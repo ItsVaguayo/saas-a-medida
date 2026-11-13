@@ -1,0 +1,27 @@
+{
+  "description": "saas-a-medida: al abrir la sesión, y como mucho cada 15 minutos mientras se trabaja, avisa de los PR del equipo que esperan revisión o tienen cambios pedidos. Solo actúa en proyectos con .claude/saas-a-medida.json en modo pareja o grupo.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/skills/saas-a-medida/scripts/prs-pendientes.sh\" inicio",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/skills/saas-a-medida/scripts/prs-pendientes.sh\" mensaje",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

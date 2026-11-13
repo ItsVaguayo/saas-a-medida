@@ -1,0 +1,244 @@
+/* Estilo de los documentos para el cliente. Descrito en references/estilo-documentos.md.
+   Cambia solo las variables de :root; el resto es común a todos los documentos.
+   Los textos de cabecera y pie van en el bloque <style id="pagina"> de cada documento. */
+
+:root {
+  --acento: #2563eb;
+  --acento-medio: #3b82f6;
+  --acento-claro: #c9dafc;
+  --acento-fondo: #eef4ff;
+  --acento-texto: #1d4fd7;
+  --tinta: #0c0e12;
+  --texto: #3a4252;
+  --gris: #5d6471;
+  --linea: #e3e8f0;
+  --suave: #f3f6fc;
+  --gris-fondo: #eef0f3;
+  --ambar: #f2c66b;
+  --ambar-fondo: #fdf3dc;
+  --ambar-texto: #7a5a12;
+  --rojo: #ef4444;
+  --rojo-fondo: #fde6e6;
+  --rojo-texto: #a32020;
+}
+
+html {
+  font-family: Montserrat, "Helvetica Neue", Arial, sans-serif;
+  font-size: 9.6pt;
+  line-height: 1.55;
+  color: var(--texto);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  font-kerning: normal;
+}
+body { margin: 0; }
+* { box-sizing: border-box; }
+
+/* ---------- Portada ---------- */
+.portada {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  padding: 15mm 18mm 13mm;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  break-after: page;
+}
+.portada::before {
+  content: "";
+  position: absolute;
+  top: -150mm;
+  right: -130mm;
+  width: 300mm;
+  height: 300mm;
+  background: radial-gradient(closest-side, #dce7fd 0%, rgba(220, 231, 253, .55) 45%, rgba(255, 255, 255, 0) 100%);
+}
+.portada > * { position: relative; }
+.portada__arriba { display: flex; justify-content: space-between; align-items: center; }
+.portada__centro { margin-top: 64mm; }
+.portada__subtitulo { font-size: 11pt; line-height: 1.45; color: var(--texto); max-width: 150mm; margin: 0; }
+.portada__resumen { margin-top: auto; }
+.portada__pie {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12mm;
+  font-size: 7.5pt;
+  color: var(--gris);
+}
+.portada .etiqueta::before {
+  content: "";
+  display: inline-block;
+  width: 7mm;
+  height: 1px;
+  background: var(--gris);
+  vertical-align: middle;
+  margin-right: 2.5mm;
+}
+.portada h1 {
+  font-size: 42pt;
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--tinta);
+  margin: 5mm 0 4.5mm;
+}
+.portada h1 em { font-style: normal; color: var(--acento); }
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.2mm;
+  font-weight: 800;
+  font-size: 8.5pt;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--tinta);
+}
+.marca__simbolo {
+  width: 4.4mm;
+  height: 4.4mm;
+  border-radius: 1.2mm;
+  background: var(--acento);
+  color: #fff;
+  font-size: 5.6pt;
+  letter-spacing: 0;
+  display: grid;
+  place-items: center;
+}
+.marca img { height: 5mm; }
+.pildora {
+  background: #fff;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  padding: 1.6mm 3.8mm;
+  font-size: 7.5pt;
+  font-weight: 600;
+  color: var(--tinta);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 4px 12px rgba(37, 99, 235, .07);
+}
+.chips { display: flex; flex-wrap: wrap; gap: 2mm; margin-top: 5.5mm; }
+.chip {
+  background: var(--gris-fondo);
+  color: var(--tinta);
+  border-radius: 1.5mm;
+  padding: 1.2mm 2.6mm;
+  font-size: 7pt;
+  font-weight: 600;
+}
+
+/* Barra resumen de la portada: cada tramo lleva style="--n: <cantidad>" */
+.barra { display: flex; gap: .8mm; height: 2.4mm; margin-bottom: 3mm; }
+.barra span { flex: var(--n); border-radius: 99px; }
+.barra .si { background: var(--acento); }
+.barra .condicion { background: var(--ambar); }
+.barra .pendiente { background: #c3c8d1; }
+.barra .no { background: var(--rojo); }
+.leyenda { display: flex; gap: 6mm; font-size: 7.5pt; color: var(--gris); }
+.leyenda b { color: var(--tinta); font-weight: 800; font-size: 10pt; margin-right: 1.2mm; }
+
+/* ---------- Páginas interiores ---------- */
+.etiqueta {
+  font-size: 7pt;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gris);
+}
+h2 {
+  font-size: 19pt;
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--tinta);
+  margin: 9mm 0 3mm;
+  break-after: avoid;
+}
+h2:first-child { margin-top: 0; }
+h2 .num { color: var(--acento); margin-right: 2.5mm; }
+h3 {
+  font-size: 11.5pt;
+  font-weight: 700;
+  color: var(--tinta);
+  margin: 5.5mm 0 1.5mm;
+  break-after: avoid;
+}
+p { margin: 0 0 2.6mm; }
+ul, ol { margin: 0 0 3mm; padding-left: 4.5mm; }
+li { margin-bottom: 1.2mm; }
+strong { color: var(--tinta); font-weight: 700; }
+.salto { break-before: page; }
+
+/* Tabla */
+.tabla {
+  border: 1px solid var(--linea);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 3mm 0 5mm;
+  break-inside: avoid;
+}
+.tabla table { width: 100%; border-collapse: collapse; font-size: 8.6pt; line-height: 1.45; }
+.tabla th {
+  text-align: left;
+  font-size: 6.6pt;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gris);
+  padding: 3mm 3.5mm 2.4mm;
+  border-bottom: 1px solid var(--linea);
+}
+.tabla td { padding: 2.6mm 3.5mm; border-bottom: 1px solid var(--linea); vertical-align: top; }
+.tabla tr:last-child td { border-bottom: 0; }
+.tabla td:first-child { font-weight: 700; color: var(--tinta); }
+.tabla .estrecha { width: 1%; white-space: nowrap; }
+
+/* Chip de estado */
+.estado {
+  display: inline-block;
+  border-radius: 99px;
+  padding: .7mm 2.4mm;
+  font-size: 7pt;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.estado--si { background: var(--acento-fondo); color: var(--acento-texto); }
+.estado--condicion { background: var(--ambar-fondo); color: var(--ambar-texto); }
+.estado--no { background: var(--rojo-fondo); color: var(--rojo-texto); }
+.estado--pendiente { background: var(--gris-fondo); color: var(--gris); }
+
+/* Tarjetas de cifras */
+.cifras { display: flex; gap: 2mm; margin: 3mm 0 5mm; break-inside: avoid; }
+.cifra { flex: 1; border-radius: 2.4mm; padding: 3mm 3.2mm; background: var(--acento-fondo); color: var(--acento-texto); }
+.cifra--principal { background: linear-gradient(135deg, var(--acento), var(--acento-medio)); color: #fff; }
+.cifra b { display: block; font-size: 18pt; font-weight: 800; line-height: 1.1; }
+.cifra span { font-size: 7pt; font-weight: 600; }
+
+/* Nota destacada */
+.nota {
+  background: var(--acento-fondo);
+  border-radius: 10px;
+  padding: 4mm 4.5mm;
+  margin: 4mm 0 5mm;
+  break-inside: avoid;
+}
+.nota strong { display: block; margin-bottom: 1mm; }
+.nota p:last-child { margin-bottom: 0; }
+
+/* Figura */
+figure { margin: 4mm 0 5mm; break-inside: avoid; }
+figure img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, .08);
+}
+figcaption {
+  margin-top: 2.2mm;
+  font-size: 6.6pt;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gris);
+}

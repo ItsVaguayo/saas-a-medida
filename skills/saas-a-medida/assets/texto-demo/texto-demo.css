@@ -1,0 +1,50 @@
+/* Texto de demo. Ámbar y borde discontinuo: se distingue de cualquier paleta de cliente
+   y se lee como algo provisional, igual que los avisos de modo de prueba de las apps reales. */
+.texto-demo {
+  position: relative;
+  margin: 12px 0;
+  padding: 14px 14px 12px;
+  border: 1.5px dashed #d97706;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #78350f;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.texto-demo__etiqueta {
+  position: absolute;
+  top: -9px;
+  left: 10px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: #d97706;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  line-height: 18px;
+}
+.texto-demo__titulo { display: block; margin-bottom: 2px; color: #78350f; font-weight: 650; }
+.texto-demo__cuerpo > :last-child { margin-bottom: 0; }
+
+.aviso-modo-demo {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1000;
+  max-width: 320px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #d97706;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .texto-demo { background: #2b2111; color: #fde68a; border-color: #f59e0b; }
+  .texto-demo__titulo { color: #fde68a; }
+}

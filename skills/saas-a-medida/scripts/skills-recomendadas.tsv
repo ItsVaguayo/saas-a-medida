@@ -1,0 +1,28 @@
+# grupo	nombre	tipo	id	comando de instalación	qué aporta
+# tipos: integrada (viene con Claude Code), incluida (viene dentro de este plugin), plugin (se busca por nombre en cualquier marketplace), skill (carpeta en ~/.claude/skills), comando (ejecutable en el PATH)
+integradas	/code-review	integrada	-	-	revisión de los cambios o de un PR
+integradas	/simplify	integrada	-	-	limpieza del código cambiado
+integradas	/security-review	integrada	-	-	revisión de seguridad
+incluidas	impeccable	integrada	-	-	auditoría y pulido de diseño
+incluidas	web-design-guidelines	integrada	-	-	revisión de pantallas contra las pautas de Vercel
+incluidas	emil-design-eng	integrada	-	-	detalles de pulido de interfaz
+incluidas	mobile-native	integrada	-	-	que la web se sienta nativa en el móvil
+incluidas	fixing-accessibility	integrada	-	-	accesibilidad: etiquetas, teclado, foco, contraste
+incluidas	break-ui	integrada	-	-	probar pantallas con datos extremos
+incluidas	vercel-react-best-practices	integrada	-	-	rendimiento de React
+dependencias	feature-dev	plugin	feature-dev	claude plugin install feature-dev@claude-plugins-official	construir cada módulo
+dependencias	frontend-design	plugin	frontend-design	claude plugin install frontend-design@claude-plugins-official	dirección visual
+dependencias	pr-review-toolkit	plugin	pr-review-toolkit	claude plugin install pr-review-toolkit@claude-plugins-official	revisores de PR
+dependencias	claude-security	plugin	claude-security	claude plugin install claude-security@claude-plugins-official	auditoría de seguridad a fondo
+tokens	typescript-lsp	plugin	typescript-lsp	npm install -g typescript-language-server typescript && claude plugin install typescript-lsp@claude-plugins-official	ir a la definición sin leer ficheros enteros
+tokens	graphify	comando	graphify	uv tool install graphifyy && graphify install	mapa del proyecto antes de leer (necesita uv)
+tokens	ccusage	comando	npx	echo "ccusage no se instala: se ejecuta con npx ccusage@latest"	medir cuánto gasta cada sesión
+pruebas	playwright-cli	comando	playwright-cli	npm install -g @playwright/cli@latest && playwright-cli install --skills	pruebas en navegador con menos tokens que el MCP
+mockups	figma	plugin	figma	claude plugin install figma@claude-plugins-official	capturar la demo a Figma para que el cliente comente (después /plugin, figma, Allow access)
+documentos	doc-coauthoring	skill	doc-coauthoring	DISABLE_TELEMETRY=1 npx --yes skills add anthropics/skills --skill doc-coauthoring -g -a claude-code -y	redactar documentos con la persona
+plan	compound-engineering	plugin	compound-engineering	claude plugin marketplace add EveryInc/compound-engineering-plugin && claude plugin install compound-engineering@compound-engineering-plugin	ce-plan para la especificación
+documentacion	context7	plugin	context7	claude plugin install context7@claude-plugins-official	documentación al día de librerías (servidor MCP)
+rendimiento	chrome-devtools-mcp	plugin	chrome-devtools-mcp	claude plugin install chrome-devtools-mcp@claude-plugins-official	medir y depurar rendimiento en Chrome (servidor MCP, envía estadísticas de uso)
+seguridad-continua	security-guidance	plugin	security-guidance	claude plugin install security-guidance@claude-plugins-official	aviso al editar y revisión con IA en cada turno (gasta tokens; ENABLE_STOP_REVIEW=0 la quita)
+legal	claude-para-abogados	plugin	privacidad	claude plugin marketplace add betobetico/claude-para-abogados && claude plugin install privacidad@claude-para-abogados && claude plugin install proteccion-datos@claude-para-abogados && claude plugin install gobernanza-ia@claude-para-abogados	triajes, EIPD y encargos en detalle (piden su entrevista inicial; sin probar con casos reales)
+despliegue	hostinger	plugin	hostinger	claude plugin install hostinger@claude-plugins-official	solo si el servidor está en Hostinger

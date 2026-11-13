@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "saas-a-medida": {
+      "source": { "source": "github", "repo": "ItsVaguayo/saas-a-medida" }
+    }
+  },
+  "enabledPlugins": {
+    "saas-a-medida@saas-a-medida": true
+  }
+}

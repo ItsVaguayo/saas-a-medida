@@ -1,0 +1,14 @@
+{
+  "proyecto": "",
+  "cliente": "",
+  "modo": "individual",
+  "integrantes": [
+    { "nombre": "", "github": "" }
+  ],
+  "contacto_cliente": "",
+  "revisiones": {},
+  "ramas": { "modelo": "modulo", "integracion": "develop", "produccion": "main" },
+  "docs_cliente": "",
+  "panel_dudas": "",
+  "agencia": { "nombre": "", "web": "", "color": "#2563eb" }
+}

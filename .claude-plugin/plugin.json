@@ -1,0 +1,40 @@
+{
+  "name": "saas-a-medida",
+  "displayName": "SaaS a medida",
+  "version": "1.0.0",
+  "description": "Acompaña el desarrollo de un SaaS a medida para un cliente, solo o en equipo: información del cliente, alcance en PDF, mockups, plan técnico con reparto y ramas, desarrollo por módulos con revisiones, panel de dudas, demo, producción, seguridad, legal y soporte.",
+  "author": {
+    "name": "ItsVaguayo",
+    "url": "https://github.com/ItsVaguayo"
+  },
+  "homepage": "https://github.com/ItsVaguayo/saas-a-medida",
+  "repository": "https://github.com/ItsVaguayo/saas-a-medida",
+  "license": "MIT",
+  "keywords": ["saas", "a-medida", "equipo", "alcance", "revisiones", "despliegue"],
+  "dependencies": [
+    "feature-dev@claude-plugins-official",
+    "frontend-design@claude-plugins-official",
+    "pr-review-toolkit@claude-plugins-official",
+    "claude-security@claude-plugins-official"
+  ],
+  "userConfig": {
+    "agencia": {
+      "type": "string",
+      "title": "Nombre en los documentos",
+      "description": "Tu nombre o el de tu agencia, tal como saldrá en los PDF para clientes. Si lo dejas vacío, se pregunta en el primer proyecto.",
+      "default": ""
+    },
+    "web": {
+      "type": "string",
+      "title": "Web en los documentos",
+      "description": "La web que sale en el pie de los PDF. Puede quedar vacía.",
+      "default": ""
+    },
+    "color": {
+      "type": "string",
+      "title": "Color de acento",
+      "description": "Color principal de los PDF, en hexadecimal.",
+      "default": "#2563eb"
+    }
+  }
+}

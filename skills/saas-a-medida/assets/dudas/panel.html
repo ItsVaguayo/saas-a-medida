@@ -1,0 +1,527 @@
+<title>Dudas del proyecto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Una columna: cabecera con el proyecto y los recuentos, pestañas y filtros fijos arriba, una tarjeta por duda. */
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --ink: #0c0e12;
+  --text: #3a4252;
+  --muted: #5d6471;
+  --line: #e3e8f0;
+  --accent: #2563eb;
+  --accent-soft: #eef4ff;
+  --accent-ink: #1d4fd7;
+  --open-soft: #fdf3dc;
+  --open-ink: #7a5a12;
+  --done-soft: #e5f4eb;
+  --done-ink: #1f6b45;
+  --block-soft: #fde6e6;
+  --block-ink: #a32020;
+  --font-display: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1218; --surface: #171c24; --ink: #f1f3f7; --text: #c7cfdb; --muted: #909aab; --line: #283142;
+    --accent: #7aa2ff; --accent-soft: #18233a; --accent-ink: #b3c8ff;
+    --open-soft: #2c2512; --open-ink: #f2c66b; --done-soft: #12291e; --done-ink: #86d3aa;
+    --block-soft: #351818; --block-ink: #ff9d9d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1218; --surface: #171c24; --ink: #f1f3f7; --text: #c7cfdb; --muted: #909aab; --line: #283142;
+  --accent: #7aa2ff; --accent-soft: #18233a; --accent-ink: #b3c8ff;
+  --open-soft: #2c2512; --open-ink: #f2c66b; --done-soft: #12291e; --done-ink: #86d3aa;
+  --block-soft: #351818; --block-ink: #ff9d9d;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.envoltorio {
+  max-width: 780px;
+  margin: 0 auto;
+  padding-block: 28px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.etiqueta {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+h1 {
+  margin: 6px 0 4px;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 5vw, 34px);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.recuento { margin: 0; color: var(--muted); font-variant-numeric: tabular-nums; }
+.recuento b { color: var(--ink); font-weight: 600; }
+
+.barra {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 0 14px;
+  padding-block: 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.pestanas, .filtros { display: flex; flex-wrap: wrap; gap: 6px; }
+button {
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+}
+.pestanas button {
+  border: 0;
+  background: transparent;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.pestanas button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+.filtros button {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.filtros button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); font-weight: 600; }
+.filtros span { color: var(--muted); margin-left: 2px; }
+.filtros button[aria-pressed="true"] span { color: inherit; }
+button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+.boton {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 7px 13px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.boton--principal { background: var(--accent); border-color: var(--accent); color: #fff; }
+.boton[disabled] { opacity: .55; cursor: default; }
+.nota { color: var(--muted); font-size: 14px; }
+.aviso { margin: 0 0 14px; padding: 10px 12px; border-radius: 8px; background: var(--open-soft); color: var(--open-ink); }
+#copia-manual { width: 100%; min-height: 140px; margin-bottom: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: var(--surface); color: var(--text); }
+
+#lista { display: grid; gap: 12px; }
+.duda {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+}
+.duda__meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+.duda__id { font-family: var(--font-display); font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 4px; }
+.pill { border-radius: 999px; padding: 2px 9px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.pill--abierta { background: var(--open-soft); color: var(--open-ink); }
+.pill--respondida { background: var(--accent-soft); color: var(--accent-ink); }
+.pill--aplicada { background: var(--done-soft); color: var(--done-ink); }
+.pill--bloquea { background: var(--block-soft); color: var(--block-ink); }
+.pill--neutra { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+.duda h2 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.duda p { margin: 0 0 8px; overflow-wrap: anywhere; }
+.pregunta { font-size: 17px; color: var(--ink); }
+.porque { color: var(--muted); font-size: 15px; }
+.porque b, .subtitulo { font-weight: 600; color: var(--text); }
+.opciones { margin: 6px 0 10px; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.opciones li { border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-size: 15px; background: var(--bg); }
+.respuesta { margin-top: 10px; padding: 12px 14px; border-radius: 10px; background: var(--accent-soft); }
+.respuesta--aplicada { background: var(--done-soft); }
+.respuesta p { margin: 0 0 4px; color: var(--ink); white-space: pre-wrap; }
+.respuesta .quien { font-size: 13.5px; color: var(--muted); margin: 0; }
+.responder { margin-top: 10px; display: grid; gap: 8px; }
+.responder label { font-weight: 600; color: var(--ink); font-size: 15px; }
+.responder textarea {
+  width: 100%;
+  min-height: 84px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 11px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+.responder__pie { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.enlace { border: 0; background: none; padding: 0; color: var(--accent-ink); font-weight: 600; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.tecnico { margin: 4px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
+.tecnico dt { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+.tecnico dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.tecnico dd p { margin: 0 0 6px; }
+.tecnico ul { margin: 0; padding-left: 18px; }
+@media (max-width: 520px) {
+  .tecnico { grid-template-columns: 1fr; }
+  .tecnico dt { padding-top: 6px; }
+}
+.vacio { padding: 28px 18px; text-align: left; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); }
+.vacio b { display: block; color: var(--ink); font-family: var(--font-display); margin-bottom: 4px; }
+@media (prefers-reduced-motion: no-preference) {
+  .duda { transition: border-color .15s ease; }
+}
+</style>
+
+<div class="envoltorio">
+  <header>
+    <p class="etiqueta" id="cliente">Dudas para el cliente</p>
+    <h1 id="titulo">Dudas del proyecto</h1>
+    <p class="recuento" id="recuento">Cargando las dudas…</p>
+  </header>
+
+  <nav class="barra" aria-label="Vistas del panel">
+    <div class="pestanas" role="tablist" aria-label="Vista">
+      <button type="button" role="tab" id="tab-cliente" data-pestana="cliente" aria-selected="true">Para el cliente</button>
+      <button type="button" role="tab" id="tab-tecnico" data-pestana="tecnico" aria-selected="false" hidden>Detalle técnico</button>
+    </div>
+    <div class="filtros" role="group" aria-label="Filtrar">
+      <button type="button" data-filtro="abiertas" aria-pressed="true">Abiertas <span id="n-abiertas"></span></button>
+      <button type="button" data-filtro="respondidas" aria-pressed="false">Respondidas <span id="n-respondidas"></span></button>
+      <button type="button" data-filtro="todas" aria-pressed="false">Todas <span id="n-todas"></span></button>
+    </div>
+  </nav>
+
+  <div class="acciones" id="acciones">
+    <button type="button" class="boton" id="copiar">Copiar preguntas abiertas</button>
+    <span class="nota" id="copiado" role="status"></span>
+  </div>
+  <textarea id="copia-manual" readonly hidden aria-label="Preguntas abiertas para copiar"></textarea>
+  <p class="aviso" id="aviso" role="status" hidden></p>
+
+  <section id="lista" aria-live="polite"></section>
+  <div class="vacio" id="vacio">
+    <b>Todavía no hay dudas</b>
+    Cuando surja una pregunta para el cliente, Claude la añade aquí con una explicación fácil y su detalle técnico. Las respuestas se apuntan en cada tarjeta.
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const estado = {
+    dudas: [], tecnico: {}, meta: {}, pestana: 'cliente', filtro: 'abiertas',
+    puedeEscribir: null, editando: new Set(), borradores: new Map(), guardando: new Set(), perfiles: {}
+  };
+  const fecha = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const NOMBRES_ESTADO = { abierta: 'Abierta', respondida: 'Respondida', aplicada: 'Aplicada' };
+
+  try {
+    const p = localStorage.getItem('dudas-pestana');
+    if (p === 'cliente' || p === 'tecnico') estado.pestana = p;
+  } catch (e) { /* sin almacenamiento */ }
+
+  function el(tag, attrs = {}, ...hijos) {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v === undefined || v === null || v === false) continue;
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const h of hijos.flat()) if (h) n.append(h);
+    return n;
+  }
+  function parrafos(texto) {
+    return String(texto || '').split(/\n{2,}/).map((t) => t.trim()).filter(Boolean).map((t) => el('p', { text: t }));
+  }
+  function aviso(texto) {
+    const a = $('aviso');
+    a.textContent = texto || '';
+    a.hidden = !texto;
+  }
+
+  function ordenadas() {
+    return [...estado.dudas].sort((a, b) => (a.orden ?? 9999) - (b.orden ?? 9999) || String(a.id).localeCompare(String(b.id)));
+  }
+  function visibles() {
+    const todas = ordenadas();
+    if (estado.filtro === 'abiertas') return todas.filter((d) => (d.estado || 'abierta') === 'abierta');
+    if (estado.filtro === 'respondidas') return todas.filter((d) => d.estado === 'respondida' || d.estado === 'aplicada');
+    return todas;
+  }
+
+  function quien(d) {
+    if (d.fuente === 'claude') return 'Apuntada por Claude';
+    const p = d.respondida_por && estado.perfiles[d.respondida_por];
+    return 'Apuntada por ' + ((p && p.name) || 'alguien del equipo');
+  }
+  function cuando(iso) {
+    const t = Date.parse(iso || '');
+    return Number.isNaN(t) ? '' : ' · ' + fecha.format(new Date(t));
+  }
+
+  function bloqueRespuesta(d) {
+    const caja = el('div', { class: 'respuesta' + (d.estado === 'aplicada' ? ' respuesta--aplicada' : '') },
+      el('p', { text: d.respuesta }),
+      el('p', { class: 'quien', text: quien(d) + cuando(d.respondida_en) + (d.estado === 'aplicada' && d.aplicada_en ? ' · aplicada en ' + d.aplicada_en : '') })
+    );
+    if (d.estado !== 'aplicada' && estado.puedeEscribir !== false) {
+      const cambiar = el('button', { type: 'button', class: 'enlace', text: 'Cambiar respuesta' });
+      cambiar.addEventListener('click', () => { estado.editando.add(d.id); render(); enfocar(d.id); });
+      caja.append(cambiar);
+    }
+    return caja;
+  }
+
+  function formulario(d) {
+    const idCampo = 'r-' + d.id;
+    const campo = el('textarea', { id: idCampo, rows: '3', placeholder: 'Escribe la respuesta tal como la ha dado el cliente' });
+    campo.value = estado.borradores.has(d.id) ? estado.borradores.get(d.id) : (d.respuesta || '');
+    campo.addEventListener('input', () => estado.borradores.set(d.id, campo.value));
+    const guardar = el('button', { type: 'submit', class: 'boton boton--principal', text: estado.guardando.has(d.id) ? 'Guardando…' : 'Guardar respuesta' });
+    if (estado.guardando.has(d.id)) guardar.disabled = true;
+    const pie = el('div', { class: 'responder__pie' }, guardar);
+    if (estado.editando.has(d.id)) {
+      const cancelar = el('button', { type: 'button', class: 'boton', text: 'Cancelar' });
+      cancelar.addEventListener('click', () => { estado.editando.delete(d.id); estado.borradores.delete(d.id); render(); });
+      pie.append(cancelar);
+    }
+    const f = el('form', { class: 'responder' }, el('label', { for: idCampo, text: 'Respuesta' }), campo, pie);
+    f.addEventListener('submit', (ev) => { ev.preventDefault(); guardarRespuesta(d.id, campo.value); });
+    return f;
+  }
+
+  function metaDuda(d, tecnica) {
+    const m = el('div', { class: 'duda__meta' },
+      el('span', { class: 'duda__id', text: d.id }),
+      el('span', { class: 'pill pill--' + (d.estado || 'abierta'), text: NOMBRES_ESTADO[d.estado || 'abierta'] || d.estado })
+    );
+    if (d.bloquea) m.append(el('span', { class: 'pill pill--bloquea', text: 'Bloquea: ' + d.bloquea }));
+    if (tecnica && d.prioridad) m.append(el('span', { class: 'pill pill--neutra', text: 'Prioridad ' + d.prioridad }));
+    return m;
+  }
+
+  function tarjetaCliente(d) {
+    const a = el('article', { class: 'duda', 'data-id': d.id }, metaDuda(d, false), el('h2', { text: d.titulo || d.id }));
+    if (d.pregunta) a.append(el('p', { class: 'pregunta', text: d.pregunta }));
+    if (d.porque) a.append(el('p', { class: 'porque' }, el('b', { text: 'Por qué lo preguntamos. ' }), document.createTextNode(d.porque)));
+    if (Array.isArray(d.opciones) && d.opciones.length) {
+      a.append(el('p', { class: 'subtitulo', text: 'Opciones que vemos' }), el('ul', { class: 'opciones' }, d.opciones.map((o) => el('li', { text: String(o) }))));
+    }
+    const abierta = (d.estado || 'abierta') === 'abierta';
+    if ((abierta || estado.editando.has(d.id)) && estado.puedeEscribir !== false) a.append(formulario(d));
+    else if (d.respuesta) a.append(bloqueRespuesta(d));
+    return a;
+  }
+
+  function tarjetaTecnica(d) {
+    const t = estado.tecnico[d.id] || {};
+    const a = el('article', { class: 'duda', 'data-id': d.id }, metaDuda(d, true), el('h2', { text: d.titulo || d.id }));
+    const dl = el('dl', { class: 'tecnico' });
+    const fila = (titulo, contenido) => { if (contenido && (!Array.isArray(contenido) || contenido.length)) dl.append(el('dt', { text: titulo }), el('dd', {}, contenido)); };
+    fila('Al cliente', d.pregunta ? el('p', { text: d.pregunta }) : null);
+    fila('Afecta a', t.afecta ? el('p', { text: t.afecta }) : null);
+    fila('Detalle', parrafos(t.detalle));
+    fila('Alternativas', Array.isArray(t.alternativas) && t.alternativas.length ? el('ul', {}, t.alternativas.map((x) => el('li', { text: String(x) }))) : null);
+    fila('Recomendación', t.recomendacion ? el('p', { text: t.recomendacion }) : null);
+    fila('Aplicada en', d.estado === 'aplicada' && d.aplicada_en ? el('p', { text: d.aplicada_en }) : null);
+    a.append(dl);
+    if (d.respuesta) a.append(bloqueRespuesta(d));
+    return a;
+  }
+
+  async function resolverPerfiles() {
+    const user = await claude.use('user').catch(() => null);
+    if (!user) return;
+    const ids = [...new Set(estado.dudas.map((d) => d.respondida_por).filter(Boolean))];
+    if (!ids.length) return;
+    const ps = await user.profiles(ids);
+    let cambio = false;
+    for (const id of ids) {
+      const nombre = ps[id] && ps[id].name;
+      if ((estado.perfiles[id] && estado.perfiles[id].name) !== nombre) { estado.perfiles[id] = ps[id]; cambio = true; }
+    }
+    if (cambio) render(false);
+  }
+
+  function render(conPerfiles = true) {
+    const activo = document.activeElement;
+    const foco = activo && activo.id && activo.tagName === 'TEXTAREA' ? { id: activo.id, ini: activo.selectionStart, fin: activo.selectionEnd } : null;
+
+    const total = estado.dudas.length;
+    const abiertas = estado.dudas.filter((d) => (d.estado || 'abierta') === 'abierta').length;
+    const respondidas = total - abiertas;
+    const aplicadas = estado.dudas.filter((d) => d.estado === 'aplicada').length;
+    $('n-abiertas').textContent = abiertas;
+    $('n-respondidas').textContent = respondidas;
+    $('n-todas').textContent = total;
+    if (estado.meta.proyecto) $('titulo').textContent = estado.meta.proyecto;
+    if (estado.meta.cliente) $('cliente').textContent = 'Dudas para ' + estado.meta.cliente;
+    const r = $('recuento');
+    r.replaceChildren();
+    if (total) {
+      r.append(el('b', { text: String(abiertas) }), document.createTextNode(abiertas === 1 ? ' abierta · ' : ' abiertas · '),
+        el('b', { text: String(respondidas - aplicadas) }), document.createTextNode(respondidas - aplicadas === 1 ? ' respondida · ' : ' respondidas · '),
+        el('b', { text: String(aplicadas) }), document.createTextNode(aplicadas === 1 ? ' aplicada' : ' aplicadas'));
+    } else {
+      r.textContent = estado.cargado ? 'Sin dudas por ahora' : 'Cargando las dudas…';
+    }
+
+    const mostrarTecnico = Object.keys(estado.tecnico).length > 0 || estado.puedeEscribir === true;
+    $('tab-tecnico').hidden = !mostrarTecnico;
+    if (!mostrarTecnico) estado.pestana = 'cliente';
+    for (const b of document.querySelectorAll('[data-pestana]')) b.setAttribute('aria-selected', String(b.dataset.pestana === estado.pestana));
+    for (const b of document.querySelectorAll('[data-filtro]')) b.setAttribute('aria-pressed', String(b.dataset.filtro === estado.filtro));
+    $('acciones').hidden = estado.pestana !== 'cliente' || abiertas === 0;
+
+    const lista = visibles();
+    $('lista').replaceChildren(...lista.map((d) => (estado.pestana === 'tecnico' ? tarjetaTecnica(d) : tarjetaCliente(d))));
+    const vacio = $('vacio');
+    vacio.hidden = lista.length > 0 || !estado.cargado;
+    if (total && !lista.length) {
+      vacio.replaceChildren(el('b', { text: estado.filtro === 'abiertas' ? 'No queda ninguna duda abierta' : 'Nada en este filtro' }),
+        document.createTextNode('Cambia el filtro para ver el resto.'));
+    }
+
+    if (foco) {
+      const campo = document.getElementById(foco.id);
+      if (campo) { campo.focus(); try { campo.setSelectionRange(foco.ini, foco.fin); } catch (e) { /* nada */ } }
+    }
+    if (conPerfiles) resolverPerfiles();
+  }
+
+  function enfocar(id) {
+    const campo = document.getElementById('r-' + id);
+    if (campo) campo.focus();
+  }
+
+  async function guardarRespuesta(id, texto) {
+    const limpio = String(texto || '').trim();
+    if (!limpio) { aviso('Escribe la respuesta antes de guardarla.'); return; }
+    if (estado.guardando.has(id)) return;
+    const db = await claude.use('db');
+    if (!db) { aviso('No se puede guardar desde aquí. Abre el panel desde Claude.'); return; }
+    const user = await claude.use('user');
+    const uid = user ? await user.id() : null;
+    estado.guardando.add(id); aviso(''); render(false);
+    try {
+      const ahora = new Date().toISOString();
+      await db.doc('dudas/' + id).update({
+        respuesta: limpio, estado: 'respondida', fuente: 'panel',
+        respondida_por: uid || '', respondida_en: ahora, actualizada: ahora
+      });
+      estado.editando.delete(id); estado.borradores.delete(id);
+    } catch (e) {
+      if (e && e.code === 'invalid_argument') {
+        estado.puedeEscribir = false;
+        aviso('No tienes permiso para responder en este panel. Pide a quien lleva el proyecto acceso de colaborador.');
+      } else if (e && e.code === 'unavailable') {
+        aviso('No se ha podido guardar. Vuelve a intentarlo en unos segundos.');
+      } else {
+        aviso('No se ha podido guardar la respuesta.');
+      }
+    } finally {
+      estado.guardando.delete(id); render(false);
+    }
+  }
+
+  function textoParaCopiar() {
+    const abiertas = ordenadas().filter((d) => (d.estado || 'abierta') === 'abierta');
+    const lineas = ['Dudas pendientes' + (estado.meta.proyecto ? ' · ' + estado.meta.proyecto : ''), ''];
+    abiertas.forEach((d, i) => {
+      lineas.push((i + 1) + '. ' + (d.titulo || d.id));
+      if (d.pregunta) lineas.push(d.pregunta);
+      if (Array.isArray(d.opciones) && d.opciones.length) lineas.push('Opciones: ' + d.opciones.join(' / '));
+      lineas.push('');
+    });
+    return lineas.join('\n').trim();
+  }
+
+  $('copiar').addEventListener('click', () => {
+    const texto = textoParaCopiar();
+    const manual = $('copia-manual');
+    const ok = () => { $('copiado').textContent = 'Copiadas. Revísalas antes de enviarlas.'; manual.hidden = true; };
+    const fallo = () => {
+      manual.value = texto; manual.hidden = false; manual.focus(); manual.select();
+      $('copiado').textContent = 'No se ha podido copiar solo: selecciona el texto y cópialo.';
+    };
+    try { navigator.clipboard.writeText(texto).then(ok, fallo); } catch (e) { fallo(); }
+  });
+  for (const b of document.querySelectorAll('[data-pestana]')) {
+    b.addEventListener('click', () => {
+      estado.pestana = b.dataset.pestana;
+      try { localStorage.setItem('dudas-pestana', estado.pestana); } catch (e) { /* nada */ }
+      render(false);
+    });
+  }
+  for (const b of document.querySelectorAll('[data-filtro]')) {
+    b.addEventListener('click', () => { estado.filtro = b.dataset.filtro; render(false); });
+  }
+
+  render(false);
+
+  (async () => {
+    const db = await claude.use('db');
+    if (!db) {
+      estado.cargado = true;
+      aviso('Este panel carga las dudas cuando se abre desde Claude.');
+      render(false);
+      return;
+    }
+    const user = await claude.use('user');
+    estado.puedeEscribir = user ? await user.can('data.write') : null;
+
+    const espera = setTimeout(() => {
+      aviso(estado.dudas.length ? 'Puede que las dudas no estén al día: no se puede conectar ahora mismo.' : 'Todavía no se pueden cargar las dudas. Si sigue así, vuelve a abrir el panel más tarde.');
+    }, 10000);
+    const terminar = () => { clearTimeout(espera); };
+
+    db.collection('dudas').onSnapshot((snap) => {
+      estado.dudas = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      if (!snap.metadata.fromCache) { estado.cargado = true; terminar(); aviso(''); }
+      render();
+    }, (e) => {
+      terminar(); estado.cargado = true;
+      aviso(e && e.code === 'revoked' ? '' : 'No se han podido cargar las dudas.');
+      render(false);
+    });
+    db.collection('tecnico').onSnapshot((snap) => {
+      const mapa = {};
+      for (const d of snap.docs) mapa[d.id] = d.data();
+      estado.tecnico = mapa;
+      render(false);
+    }, () => { /* sin acceso al detalle técnico: se oculta la pestaña */ });
+    db.doc('meta/panel').onSnapshot((snap) => {
+      estado.meta = snap.exists ? snap.data() : {};
+      render(false);
+    }, () => {});
+  })();
+})();
+</script>

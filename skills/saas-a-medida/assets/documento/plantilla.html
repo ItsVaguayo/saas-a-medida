@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Plantilla de documento para el cliente. Estilo descrito en references/estilo-documentos.md.
+     Rellenar: título, textos de cabecera y pie (bloque #pagina), marca, cliente y contenido.
+     El contenido de ejemplo es de un cliente inventado: sustitúyelo entero. -->
+<title>Alcance · Ejemplo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<link rel="stylesheet" href="documento.css">
+<style id="pagina">
+  /* Cabecera y pie de las páginas interiores. Cambia los cuatro textos entre comillas. */
+  @page {
+    size: A4;
+    margin: 20mm 18mm 17mm;
+    @top-left { content: "MARCA"; font: 800 7.5pt Montserrat, sans-serif; letter-spacing: .14em; color: #0c0e12; vertical-align: bottom; padding-bottom: 5mm; }
+    @top-right { content: "Documento de alcance · Proyecto de ejemplo"; font: 500 7pt Montserrat, sans-serif; color: #5d6471; vertical-align: bottom; padding-bottom: 5mm; }
+    @bottom-left { content: "web.ejemplo"; font: 500 7pt Montserrat, sans-serif; color: #5d6471; vertical-align: top; padding-top: 5mm; }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 500 7pt Montserrat, sans-serif; color: #5d6471; vertical-align: top; padding-top: 5mm; }
+  }
+  @page :first {
+    margin: 0;
+    @top-left { content: none; } @top-right { content: none; }
+    @bottom-left { content: none; } @bottom-right { content: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="portada">
+  <div class="portada__arriba">
+    <span class="marca"><span class="marca__simbolo">M</span>Marca</span>
+    <span class="pildora">Proyecto de ejemplo</span>
+  </div>
+
+  <div class="portada__centro">
+    <div class="etiqueta">Documento de alcance</div>
+    <h1>Gestión de alumnos y prácticas, <em>lo que vamos a hacer</em></h1>
+    <p class="portada__subtitulo">Qué entra en la aplicación, qué se conecta con vuestros sistemas, qué queda fuera y qué necesitamos de vosotros para empezar.</p>
+    <div class="chips">
+      <span class="chip">Para Escuela de ejemplo</span>
+      <span class="chip">Noviembre 2026</span>
+      <span class="chip">3 páginas</span>
+    </div>
+  </div>
+
+  <div class="portada__resumen">
+    <div class="barra">
+      <span class="si" style="--n: 7"></span>
+      <span class="condicion" style="--n: 2"></span>
+      <span class="pendiente" style="--n: 2"></span>
+      <span class="no" style="--n: 1"></span>
+    </div>
+    <div class="leyenda">
+      <span><b>7</b>se hacen</span>
+      <span><b>2</b>con condición</span>
+      <span><b>2</b>por comprobar</span>
+      <span><b>1</b>fuera</span>
+    </div>
+  </div>
+
+  <div class="portada__pie">
+    <span class="marca"><span class="marca__simbolo">M</span>Marca</span>
+    <span>web.ejemplo</span>
+  </div>
+</section>
+
+<h2><span class="num">01</span>Lo que nos habéis pedido</h2>
+<p>Hoy cada alumno vive en tres sitios: el Excel de matrículas, la agenda de prácticas en papel y los pagos en el programa de contabilidad. Cuando un alumno llama, la oficina tarda en saber qué tiene contratado, qué ha hecho y qué debe.</p>
+<p>Queréis una ficha única por alumno, que los instructores pasen lista desde el móvil y que los cobros pendientes salten solos.</p>
+<div class="nota">
+  <strong>En vuestras palabras</strong>
+  <p>«Que reservar una práctica no dé por hecha la otra» [P.6]. «Usarlo en el móvil como una app» [P.4].</p>
+</div>
+
+<h2><span class="num">02</span>Lo que vamos a hacer</h2>
+<div class="cifras">
+  <div class="cifra cifra--principal"><b>7</b><span>módulos</span></div>
+  <div class="cifra"><b>4</b><span>roles</span></div>
+  <div class="cifra"><b>2</b><span>integraciones</span></div>
+  <div class="cifra"><b>1</b><span>app instalable</span></div>
+</div>
+<div class="tabla">
+  <table>
+    <thead><tr><th>Módulo</th><th>Qué hace</th><th class="estrecha">Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Ficha del alumno</td><td>Datos, curso contratado, prácticas reservadas y hechas, pagos y documentos en una sola pantalla.</td><td><span class="estado estado--si">Se hace</span></td></tr>
+      <tr><td>Salidas de prácticas</td><td>Calendario del mes con barco, instructor, plazas y lista de asistencia.</td><td><span class="estado estado--si">Se hace</span></td></tr>
+      <tr><td>Cobros</td><td>Plan de pagos por alumno y avisos de lo que vence.</td><td><span class="estado estado--si">Se hace</span></td></tr>
+      <tr><td>Campus online</td><td>Vídeos y temario para los alumnos.</td><td><span class="estado estado--condicion">Con condición</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2><span class="num">03</span>Lo que se conecta</h2>
+<div class="tabla">
+  <table>
+    <thead><tr><th>Sistema</th><th>Para qué</th><th class="estrecha">Estado</th><th>Condición</th></tr></thead>
+    <tbody>
+      <tr><td>Programa de facturación</td><td>Crear el contacto del alumno al matricularlo.</td><td><span class="estado estado--pendiente">Por comprobar</span></td><td>Necesitamos una clave de su API.</td></tr>
+      <tr><td>Web con tienda</td><td>Que cada matrícula pagada en la web entre en la app.</td><td><span class="estado estado--condicion">Con condición</span></td><td>Solo pedidos nuevos; los antiguos se importan una vez.</td></tr>
+      <tr><td>Organismo oficial</td><td>Dar de alta las prácticas para los títulos.</td><td><span class="estado estado--no">No se hace</span></td><td>Solo admite el formulario con certificado digital.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2><span class="num">04</span>Lo que necesitamos de vosotros</h2>
+<ul>
+  <li>Acceso de prueba al programa de facturación.</li>
+  <li>Un Excel real de matrículas, sin datos de alumnos si lo preferís.</li>
+  <li>Respuesta a las dudas abiertas, sobre todo la de los plazos de pago.</li>
+</ul>
+
+</body>
+</html>

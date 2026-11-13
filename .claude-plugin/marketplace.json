@@ -1,0 +1,17 @@
+{
+  "name": "saas-a-medida",
+  "owner": {
+    "name": "ItsVaguayo",
+    "url": "https://github.com/ItsVaguayo"
+  },
+  "description": "Plugin para llevar un SaaS a medida de principio a fin con Claude Code.",
+  "allowCrossMarketplaceDependenciesOn": ["claude-plugins-official"],
+  "plugins": [
+    {
+      "name": "saas-a-medida",
+      "source": "./",
+      "description": "Acompaña el desarrollo de un SaaS a medida para un cliente, solo o en equipo, del primer contacto al soporte.",
+      "version": "1.0.0"
+    }
+  ]
+}
