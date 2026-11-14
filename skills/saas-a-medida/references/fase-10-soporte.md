@@ -14,12 +14,14 @@ Clasifica cada petición y pregunta con el menú qué hacer cuando no sea un err
 
 Todo se apunta en `docs/soporte.md` (plantilla en `assets/docs/`): fecha, qué pasó o qué se pidió, qué se hizo y en qué versión salió.
 
+Si un error llegó a producción por algo que el proceso debería haber parado (un caso límite que no estaba en la especificación, una revisión que no lo vio, un paso de la lista que se saltó), apúntalo también en `docs/lecciones.md` (`lecciones.md`).
+
 ## Mantenimiento
 
 Una vez al mes, o cuando la persona lo pida:
 
 - Dependencias: `npm outdated` y `npm audit --omit=dev`. Las actualizaciones grandes van en su propia rama con los tests en verde.
-- Copias de seguridad: comprueba que se hacen y restaura una en otra instancia para ver que sirve.
+- Copias de seguridad: comprueba que la de anoche existe en el servidor y en el destino externo, y restaura una en otra instancia para ver que sirve.
 - Registros de errores del servidor: lo que se repite se convierte en un error a arreglar.
 - Que el certificado HTTPS se renueva solo.
 

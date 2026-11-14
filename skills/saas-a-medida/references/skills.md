@@ -17,8 +17,8 @@ Usa el nombre que aparezca en la lista de skills de la sesión. Si una no está,
 | 3. Alcance | la plantilla del PDF y `estilo-documentos.md` |
 | 5. Mockups | `frontend-design` para cada dirección; `impeccable` para pulir; plugin `figma` (grupo `mockups`) para que el cliente comente |
 | 6. Plan técnico | `compound-engineering:ce-plan` (grupo `plan`) si está; si no, la plantilla de la fase 6 |
-| 7. Cada módulo | `feature-dev`; antes del PR, `/code-review` y `/simplify` |
-| 7. Pantallas | `impeccable` (auditoría), `web-design-guidelines`, `mobile-native`, `fixing-accessibility`, `break-ui`; `emil-design-eng` para el pulido final |
+| 7. Cada módulo | `feature-dev` con `desarrollo-backend.md` y `desarrollo-frontend.md`; antes del PR, `/simplify` y después `/code-review`; con pantallas, `break-ui` |
+| 7 y 8. Todas las pantallas, una vez sobre `develop` antes de la demo | `impeccable` (auditoría), `web-design-guidelines`, `mobile-native`, `fixing-accessibility`; `emil-design-eng` para el pulido final |
 | 7. React | `vercel-react-best-practices` cuando haya problemas de rendimiento o al revisar componentes con muchos datos |
 | 7. Pruebas en navegador | `playwright-cli` (grupo `pruebas`); accesibilidad automática con `@axe-core/playwright` en los e2e del proyecto |
 | 7. Revisar un PR | `/code-review <número>` y los agentes de `pr-review-toolkit` |

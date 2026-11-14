@@ -3,6 +3,8 @@
 
 - PR de compañeros con revisión pedida a esta persona (en pareja, también los que aún no ha revisado).
 - PR propios con cambios pedidos o ya aprobados y sin integrar.
+- PR que esta persona ya revisó y que han recibido commits después: vuelven a salir.
+- Al abrir la sesión, además, las fases que están en curso según .claude/saas-a-medida.json.
 
 Al abrir la sesión ("inicio") cuenta todo lo pendiente. En cada mensaje ("mensaje") mira como mucho
 cada 15 minutos y solo cuenta lo que no se haya contado ya en esta sesión.
@@ -17,6 +19,10 @@ import time
 from datetime import datetime, timezone
 
 CADA_SEGUNDOS = 15 * 60
+NOMBRES_FASE = {"0": "equipo y proyecto", "1": "información del cliente", "2": "maqueta base",
+                "3": "documento de alcance", "4": "plan de la plataforma", "5": "mockups y estilo",
+                "6": "plan técnico", "7": "desarrollo por módulos", "8": "demo al cliente",
+                "9": "producción", "10": "soporte"}
 
 
 def sh(args, cwd, timeout=8):
@@ -56,7 +62,25 @@ def main():
     except Exception:
         return
     modo = (config.get("modo") or "individual").lower()
+    nombre_evento = "SessionStart" if evento == "inicio" else "UserPromptSubmit"
+
+    def emitir(partes):
+        if partes:
+            print(json.dumps({"hookSpecificOutput": {"hookEventName": nombre_evento,
+                                                     "additionalContext": "\n".join(partes)}}, ensure_ascii=False))
+
+    # Al abrir la sesión, en qué fase está el proyecto: vale para cualquier modo y no necesita gh.
+    cabecera = []
+    fases = config.get("fases")
+    if evento == "inicio" and isinstance(fases, dict):
+        en_curso = [f"{n} ({NOMBRES_FASE.get(str(n), '')})".replace(" ()", "")
+                    for n, e in sorted(fases.items(), key=lambda x: int(x[0]) if str(x[0]).isdigit() else 99)
+                    if str(e).lower() == "en curso"]
+        if en_curso:
+            cabecera.append(f"Proyecto {config.get('proyecto') or os.path.basename(raiz)} (saas-a-medida). "
+                            f"Fases en curso: {', '.join(en_curso)}. Lee solo la guía de la fase en la que se vaya a trabajar.")
     if modo == "individual":
+        emitir(cabecera)
         return
 
     cache_dir = os.environ.get("CLAUDE_PLUGIN_DATA") or os.path.expanduser("~/.cache/saas-a-medida")
@@ -81,14 +105,16 @@ def main():
         try:
             yo = sh(["gh", "api", "user", "-q", ".login"], raiz)
         except Exception:
+            emitir(cabecera)
             return
         json.dump({"login": yo, "t": ahora}, open(login_path, "w", encoding="utf-8"))
 
     try:
         salida = sh(["gh", "pr", "list", "--state", "open", "--limit", "50", "--json",
-                     "number,title,url,author,isDraft,reviewRequests,reviews,reviewDecision,createdAt"], raiz)
+                     "number,title,url,author,isDraft,reviewRequests,reviews,reviewDecision,createdAt,headRefOid"], raiz)
         prs = json.loads(salida or "[]")
     except Exception:
+        emitir(cabecera)
         return
 
     nombres = {(p.get("github") or "").lower(): p.get("nombre") or p.get("github")
@@ -106,11 +132,17 @@ def main():
             continue
         autor = (pr.get("author") or {}).get("login", "")
         pedidos = [(r.get("login") or "").lower() for r in pr.get("reviewRequests", []) if r]
-        revisado_por_mi = any(((r.get("author") or {}).get("login", "")).lower() == yo.lower()
-                              for r in pr.get("reviews", []))
+        mias = sorted((r for r in pr.get("reviews", [])
+                       if ((r.get("author") or {}).get("login", "")).lower() == yo.lower()),
+                      key=lambda r: r.get("submittedAt") or "")
+        revisado_por_mi = bool(mias)
+        # Si el autor ha subido commits después de mi última revisión, vuelve a tocarme.
+        visto = ((mias[-1].get("commit") or {}).get("oid") if mias else None)
+        cabeza = pr.get("headRefOid")
+        pr["_otra_vez"] = bool(visto and cabeza and visto != cabeza)
         if autor.lower() != yo.lower():
             le_toca = modo == "pareja" or autor.lower() in me_toca
-            if yo.lower() in pedidos or (le_toca and not revisado_por_mi):
+            if yo.lower() in pedidos or (le_toca and (not revisado_por_mi or pr["_otra_vez"])):
                 por_revisar.append(pr)
         else:
             if pr.get("reviewDecision") == "CHANGES_REQUESTED":
@@ -119,8 +151,11 @@ def main():
                 aprobados.append(pr)
 
     contados = set(estado.get("contados", {}).get(sesion, []))
+    def marca(p, tipo):  # la de revisión lleva el commit, para que un PR con cambios nuevos vuelva a contarse
+        return f"r:{p['number']}:{(p.get('headRefOid') or '')[:7]}" if tipo == "r" else f"{tipo}:{p['number']}"
+
     def nuevos(lista, tipo):
-        return [p for p in lista if f"{tipo}:{p['number']}" not in contados]
+        return [p for p in lista if marca(p, tipo) not in contados]
 
     if evento == "mensaje":
         por_revisar, con_cambios, aprobados = (nuevos(por_revisar, "r"), nuevos(con_cambios, "c"),
@@ -128,20 +163,22 @@ def main():
 
     estado["ultima"] = ahora
     sesiones = estado.get("contados", {})
-    sesiones[sesion] = sorted(contados | {f"r:{p['number']}" for p in por_revisar}
-                              | {f"c:{p['number']}" for p in con_cambios}
-                              | {f"a:{p['number']}" for p in aprobados})
+    sesiones[sesion] = sorted(contados | {marca(p, "r") for p in por_revisar}
+                              | {marca(p, "c") for p in con_cambios}
+                              | {marca(p, "a") for p in aprobados})
     estado["contados"] = dict(list(sesiones.items())[-20:])
     json.dump(estado, open(estado_path, "w", encoding="utf-8"))
 
     if not (por_revisar or con_cambios or aprobados):
+        emitir(cabecera)
         return
 
     def linea(p):
         autor = quien((p.get("author") or {}).get("login", ""))
-        return f"#{p['number']} «{p['title']}» de {autor}, abierto {dias_desde(p.get('createdAt', ''))} ({p['url']})"
+        otra = ", con commits nuevos desde su última revisión" if p.get("_otra_vez") else ""
+        return f"#{p['number']} «{p['title']}» de {autor}, abierto {dias_desde(p.get('createdAt', ''))}{otra} ({p['url']})"
 
-    partes = [f"Aviso de saas-a-medida sobre los PR del proyecto {config.get('proyecto') or os.path.basename(raiz)} "
+    partes = cabecera + [f"Aviso de saas-a-medida sobre los PR del proyecto {config.get('proyecto') or os.path.basename(raiz)} "
               f"para {quien(yo)}:"]
     if por_revisar:
         partes.append(f"- {len(por_revisar)} PR de compañeros esperan su revisión: "
@@ -153,9 +190,7 @@ def main():
     partes.append("La skill saas-a-medida (fase 7, «Revisar el PR de un compañero») explica cómo revisarlos. "
                   "Nada se publica en GitHub sin que la persona lo confirme.")
 
-    nombre_evento = "SessionStart" if evento == "inicio" else "UserPromptSubmit"
-    print(json.dumps({"hookSpecificOutput": {"hookEventName": nombre_evento,
-                                             "additionalContext": "\n".join(partes)}}, ensure_ascii=False))
+    emitir(partes)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,10 @@
 # Uso, desde la raíz del repo:
 #   deploy/desplegar.sh              despliega lo que hay en la rama actual (tiene que estar limpia)
 #   deploy/desplegar.sh --simular    enseña lo que haría sin tocar el servidor
-#   deploy/desplegar.sh --atras      vuelve a la versión anterior
+#   deploy/desplegar.sh --atras      vuelve al código de la versión anterior (los datos no se tocan)
+#   deploy/desplegar.sh --atras --con-datos   además restaura los datos de antes de la versión que se retira
+# Las copias de aquí son las de antes de cada despliegue y viven en el mismo servidor. La copia de cada
+# noche, que sale del servidor, la hace deploy/copia-nocturna.sh.
 # Configuración: deploy/desplegar.env (copia desplegar.env.ejemplo). Sin secretos: las claves van en el servidor.
 set -Eeuo pipefail
 
@@ -25,11 +28,17 @@ COMPARTIDO=${COMPARTIDO:-"data .env"}
 EXCLUIR=${EXCLUIR:-"/.git /node_modules /data /.env /deploy/desplegar.env"}
 INSTALAR=${INSTALAR:-"npm ci --omit=dev"}
 MIGRAR=${MIGRAR:-}
-PRUEBAS_LOCALES=${PRUEBAS_LOCALES:-"npm test"}
-COMPILAR=${COMPILAR:-"npm run build"}
+PRUEBAS_LOCALES=${PRUEBAS_LOCALES-"npm test"}   # vacío = no hay
+COMPILAR=${COMPILAR-"npm run build"}         # vacío = no hay
 CONSERVAR=${CONSERVAR:-5}
 SALUD_INTENTOS=${SALUD_INTENTOS:-15}
+PRODUCCION=${PRODUCCION:-0}
+RAMA_PRODUCCION=${RAMA_PRODUCCION:-main}
 modo=${1:-desplegar}
+con_datos=${2:-}
+case "$modo" in desplegar|--simular|--atras) ;; *) echo "Opción desconocida: $modo (usa --simular o --atras)." >&2; exit 2 ;; esac
+# Sin forma de comprobar la salud no se despliega: el script la daría por caída y volvería atrás restaurando datos.
+[ -n "$SALUD$SALUD_CMD" ] || { echo "Falta SALUD o SALUD_CMD en $conf: sin eso no se puede saber si la versión nueva responde." >&2; exit 2; }
 
 paso_actual=""
 paso() { paso_actual="$*"; printf '\n== %s\n' "$*"; }
@@ -42,16 +51,25 @@ salud() {
   local i
   for i in $(seq 1 "$SALUD_INTENTOS"); do
     if [ -n "$SALUD_CMD" ]; then remoto "$SALUD_CMD" >/dev/null 2>&1 && return 0
-    elif [ -n "$SALUD" ]; then curl -fsS -m 5 -o /dev/null "$SALUD" && return 0
-    else echo "Sin SALUD ni SALUD_CMD: no se puede comprobar." >&2; return 1; fi
+    else curl -fsS -m 5 -o /dev/null "$SALUD" && return 0; fi
     sleep 2
   done
   return 1
 }
 
 if [ "$modo" = "--atras" ]; then
-  paso "Volviendo a la versión anterior"
-  remoto "cd '$RUTA' && hoy=\$(basename \"\$(readlink actual)\") && anterior=\$(ls -1 versiones | sort | awk -v c=\"\$hoy\" '\$0==c{print p; exit} {p=\$0}') && [ -n \"\$anterior\" ] || { echo 'No hay versión anterior a '\"\$hoy\"; exit 1; } && ln -sfn \"versiones/\$anterior\" actual.nuevo && mv -T actual.nuevo actual && echo \"actual: \$hoy -> \$anterior\""
+  # El código vuelve atrás; los datos, solo con --con-datos. Si la versión que se retira aplicó una migración
+  # que la anterior no entiende, hace falta --con-datos: restaura la copia hecha justo antes de desplegarla
+  # y se pierde lo que se haya escrito desde entonces.
+  [ -z "$con_datos" ] || [ "$con_datos" = "--con-datos" ] || { echo "Opción desconocida: $con_datos" >&2; exit 2; }
+  paso "Volviendo a la versión anterior${con_datos:+ y a sus datos}"
+  restaurar=""
+  if [ "$con_datos" = "--con-datos" ]; then
+    restaurar=" && [ -d \"copias/\$hoy\" ] || { echo 'No hay copia de datos de antes de '\"\$hoy\"; exit 1; } && mkdir -p \"copias/antes-de-volver-\$hoy\" && for f in $COMPARTIDO; do if [ -e \"copias/\$hoy/\$f\" ]; then if [ -e \"compartido/\$f\" ]; then mv \"compartido/\$f\" \"copias/antes-de-volver-\$hoy/\"; fi; cp -a \"copias/\$hoy/\$f\" \"compartido/\$f\"; fi; done && echo \"datos restaurados de copias/\$hoy (lo que había queda en copias/antes-de-volver-\$hoy)\""
+  else
+    echo "Solo vuelve el código. Si la versión que se retira cambió el esquema de datos, repite con: --atras --con-datos"
+  fi
+  remoto "cd '$RUTA' && hoy=\$(basename \"\$(readlink actual)\") && anterior=\$(ls -1 versiones | sort | awk -v c=\"\$hoy\" '\$0==c{print p; exit} {p=\$0}') && [ -n \"\$anterior\" ] || { echo 'No hay versión anterior a '\"\$hoy\"; exit 1; }$restaurar && ln -sfn \"versiones/\$anterior\" actual.nuevo && mv -T actual.nuevo actual && echo \"actual: \$hoy -> \$anterior\""
   [ -n "$REINICIAR" ] && remoto "$REINICIAR"
   salud && echo "La versión anterior responde." || { echo "La versión anterior tampoco responde: revisa el servidor." >&2; exit 1; }
   exit 0
@@ -63,8 +81,22 @@ if [ -n "$(git status --porcelain)" ] && [ "$modo" != "--simular" ]; then
   echo "Hay cambios sin guardar en git. Despliega solo código con commit." >&2; exit 1
 fi
 version="$(date +%Y%m%d-%H%M%S)-$(git rev-parse --short HEAD)"
-echo "Versión: $version (rama $(git branch --show-current))"
-if [ -x "$raiz/deploy/comprobar-texto-demo.sh" ] && [ "${PRODUCCION:-0}" = "1" ]; then
+rama=$(git branch --show-current)
+echo "Versión: $version (rama ${rama:-sin rama})"
+if [ "$PRODUCCION" = "1" ]; then
+  # A producción solo llega la rama de producción, y tal como está en el remoto.
+  if [ "$rama" != "$RAMA_PRODUCCION" ]; then
+    echo "Esto es un despliegue de producción y estás en «${rama:-sin rama}», no en «$RAMA_PRODUCCION»." >&2
+    [ "$modo" = "--simular" ] || exit 1
+  fi
+  if git remote get-url origin >/dev/null 2>&1 && [ "$modo" != "--simular" ]; then
+    git fetch -q origin "$RAMA_PRODUCCION" || { echo "No se ha podido consultar origin/$RAMA_PRODUCCION." >&2; exit 1; }
+    if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$RAMA_PRODUCCION")" ]; then
+      echo "Tu «$RAMA_PRODUCCION» no coincide con la de origin: sube o baja los cambios antes de desplegar." >&2; exit 1
+    fi
+  fi
+fi
+if [ -x "$raiz/deploy/comprobar-texto-demo.sh" ] && [ "$PRODUCCION" = "1" ]; then
   "$raiz/deploy/comprobar-texto-demo.sh" "$raiz"
 fi
 [ -n "$PRUEBAS_LOCALES" ] && bash -c "$PRUEBAS_LOCALES"

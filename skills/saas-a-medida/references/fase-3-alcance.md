@@ -42,4 +42,4 @@ El precio solo aparece si la persona lo da. Nunca lo inventes ni lo estimes en e
 
 ## Se cierra cuando
 
-La persona da el documento por bueno con el menú. Actualiza la tabla «Estado» y anota en `docs/decisiones.md` la versión enviada.
+La persona da el documento por bueno con el menú. Marca la fase como hecha en `fases` de `.claude/saas-a-medida.json` y anota en `docs/decisiones.md` la versión enviada.

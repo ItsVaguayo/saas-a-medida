@@ -22,4 +22,4 @@ Plantilla en `assets/docs/plan-plataforma.md`. Si la fase 2 ya creó el fichero 
 
 ## Se cierra cuando
 
-La persona lo aprueba. Actualiza la tabla «Estado».
+La persona lo aprueba. Marca la fase como hecha en `fases` de `.claude/saas-a-medida.json`.

@@ -2,7 +2,18 @@
 
 ## Lo común
 
-Qué se monta antes del trabajo en paralelo (sesión, roles y permisos, avisos, ajustes, despliegue básico), quién lo hace y si ya viene en la demo.
+Qué se monta antes del trabajo en paralelo, quién lo hace y si ya viene en la demo.
+
+| Qué | Cómo tiene que estar | Hecho |
+|---|---|---|
+| Contraseñas | hash lento (scrypt, bcrypt o argon2) | |
+| Sesión | cookie `HttpOnly`, `Secure`, `SameSite`; caduca; cierre en todos los dispositivos | |
+| Inicio de sesión | límite de intentos y bloqueo temporal | |
+| Permisos | una función común, con el filtro por dueño en la consulta | |
+| Cabeceras | CSP, HSTS, `X-Content-Type-Options`, `Referrer-Policy`, sin iframes | |
+| Errores | formato único, sin trazas | |
+| CI | tests, lint y compilación en cada PR | |
+| Despliegue | `deploy/desplegar.sh` a la instancia de demo, vuelta atrás probada | |
 
 ## Reparto
 
@@ -28,6 +39,7 @@ Qué se monta antes del trabajo en paralelo (sesión, roles y permisos, avisos, 
 - `develop`: lo integrado y probado.
 - `modulo/<nombre>`: una por módulo, sale de `develop` y vuelve con un PR.
 - `arreglo/<tema>`: correcciones pequeñas.
+- `docs/<tema>`: documentos comunes (decisiones, dudas, estado de las fases). PR pequeño que se integra en el momento.
 
 Paso a paso:
 
@@ -39,6 +51,7 @@ git switch -c modulo/<nombre>
 # Subirlo y pedir revisión
 git push -u origin modulo/<nombre>
 gh pr create --base develop --reviewer <usuario>
+gh pr checks --watch        # el CI tiene que acabar en verde
 
 # Cuando está aprobado: «Squash and merge» en GitHub y borrar la rama
 git switch develop && git pull && git branch -d modulo/<nombre>
@@ -54,8 +67,8 @@ De `develop` a `main` en cada entrega, con merge commit y etiqueta de versión.
 
 ## Cuándo está hecho un módulo
 
-1. Pasan los tests de su especificación.
+1. Pasan los tests de su especificación y el CI está en verde.
 2. Ha pasado las revisiones de la fase 7 y lo encontrado está resuelto.
 3. Alguien lo ha probado en el móvil y en el ordenador con la semilla.
 4. Su PR está aprobado e integrado en `develop`.
-5. `docs/avance.md` está actualizado.
+5. Su fichero de `docs/avance/` está al día, dentro del mismo PR.

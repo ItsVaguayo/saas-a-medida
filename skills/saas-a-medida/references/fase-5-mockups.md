@@ -68,4 +68,4 @@ Los colores y la tipografía quedan fijados aquí, antes de que nadie construya 
 
 ## Se cierra cuando
 
-La persona elige una dirección con el menú y el estilo queda fijado en variables. Actualiza la tabla «Estado».
+La persona elige una dirección con el menú y el estilo queda fijado en variables. Marca la fase como hecha en `fases` de `.claude/saas-a-medida.json`.

@@ -6,9 +6,11 @@ Pasar de la demo a la app que el cliente usa de verdad. Es la fase en la que un 
 
 1. `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-texto-demo.sh" <carpeta del código>` tiene que terminar sin nada. Si lista textos de demo, quítalos (o conviértelos en ayuda real si la persona lo decide con el menú) y vuelve a pasarlo.
 2. Quita el aviso de modo demo, el selector de «entrar como» sin contraseña, el botón de reiniciar la demo y la semilla de ejemplo del arranque de producción.
-3. Los datos reales del cliente se importan con un script aparte, nunca metidos en la semilla.
+3. Los datos reales del cliente se importan con el script de migración, que ya se ensayó en la fase 8 (`desarrollo-backend.md`), nunca metidos en la semilla. Se pasa con copia hecha antes, y el cliente cuadra los totales y revisa diez fichas antes de dar de alta a los usuarios.
 
 ## 2. Seguridad
+
+Contraseñas, sesión, límite de intentos y cabeceras se montaron con lo común (fase 6). Aquí se comprueba que siguen así con todos los módulos dentro; si alguna no se cumple, es un fallo que viene de atrás y va también a `docs/lecciones.md`.
 
 | Comprobación | Cómo |
 |---|---|
@@ -45,13 +47,17 @@ La facturación legal (VeriFactu) queda fuera salvo que el contrato diga lo cont
 
 El despliegue lo hace un script que vive en el repo (`deploy/`), nunca comandos a mano. Si el proyecto no tiene uno, parte de `${CLAUDE_SKILL_DIR}/assets/despliegue/`: `desplegar.sh` y `desplegar.env.ejemplo`, pensados para un servidor Linux por SSH. El script:
 
-1. Se niega si hay cambios sin commit, y pasa los tests y la compilación en local.
+1. Se niega si no tiene forma de comprobar la salud, si hay cambios sin commit o, con `PRODUCCION=1`, si no estás en `main` o tu `main` no coincide con la de GitHub. Pasa los tests y la compilación en local.
 2. Hace copia de los datos compartidos (la base de datos con `sqlite3 .backup` si es SQLite) antes de tocar nada.
 3. Sube la versión a su propia carpeta (`versiones/<fecha>-<commit>`). Las exclusiones de `rsync` van ancladas: `/data`, no `data`, que también borraría carpetas `data` dentro de `node_modules`.
 4. Instala dependencias exactas y aplica las migraciones. Si algo falla aquí, para sin tocar la versión activa.
 5. Cambia el enlace `actual` a la versión nueva, reinicia y comprueba la salud (una URL o un comando).
 6. Si la salud falla, vuelve solo a la versión anterior, restaura la copia de datos y guarda la versión fallida aparte para revisarla.
-7. `--atras` vuelve a la versión anterior a mano y `--simular` enseña lo que haría.
+7. `--atras` vuelve al código de la versión anterior sin tocar los datos; `--atras --con-datos` restaura además la copia de antes de esa versión, para cuando una migración cambió algo que la versión anterior no entiende (se pierde lo escrito desde entonces, y lo que había queda guardado aparte). `--simular` enseña lo que haría.
+
+Para que casi nunca haga falta `--con-datos`, las migraciones solo añaden (`desarrollo-backend.md`, punto 1).
+
+A estas alturas el script ya lleva tiempo desplegando `develop` en la instancia de demo (fase 6). Producción es otro fichero de configuración, `deploy/desplegar.env`, con `PRODUCCION=1`.
 
 Para el primer despliegue: crea en el servidor `RUTA/compartido/` con el `.env` de producción y la carpeta de datos, rellena `deploy/desplegar.env` (sin secretos), copia también `comprobar-texto-demo.sh` a `deploy/` para que el script lo pase con `PRODUCCION=1`, y prueba antes con `--simular`.
 
@@ -59,7 +65,8 @@ Además:
 
 - Variables de entorno y secretos fuera del repo, en el servidor.
 - HTTPS con renovación automática del certificado.
-- Copias de seguridad cada noche, guardando al menos las dos últimas semanas, y una restauración de prueba antes de dar la fase por cerrada.
+- Copias de seguridad cada noche con `copia-nocturna.sh` (en `${CLAUDE_SKILL_DIR}/assets/despliegue/`): se copia al servidor junto con su `copia.env` y se programa con cron. Guarda dos semanas y manda cada copia a otra máquina o a un almacenamiento externo; si no tiene destino externo configurado, falla a propósito. Las copias que hace `desplegar.sh` antes de cada despliegue viven en el mismo servidor y no cuentan como copia de seguridad.
+- Una restauración de prueba antes de dar la fase por cerrada: `copia-nocturna.sh copia.env --probar`, y además levantar la app en otra instancia con esa copia y entrar.
 - Un aviso si la app deja de responder y registros de errores que se puedan consultar.
 
 Desplegar en el servidor del cliente o en el nuestro, con qué dominio y con qué proveedor son decisiones de la persona: pregúntalas con el menú.
@@ -68,9 +75,9 @@ Desplegar en el servidor del cliente o en el nuestro, con qué dominio y con qu�
 
 1. Alta de los usuarios reales con invitación (cada uno elige su contraseña).
 2. Una guía de uso corta por rol, en PDF con el estilo de `estilo-documentos.md`, con capturas de la app real.
-3. `docs/soporte.md` con qué cubre el soporte y cómo se pide un cambio.
+3. `docs/soporte.md` con qué cubre el soporte, cómo se pide un cambio, de quién es el código y quién paga el servidor y el dominio (fase 1, pregunta 11).
 4. Etiqueta de versión en `main` (`v1.0`).
 
 ## Se cierra cuando
 
-La app funciona en producción, las copias se hacen y se ha probado una restauración. Actualiza la tabla «Estado» y pasa a la fase 10.
+La app funciona en producción, las copias se hacen, salen del servidor y se ha probado una restauración. Marca la fase como hecha en `fases` de `.claude/saas-a-medida.json`, apunta las lecciones del proyecto (`lecciones.md`) y pasa a la fase 10.

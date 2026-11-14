@@ -59,7 +59,7 @@ En los dos casos, aplica la respuesta primero en la especificación o en el docu
 
 ## Copia en el repo
 
-Después de cada cambio en el panel, regenera `docs/dudas-cliente.md` a partir de la base de datos (un `list` de `dudas` y otro de `tecnico`): abiertas, respondidas y aplicadas, con su detalle. Así queda historial en git y lo ve quien no tenga acceso al panel.
+Después de cada cambio en el panel, regenera `docs/dudas-cliente.md` a partir de la base de datos (un `list` de `dudas` y otro de `tecnico`): abiertas, respondidas y aplicadas, con su detalle. Así queda historial en git y lo ve quien no tenga acceso al panel. En pareja o grupo, ese fichero no se sube desde la rama de un módulo: va en una rama `docs/dudas` con su PR pequeño, para que dos personas no lo regeneren a la vez en ramas distintas.
 
 ## Mandarlas al cliente
 

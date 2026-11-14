@@ -9,8 +9,8 @@ Esta skill lleva un SaaS a medida desde la primera información del cliente hast
 
 ## Al empezar cada sesión
 
-1. Busca `.claude/saas-a-medida.json` en la raíz del repo. Si no existe, el proyecto no ha empezado: ve a la fase 0.
-2. Lee la tabla «Estado» del `CLAUDE.md` del proyecto. Puede haber varias fases abiertas a la vez (por ejemplo, desarrollo con dudas del cliente pendientes de la fase 1). Trabaja en la que pida la persona.
+1. Busca `.claude/saas-a-medida.json` en la raíz del repo. Si no existe, ve a la fase 0: por el principio si la carpeta está vacía, o por «Si el proyecto ya está empezado» si ya hay código o documentos.
+2. Mira el campo `fases` de ese fichero (el aviso de inicio de sesión ya te dice cuáles están en curso). Puede haber varias fases abiertas a la vez (por ejemplo, desarrollo con dudas del cliente pendientes de la fase 1). Trabaja en la que pida la persona.
 3. Si un aviso de inicio de sesión dice que hay PR de compañeros esperando revisión o cambios pedidos en los suyos, díselo a la persona en tu primera respuesta y ofrécele revisarlos (fase 7, «Revisar el PR de un compañero»).
 4. Lee solo la referencia de la fase en la que estás. No cargues todas.
 
@@ -23,7 +23,9 @@ Las rutas de esta skill: los scripts están en `${CLAUDE_SKILL_DIR}/scripts/`, l
 - **Los textos de la interfaz se escriben como en las apps reales**, sin explicar de más ni anunciar funcionalidades: `references/textos-interfaz.md`. El texto que explica cómo funciona algo en una demo se permite, pero marcado como texto de demo y fuera antes de producción: `references/texto-demo.md`.
 - **Nada sale al cliente sin que lo revise la persona**: documentos, mensajes, demos, respuestas. Tú lo preparas y ella lo envía.
 - **Los planes no llevan fechas ni semanas.** El orden lo dan las dependencias. Si la persona da una fecha, se apunta como dato, no se reparte el trabajo por semanas.
-- **La especificación manda** sobre cualquier conversación. Si el código y la especificación no coinciden en un nombre, gana el código y se corrige la especificación.
+- **La especificación manda** sobre cualquier conversación y sobre el código. Si el código hace algo distinto de lo que dice, es un error y se arregla el código; si lo que hay que cambiar es la regla, se cambia primero en la especificación. La única excepción son los nombres (de un campo, una ruta o un estado): si no coinciden, se deja el del código y se corrige la especificación.
+- **Al construir se siguen `references/desarrollo-backend.md` y `references/desarrollo-frontend.md`.** Dicen paso a paso cómo se hace cada cosa y cómo se comprueba, y valen para cualquier modelo o agente que trabaje en el proyecto.
+- **Desde la rama de un módulo solo se toca lo de ese módulo.** Los documentos comunes (`docs/decisiones.md`, `docs/dudas.md`, `docs/dudas-cliente.md`, el estado de las fases) se cambian en una rama `docs/<tema>` con su PR pequeño, que se integra en el momento. Trabajando solo se pueden cambiar directamente en `develop`.
 - **Las dudas no se quedan en el chat.** Las del cliente van al panel de dudas (`references/dudas-cliente.md`); las del equipo, a `docs/dudas.md`; las decisiones tomadas, a `docs/decisiones.md`.
 - **Pregunta antes de construir** algo que cambie permisos o envíe datos a terceros (familias, clientes finales, otras empresas).
 - **Ningún dato personal real del cliente** en la semilla, en los tests ni en el repo, aunque nos pase el Excel.
@@ -43,13 +45,13 @@ En pareja o en grupo, una persona habla con el cliente (campo `contacto_cliente`
 | 3. Documento de alcance | `docs/viabilidad.md` y el PDF de alcance para el cliente | la persona lo revisa y lo envía ella | `references/fase-3-alcance.md` |
 | 4. Plan de la plataforma | `docs/plan-plataforma.md` | la persona lo aprueba | `references/fase-4-plan-plataforma.md` |
 | 5. Mockups y estilo | dos o tres direcciones, estilo fijado en variables | la persona elige una dirección | `references/fase-5-mockups.md` |
-| 6. Plan técnico | `docs/especificacion.md`, `docs/plan-tecnico.md`, `docs/avance.md` | la persona lo da por bueno | `references/fase-6-plan-tecnico.md` |
+| 6. Plan técnico | `docs/especificacion.md`, `docs/plan-tecnico.md`, `docs/avance/` | la persona lo da por bueno | `references/fase-6-plan-tecnico.md` |
 | 7. Desarrollo por módulos | un PR por módulo, revisado e integrado | todos los módulos están en `develop` | `references/fase-7-desarrollo.md` |
-| 8. Demo al cliente | guion, datos de demo, correcciones en la especificación | el cliente da su conformidad | `references/fase-8-demo.md` |
-| 9. Producción | app desplegada con seguridad y legal hechos | la app funciona en producción con copias | `references/fase-9-produccion.md` |
+| 8. Demo al cliente | guion, datos de demo, ensayo de la migración, correcciones en la especificación | el cliente da su conformidad por escrito | `references/fase-8-demo.md` |
+| 9. Producción | app desplegada con seguridad y legal hechos, datos reales dentro | la app funciona en producción con copias fuera del servidor | `references/fase-9-produccion.md` |
 | 10. Soporte | registro de cambios e incidencias | no se cierra | `references/fase-10-soporte.md` |
 
-Al cerrar una fase, actualiza su fila en la tabla «Estado» del `CLAUDE.md` del proyecto, para que el siguiente que abra Claude sepa dónde está.
+Al cerrar una fase, cambia su estado en `fases` de `.claude/saas-a-medida.json` (`pendiente`, `en curso` o `hecha`), para que el siguiente que abra Claude sepa dónde está. Al cerrar las fases 8 y 9, y cuando un error de soporte venga de algo que la skill debería haber evitado, apunta en `docs/lecciones.md` qué falló y qué habría que cambiar en la skill (`references/lecciones.md`).
 
 ## Qué skill usar en cada momento
 
@@ -61,9 +63,9 @@ El detalle, con nombres exactos y alternativas, está en `references/skills.md`.
 | Datos sensibles o IA dentro de la app | triaje de privacidad y de IA (`references/legal.md`) |
 | Mockups y diseño | `frontend-design`, `impeccable` |
 | Plan técnico | `compound-engineering:ce-plan` si está instalada; si no, la plantilla de la fase 6 |
-| Cada módulo | `feature-dev` |
-| Antes de cada PR | `/code-review` y `/simplify` |
-| Antes de un PR con pantallas | revisión de diseño, móvil y accesibilidad, y `break-ui` |
+| Cada módulo | `feature-dev`, con `references/desarrollo-backend.md` y `references/desarrollo-frontend.md` |
+| Antes de cada PR | `/simplify` y después `/code-review`; con pantallas, también `break-ui` |
+| Antes de la demo, una vez sobre `develop` | revisión completa de diseño, móvil y accesibilidad |
 | Revisar el PR de un compañero | `/code-review <número>` y `pr-review-toolkit` |
 | Producción | `/security-review`, `claude-security`, `references/legal.md`, script de `assets/despliegue/` |
 
@@ -77,4 +79,6 @@ Si una skill no está instalada, sigue sin ella, dilo y ofrece instalarla con `b
 - `references/referencias-reales.md`: buscar productos reales antes de diseñar o modelar.
 - `references/legal.md`: triaje de privacidad y de IA, y los documentos legales de producción.
 - `references/textos-interfaz.md` y `references/texto-demo.md`: textos de la app.
+- `references/desarrollo-backend.md` y `references/desarrollo-frontend.md`: cómo se construye y se comprueba cada módulo.
+- `references/lecciones.md`: qué se apunta al cerrar para mejorar la skill.
 - `references/skills.md` y `references/ahorro-tokens.md`.

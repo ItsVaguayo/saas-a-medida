@@ -19,7 +19,7 @@ Qué hacen, cómo trabajan hoy, qué les duele y qué quieren conseguir. Copia s
 Estas preguntas van primero. Cada una lleva el motivo, para saber qué hacer con una respuesta a medias.
 
 1. **Integraciones.** ¿Con qué sistemas tiene que hablar la app (pasarelas de pago, ERP, programa de facturación, web, proveedores, Google, WhatsApp, correo)? ¿El cliente tiene acceso técnico (API, exportación, FTP) o solo entra por la web? Sin acceso técnico la integración no existe y el proceso sigue a mano. Es lo que más veces cambia un presupuesto.
-2. **Datos que ya existen.** ¿De dónde salen hoy (Excel, otro programa, papel)? ¿Cuántos registros, en qué formato y con qué calidad? Migrar datos sucios cuesta más que construir la pantalla.
+2. **Datos que ya existen.** ¿De dónde salen hoy (Excel, otro programa, papel)? ¿Cuántos registros, en qué formato y con qué calidad? ¿Tienen que entrar en la app nueva o se empieza en blanco? Migrar datos sucios cuesta más que construir la pantalla. Si entran, pide ya un ejemplo real: la migración será un módulo de la especificación (fase 6).
 3. **Usuarios y roles.** ¿Qué tipos de persona entran y qué ve cada una? ¿Entra gente de fuera de la empresa (clientes finales, familias, proveedores)? Cada rol externo multiplica permisos, avisos y casos límite.
 4. **Dinero.** ¿La app cobra, factura, gestiona suscripciones o solo apunta pagos hechos fuera? Cobrar online implica pasarela y conciliación. La facturación legal (en España, VeriFactu) queda fuera salvo que se pacte.
 5. **Datos sensibles.** ¿Hay menores, salud, datos biométricos, ubicación o seguimiento de personas? Si sí, haz el triaje de privacidad de `legal.md`: puede hacer falta una evaluación de impacto antes de construir. Apunta el resultado en `docs/privacidad.md`.
@@ -28,6 +28,8 @@ Estas preguntas van primero. Cada una lleva el motivo, para saber qué hacer con
 8. **Móvil.** ¿Basta con una web que se use bien en el móvil o hace falta instalarla? ¿Tiene que funcionar sin conexión? Sin conexión es otro proyecto.
 9. **IA dentro de la app.** ¿Alguna función decide, clasifica o genera con IA? Si sí, haz el triaje de IA de `legal.md` y presupuesta el coste por uso.
 10. **Volumen.** ¿Cuántas personas a la vez en el momento de más carga? ¿Hay horas en las que una caída sale cara?
+11. **De quién es y dónde vive.** ¿El código pasa a ser del cliente al pagar o se le da una licencia de uso? ¿En qué servidor irá, a nombre de quién y quién lo paga cada mes? ¿Y el dominio? Si esto no está escrito en el contrato, es una duda para quien vende antes de la fase 3: cambia el precio, el soporte y lo que pasa si el cliente se va.
+12. **Quién decide.** Una persona del cliente, con nombre, que contesta las dudas y da la conformidad en la demo. Si son varias y no coinciden, las correcciones no terminan nunca.
 
 Pregunta también, con el menú, si ya hay un precio cerrado con el cliente. A menudo el precio se fija al vender, antes de esta fase. Si lo hay, el documento de alcance de la fase 3 dirá qué entra por ese precio; si no, servirá para fijarlo.
 
@@ -52,4 +54,4 @@ Déjalas como lista aparte en `docs/informacion-cliente.md`, cada una con qué r
 
 ## Se cierra cuando
 
-Todas las preguntas de la parte A tienen respuesta o están en el panel de dudas como riesgo. Actualiza la tabla «Estado».
+Todas las preguntas de la parte A tienen respuesta o están en el panel de dudas como riesgo. Marca la fase como hecha en `fases` de `.claude/saas-a-medida.json`.

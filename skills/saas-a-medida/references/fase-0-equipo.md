@@ -2,6 +2,15 @@
 
 Deja el proyecto listo para que cualquiera que abra Claude en él sepa quién trabaja, dónde está cada cosa y en qué fase va.
 
+## Si el proyecto ya está empezado
+
+Hay código o documentos, pero no `.claude/saas-a-medida.json`. No se rehace nada: se pone la skill encima de lo que hay.
+
+1. Haz los pasos 1 a 4 de abajo igual. En el paso 3 no crees ramas que ya existan ni pises un `CLAUDE.md` o una plantilla de PR que ya estén: añade lo que falte y pregunta con el menú si algo choca.
+2. Mira qué hay de cada fase y propón su estado. Para darla por hecha tiene que existir lo que sale de ella (columna «Qué sale» de la tabla de fases), con el nombre que sea: si el alcance está en un PDF enviado, la fase 3 está hecha; si la especificación son notas sueltas, la fase 6 no lo está.
+3. Enseña la propuesta como tabla (fase, estado, en qué te basas, qué falta) y confírmala con el menú. Lo que falte de una fase ya pasada no se rehace entero: se apunta como tarea concreta. Lo mínimo para poder seguir en la fase 7 es una especificación de los módulos que quedan y la tabla de roles y permisos.
+4. Si la app ya está en producción, comprueba hoy tres cosas de la fase 9 antes de tocar nada más: que hay copias y salen del servidor, que el despliegue va por script y que se puede volver atrás.
+
 ## 1. Quién trabaja
 
 Pregunta con el menú (ver `decisiones.md`):
@@ -35,6 +44,7 @@ Copia desde `${CLAUDE_SKILL_DIR}/assets/`:
 | `CLAUDE.md` | raíz del repo, rellenado |
 | `settings.json` | `.claude/settings.json` (si ya existe, mezcla las claves sin borrar nada) |
 | `pull_request_template.md` | `.github/pull_request_template.md` |
+| `github/ci.yml` | `.github/workflows/ci.yml`, con los comandos del stack cuando se conozca (fase 2) |
 | `docs/informacion-cliente.md`, `docs/dudas.md`, `docs/decisiones.md` | `docs/` |
 
 El resto de plantillas de `assets/docs/` se copian en la fase que las usa.
@@ -50,6 +60,7 @@ El resto de plantillas de `assets/docs/` se copian en la fase que las usa.
 
 ## 5. Cerrar la fase
 
-- Rellena la tabla «Estado» del `CLAUDE.md`: fase 0 hecha, fase 1 en curso.
+- En `fases` de `.claude/saas-a-medida.json`: fase 0 hecha, fase 1 en curso.
+- Con el repo ya en GitHub, protege `develop` y `main` para que todo entre por PR y con el CI en verde: `bash "${CLAUDE_SKILL_DIR}/scripts/proteger-ramas.sh" --aprobaciones 1` (`0` trabajando solo; `--simular` enseña lo que haría). Cambia la configuración del repo, así que pregúntalo antes con el menú. En un repo privado sin plan de pago GitHub no lo permite: el script lo dice, y entonces el CI avisa pero no impide integrar.
 - Apunta en `docs/decisiones.md` el modo de trabajo, quién lleva el contacto y dónde van los documentos.
 - Si es en pareja o grupo, propón a la persona hacer el primer commit en `develop` y subirlo, para que los demás clonen el repo con todo esto. Haz el commit y el push solo si te lo confirma.

@@ -12,12 +12,18 @@
 
 ## Revisiones pasadas
 
-- [ ] `/code-review` y `/simplify`
-- [ ] Tests de la especificación en verde
-- [ ] Diseño, móvil y accesibilidad (si hay pantallas)
-- [ ] Datos extremos con `break-ui` (si hay pantallas)
+- [ ] Listas «Antes de darlo por hecho» de las guías de backend y de pantallas
+- [ ] `/simplify` y, después, `/code-review`
+- [ ] Tests de la especificación y CI en verde
+- [ ] Datos extremos con `break-ui` y prueba a 375 px (si hay pantallas)
+- [ ] Un test por cada «solo lo suyo» (si hay rutas nuevas)
 - [ ] `/security-review` (si toca sesión, permisos, ficheros, pagos o datos sensibles)
 - [ ] Textos de interfaz revisados; las explicaciones van en bloques de texto de demo
+- [ ] Su fichero de `docs/avance/` al día; ningún documento común tocado
+
+## Qué no se ha podido comprobar
+
+<!-- Lo que no se ha probado y por qué. Si no hay nada, «nada». -->
 
 ## Qué falta o queda abierto
 

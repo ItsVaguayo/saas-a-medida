@@ -16,7 +16,7 @@ Decide sobre qué se construye. Casi siempre ya existe una demo de esta misma pl
 2. Léete su README y su guion de demo si lo tiene. Arráncala siguiendo su README y comprueba que funciona.
 3. Haz el inventario en `docs/plan-plataforma.md`, sección «Lo que ya hace la demo» (plantilla en `assets/docs/`): pantallas, módulos, roles, datos de ejemplo y, sobre todo, qué es real y qué está simulado. El código de una demo se hace para enseñar: un botón que funciona en la demo puede no guardar nada.
 4. **El stack es el de la demo.** No lo cambies sin un motivo escrito en `docs/decisiones.md` y sin preguntarlo con el menú, explicando qué se pierde. Mantener varios stacks es la deuda más cara para quien da soporte después.
-5. Apunta en el `CLAUDE.md` del proyecto los comandos para arrancarla, probarla y reiniciar sus datos.
+5. Apunta en el `CLAUDE.md` del proyecto los comandos para arrancarla, probarla y reiniciar sus datos, y pon esos mismos comandos en `.github/workflows/ci.yml`.
 
 ## 3. Si hay un SaaS o una web de referencia
 
@@ -35,4 +35,4 @@ Igualmente, nada se inventa:
 
 ## Se cierra cuando
 
-La persona confirma la base y el stack. Actualiza la tabla «Estado» y anota la decisión en `docs/decisiones.md`.
+La persona confirma la base y el stack, y el CI pasa en verde sobre esa base. Marca la fase como hecha en `fases` de `.claude/saas-a-medida.json` y anota la decisión en `docs/decisiones.md`.
