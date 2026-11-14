@@ -84,7 +84,7 @@ Explícalo en el plan en lenguaje llano, con los comandos de cada paso (crear la
 
 En modo individual también se trabaja con rama y PR: el PR es donde corre el CI y desde donde se deshace un módulo entero si hace falta.
 
-`develop` y `main` están protegidas (fase 0): nada entra sin PR ni con el CI en rojo. Si GitHub no deja protegerlas en este repo, la regla es la misma y la cumple quien integra.
+`develop` y `main` llevan la protección que se eligió en la fase 0 (campo `proteccion` del fichero de proyecto). Con `ninguna`, la regla es la misma (nada entra sin PR ni con el CI en rojo) y la cumple quien integra, porque GitHub no lo impide. Al escribir el reparto, si el equipo ha crecido o cambia el modo de trabajo, vuelve a preguntar el nivel con el menú.
 
 ### Revisiones
 

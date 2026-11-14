@@ -4,12 +4,13 @@ Deja el proyecto listo para que cualquiera que abra Claude en él sepa quién tr
 
 ## Si el proyecto ya está empezado
 
-Hay código o documentos, pero no `.claude/saas-a-medida.json`. No se rehace nada: se pone la skill encima de lo que hay.
+Hay código o documentos, pero no `.claude/saas-a-medida.json` (o le falta el campo `fases`). No se rehace nada ni se empieza por la fase 1: se pone la skill encima de lo que hay y se sigue desde donde esté.
 
-1. Haz los pasos 1 a 4 de abajo igual. En el paso 3 no crees ramas que ya existan ni pises un `CLAUDE.md` o una plantilla de PR que ya estén: añade lo que falte y pregunta con el menú si algo choca.
-2. Mira qué hay de cada fase y propón su estado. Para darla por hecha tiene que existir lo que sale de ella (columna «Qué sale» de la tabla de fases), con el nombre que sea: si el alcance está en un PDF enviado, la fase 3 está hecha; si la especificación son notas sueltas, la fase 6 no lo está.
-3. Enseña la propuesta como tabla (fase, estado, en qué te basas, qué falta) y confírmala con el menú. Lo que falte de una fase ya pasada no se rehace entero: se apunta como tarea concreta. Lo mínimo para poder seguir en la fase 7 es una especificación de los módulos que quedan y la tabla de roles y permisos.
-4. Si la app ya está en producción, comprueba hoy tres cosas de la fase 9 antes de tocar nada más: que hay copias y salen del servidor, que el despliegue va por script y que se puede volver atrás.
+1. Ejecuta `python3 "${CLAUDE_SKILL_DIR}/scripts/detectar-fase.py"` en la raíz del proyecto. Mira los ficheros y el historial de git y propone el estado de cada fase con el rastro en el que se basa: `hecha`, `en curso`, `pendiente` o `hueco` (no hay rastro de esa fase, pero sí trabajo de fases posteriores).
+2. El script solo ve lo que hay en la carpeta. Completa su propuesta con lo que no puede ver: abre los documentos que encontró para comprobar que dicen lo que su nombre promete, y pregunta a la persona por lo que vive fuera del repo (un alcance enviado por correo, una demo ya enseñada, si está en producción). Para dar una fase por hecha tiene que existir lo que sale de ella (columna «Qué sale» de la tabla de fases), con el nombre que sea: si el alcance está en un PDF enviado, la fase 3 está hecha; si la especificación son notas sueltas, la fase 6 no lo está.
+3. Enseña la tabla (fase, estado, en qué te basas) y confírmala con el menú: una pregunta para la fase en la que se sigue trabajando, con la que propone el script como primera opción, y otra para qué hacer con los huecos. Cada hueco se puede rellenar ahora, apuntar como tarea para más adelante o dar por no necesario; no se rehace una fase entera por sistema. Lo mínimo para poder seguir en la fase 7 es una especificación de los módulos que quedan y la tabla de roles y permisos.
+4. Haz los pasos 1 a 6 de abajo igual, escribiendo en `fases` lo confirmado. En el paso 3 no crees ramas que ya existan ni pises un `CLAUDE.md` o una plantilla de PR que ya estén: añade lo que falte y pregunta con el menú si algo choca.
+5. Si la app ya está en producción, comprueba hoy tres cosas de la fase 9 antes de tocar nada más: que hay copias y salen del servidor, que el despliegue va por script y que se puede volver atrás.
 
 ## 1. Quién trabaja
 
@@ -51,16 +52,29 @@ El resto de plantillas de `assets/docs/` se copian en la fase que las usa.
 
 `.claude/settings.json` declara el marketplace de esta skill y la activa para el proyecto. Así, quien abra el repo sin tenerla ve en `/plugin` que falta y el comando para instalarla. El `CLAUDE.md` del proyecto también lo explica.
 
-## 4. Skills y herramientas
+## 4. Protección de las ramas
+
+Pregunta con el menú cuánto se protege `develop` y `main` en GitHub. Explica antes, en una frase, qué es: GitHub puede impedir que se suba código directo a esas ramas y obligar a que todo pase por un PR con los tests en verde.
+
+| Opción | Qué pasa | Para quién |
+|---|---|---|
+| `pr` | Todo entra por PR y con el CI en verde. Nadie tiene que aprobar | recomendada trabajando solo |
+| `revision` | Lo anterior y, además, otra persona tiene que aprobar cada PR | recomendada en pareja o grupo |
+| `estricta` | Lo anterior y ni siquiera quien administra el repo puede saltárselo | cuando hay datos delicados o gente nueva en el equipo; una urgencia también pasa por PR |
+| `ninguna` | Se puede subir directo. El CI avisa en rojo pero no impide integrar | prototipos y repos privados sin plan de pago de GitHub, donde la protección no existe |
+
+Pon primero la recomendada según el modo de trabajo. Guarda la respuesta en `proteccion` de `.claude/saas-a-medida.json` y en `docs/decisiones.md`. Se aplica al cerrar la fase, cuando el repo ya está en GitHub, y se puede cambiar más adelante volviendo a preguntar y a pasar el script.
+
+## 5. Skills y herramientas
 
 1. Ejecuta `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh"`. Lista las skills recomendadas que faltan y las opcionales.
 2. Pregunta con el menú (`multiSelect: true`) qué grupos opcionales instalar, explicando qué aporta cada uno y cuánto pesa en tokens (los servidores MCP cargan sus herramientas en cada mensaje).
 3. Instala lo elegido con `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh" --instalar <grupos>`.
 4. Comprueba que hay Google Chrome o Chromium para generar los PDF y `gh` identificado para los avisos de PR. Si falta algo, dilo con el comando para instalarlo.
 
-## 5. Cerrar la fase
+## 6. Cerrar la fase
 
 - En `fases` de `.claude/saas-a-medida.json`: fase 0 hecha, fase 1 en curso.
-- Con el repo ya en GitHub, protege `develop` y `main` para que todo entre por PR y con el CI en verde: `bash "${CLAUDE_SKILL_DIR}/scripts/proteger-ramas.sh" --aprobaciones 1` (`0` trabajando solo; `--simular` enseña lo que haría). Cambia la configuración del repo, así que pregúntalo antes con el menú. En un repo privado sin plan de pago GitHub no lo permite: el script lo dice, y entonces el CI avisa pero no impide integrar.
-- Apunta en `docs/decisiones.md` el modo de trabajo, quién lleva el contacto y dónde van los documentos.
+- Con el repo ya en GitHub, aplica la protección elegida en el paso 4: `bash "${CLAUDE_SKILL_DIR}/scripts/proteger-ramas.sh"` (lee el nivel del fichero de proyecto; `--simular` enseña lo que haría). En un repo privado sin plan de pago GitHub no lo permite: el script lo dice, y entonces díselo a la persona y deja `proteccion` en `ninguna`.
+- Apunta en `docs/decisiones.md` el modo de trabajo, quién lleva el contacto, dónde van los documentos y el nivel de protección de las ramas.
 - Si es en pareja o grupo, propón a la persona hacer el primer commit en `develop` y subirlo, para que los demás clonen el repo con todo esto. Haz el commit y el push solo si te lo confirma.

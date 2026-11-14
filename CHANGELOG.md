@@ -5,7 +5,7 @@
 Desarrollo
 - Dos guías nuevas, `desarrollo-backend.md` y `desarrollo-frontend.md`: el procedimiento y la comprobación de cada paso, escritas para que las siga cualquier modelo o agente.
 - Las revisiones van en dos niveles: en cada PR, `/simplify`, `/code-review`, `break-ui` y seguridad si toca; antes de la demo, una pasada completa de diseño, móvil y accesibilidad sobre `develop`. `/simplify` pasa a ir antes que `/code-review`.
-- Plantilla de CI (`assets/github/ci.yml`) y `scripts/proteger-ramas.sh`.
+- Plantilla de CI (`assets/github/ci.yml`) y `scripts/proteger-ramas.sh`. El nivel de protección de `develop` y `main` (ninguna, pr, revision o estricta) se elige con el menú en la fase 0 y se guarda en `proteccion`.
 - La seguridad de sesión, contraseñas y cabeceras se exige al montar lo común (fase 6) y se vuelve a comprobar en producción.
 - La migración de los datos reales es un módulo de la especificación, con ensayo en la fase 8.
 
@@ -17,7 +17,7 @@ Documentos del proyecto
 - `docs/lecciones.md` y `references/lecciones.md`: qué se apunta al cerrar para mejorar la skill.
 
 Fases
-- Fase 0: entrada para un proyecto ya empezado.
+- Fase 0: entrada para un proyecto ya empezado. `scripts/detectar-fase.py` mira los ficheros y el historial y propone en qué fase está, para seguir desde ahí en vez de empezar por la primera.
 - Fase 1: de quién es el código, quién paga el servidor y quién decide por parte del cliente.
 - Fase 8: la conformidad del cliente queda por escrito.
 

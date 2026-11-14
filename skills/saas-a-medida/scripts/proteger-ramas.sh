@@ -1,28 +1,44 @@
 #!/usr/bin/env bash
-# Protege develop y main en GitHub: nadie sube directo, todo entra por PR y con el CI en verde.
+# Pone en GitHub el nivel de protección de develop y main que eligió el equipo.
 # Uso, desde la raíz del repo del proyecto:
-#   proteger-ramas.sh [--aprobaciones N] [--simular]
-#     --aprobaciones N   revisiones aprobadas que hacen falta para integrar (0 trabajando solo, 1 en pareja o grupo)
-#     --simular          enseña lo que enviaría sin cambiar nada
+#   proteger-ramas.sh [--nivel ninguna|pr|revision|estricta] [--simular]
+#
+#   ninguna    sin protección: se puede subir directo. El CI avisa pero no impide nada.
+#   pr         todo entra por PR y con el CI en verde. No hace falta que nadie apruebe.
+#   revision   lo anterior y, además, una aprobación de otra persona.
+#   estricta   lo anterior y, además, tampoco se lo puede saltar quien administra el repo.
+#
+# Sin --nivel usa el campo «proteccion» de .claude/saas-a-medida.json. --simular enseña lo que enviaría.
 # Hace falta gh identificado con permiso de administración del repo. En repos privados, la protección
 # de ramas exige un plan de pago de GitHub: si no lo hay, el script lo dice y no cambia nada.
 set -euo pipefail
-aprobaciones=1; simular=0
+nivel=""; simular=0
 while [ $# -gt 0 ]; do
   case "$1" in
-    --aprobaciones) aprobaciones=${2:?Falta el número}; shift 2 ;;
+    --nivel) nivel=${2:?Falta el nivel}; shift 2 ;;
     --simular) simular=1; shift ;;
     *) echo "Opción desconocida: $1" >&2; exit 2 ;;
   esac
 done
-case "$aprobaciones" in ''|*[!0-9]*) echo "--aprobaciones tiene que ser un número." >&2; exit 2 ;; esac
+if [ -z "$nivel" ] && [ -f .claude/saas-a-medida.json ] && command -v python3 >/dev/null 2>&1; then
+  nivel=$(python3 -c "import json; print(json.load(open('.claude/saas-a-medida.json')).get('proteccion') or '')" 2>/dev/null || true)
+fi
+case "$nivel" in
+  ninguna) ;;
+  pr) aprobaciones=0; admins=false ;;
+  revision) aprobaciones=1; admins=false ;;
+  estricta) aprobaciones=1; admins=true ;;
+  "") echo "Falta el nivel: --nivel ninguna|pr|revision|estricta (o el campo «proteccion» del fichero de proyecto)." >&2; exit 2 ;;
+  *) echo "Nivel desconocido: $nivel (ninguna, pr, revision o estricta)." >&2; exit 2 ;;
+esac
 command -v gh >/dev/null 2>&1 || { echo "Falta gh (https://cli.github.com) identificado con gh auth login." >&2; exit 2; }
 repo=$(gh repo view --json nameWithOwner -q .nameWithOwner) || { echo "Esta carpeta no tiene un repo de GitHub." >&2; exit 2; }
 
+if [ "$nivel" != ninguna ]; then
 cuerpo=$(cat <<JSON
 {
   "required_status_checks": { "strict": false, "contexts": ["comprobar"] },
-  "enforce_admins": false,
+  "enforce_admins": $admins,
   "required_pull_request_reviews": { "required_approving_review_count": $aprobaciones },
   "restrictions": null,
   "allow_force_pushes": false,
@@ -30,13 +46,22 @@ cuerpo=$(cat <<JSON
 }
 JSON
 )
+fi
 estado=0
 for rama in develop main; do
-  if [ "$simular" = 1 ]; then
-    echo "PUT repos/$repo/branches/$rama/protection"; echo "$cuerpo"; continue
+  ruta="repos/$repo/branches/$rama/protection"
+  if [ "$nivel" = ninguna ]; then
+    if [ "$simular" = 1 ]; then echo "DELETE $ruta"; continue; fi
+    if salida=$(gh api -X DELETE "$ruta" 2>&1); then echo "$rama: sin protección."
+    else case "$salida" in
+      *"Branch not protected"*|*"404"*) echo "$rama: ya estaba sin protección." ;;
+      *) estado=1; echo "$rama: $salida" >&2 ;;
+    esac; fi
+    continue
   fi
-  if salida=$(printf '%s' "$cuerpo" | gh api -X PUT "repos/$repo/branches/$rama/protection" --input - 2>&1); then
-    echo "$rama: protegida (PR obligatorio, $aprobaciones aprobaciones, CI «comprobar» en verde)."
+  if [ "$simular" = 1 ]; then echo "PUT $ruta"; echo "$cuerpo"; continue; fi
+  if salida=$(printf '%s' "$cuerpo" | gh api -X PUT "$ruta" --input - 2>&1); then
+    echo "$rama: nivel «$nivel» (PR obligatorio, CI «comprobar» en verde, $aprobaciones aprobaciones$([ "$admins" = true ] && echo ', también para quien administra'))."
   else
     estado=1
     case "$salida" in

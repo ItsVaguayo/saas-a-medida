@@ -9,7 +9,7 @@ Esta skill lleva un SaaS a medida desde la primera información del cliente hast
 
 ## Al empezar cada sesión
 
-1. Busca `.claude/saas-a-medida.json` en la raíz del repo. Si no existe, ve a la fase 0: por el principio si la carpeta está vacía, o por «Si el proyecto ya está empezado» si ya hay código o documentos.
+1. Busca `.claude/saas-a-medida.json` en la raíz del repo. Si no existe, o existe sin el campo `fases`, no des por hecho que el proyecto empieza de cero: ejecuta `python3 "${CLAUDE_SKILL_DIR}/scripts/detectar-fase.py"`. Si no encuentra rastro de nada, ve a la fase 0 por el principio. Si lo encuentra, ve a la fase 0 por «Si el proyecto ya está empezado»: se confirma con la persona en qué fase está y se sigue desde ahí, sin repetir lo que ya está hecho.
 2. Mira el campo `fases` de ese fichero (el aviso de inicio de sesión ya te dice cuáles están en curso). Puede haber varias fases abiertas a la vez (por ejemplo, desarrollo con dudas del cliente pendientes de la fase 1). Trabaja en la que pida la persona.
 3. Si un aviso de inicio de sesión dice que hay PR de compañeros esperando revisión o cambios pedidos en los suyos, díselo a la persona en tu primera respuesta y ofrécele revisarlos (fase 7, «Revisar el PR de un compañero»).
 4. Lee solo la referencia de la fase en la que estás. No cargues todas.

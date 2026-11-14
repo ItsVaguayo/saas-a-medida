@@ -10,7 +10,8 @@ Claude sigue once fases: equipo y proyecto, información del cliente, maqueta, d
 - **Documento de alcance en PDF** para el cliente: qué se hace, qué se conecta, qué no y qué necesitamos de él, con un estilo sobrio de documento técnico.
 - **Plan técnico con reparto** por módulos enteros, para que en equipo nadie espere a nadie, con las ramas explicadas paso a paso.
 - **Guías de desarrollo para cualquier IA**: cómo se construye y se comprueba el backend y las pantallas de un módulo, paso a paso, para que otro modelo u otro agente llegue al mismo resultado.
-- **CI y ramas protegidas**: una plantilla de GitHub Actions y un script que protege `develop` y `main`, para que nada se integre sin PR ni con los tests en rojo.
+- **CI y ramas protegidas**: una plantilla de GitHub Actions y, al empezar, eliges con el menú cuánto se protegen `develop` y `main` (nada, PR obligatorio, PR con revisión o estricta).
+- **Se engancha a proyectos ya empezados**: detecta en qué fase está el proyecto por sus ficheros y su historial y sigue desde ahí.
 - **Aviso de PR**: al abrir Claude en el proyecto, te dice en qué fase está, qué PR de tus compañeros esperan tu revisión (también los que ya revisaste y han cambiado) y cuáles tuyos tienen cambios pedidos.
 - **Panel de dudas para el cliente**: una página con cada pregunta explicada fácil, una pestaña técnica para el equipo y las respuestas guardadas. Si el cliente lo abre con un enlace de solo lectura, no ve la parte técnica.
 - **Revisiones en dos niveles**: en cada PR, simplificación, código, datos extremos y seguridad si toca; antes de la demo, una pasada completa de diseño, móvil y accesibilidad sobre toda la app.
