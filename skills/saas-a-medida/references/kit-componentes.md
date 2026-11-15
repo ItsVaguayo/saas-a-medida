@@ -1,6 +1,6 @@
 # El kit de componentes
 
-En `${CLAUDE_SKILL_DIR}/assets/kit/` hay 40 módulos de interfaz ya hechos y probados: tabla, diálogo, avisos, paleta de comandos, selector de fecha, tablero con arrastre, esqueletos de carga, gráficos y los demás de la lista de abajo. Antes de escribir un componente desde cero, mira si está aquí.
+En `${CLAUDE_SKILL_DIR}/assets/kit/` hay 41 módulos de interfaz ya hechos y probados: tabla, diálogo, avisos, paleta de comandos, selector de fecha, tablero con arrastre, esqueletos de carga, gráficos y los demás de la lista de abajo. Antes de escribir un componente desde cero, mira si está aquí.
 
 Sirve tal cual si el proyecto usa React. Con otro stack no se copia el código, pero vale como referencia de comportamiento: qué estados tiene cada pieza, cómo responde al teclado y cuánto dura cada animación.
 
@@ -22,7 +22,7 @@ npm run dev      # catálogo en http://localhost:5190
 npm test         # 69 pruebas
 ```
 
-El catálogo enseña cada módulo con su demo y su ejemplo de uso. Los mandos de arriba cambian acento, radio, densidad y tema en los 40 a la vez. Enséñaselo a la persona cuando haya que elegir qué piezas entran en el proyecto.
+El catálogo enseña cada módulo con su demo y su ejemplo de uso. Los mandos de arriba cambian acento, radio, densidad y tema en los 41 a la vez. Enséñaselo a la persona cuando haya que elegir qué piezas entran en el proyecto.
 
 ## Qué hay
 
@@ -55,7 +55,7 @@ Si al usarlo en un proyecto se le arregla un fallo o se le añade un estado, ap�
 
 ## Qué está comprobado y qué no
 
-Comprobado: las 69 pruebas, la compilación de producción, las 40 demos en Chrome a 1280 y 375 px sin errores de consola ni desplazamiento lateral, y el uso con ratón y teclado de las piezas delicadas (foco de los diálogos, menú con flechas, arrastre del tablero, selección por tramo, validación de los pasos).
+Comprobado: las 69 pruebas, la compilación de producción, las 41 demos en Chrome a 1280 y 375 px sin errores de consola ni desplazamiento lateral, y el uso con ratón y teclado de las piezas delicadas (foco de los diálogos, menú con flechas, arrastre del tablero, selección por tramo, validación de los pasos).
 
 Sin comprobar, y hay que decírselo a la persona si el proyecto depende de ello:
 

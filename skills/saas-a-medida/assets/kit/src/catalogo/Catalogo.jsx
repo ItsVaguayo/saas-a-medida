@@ -72,7 +72,7 @@ export function Catalogo() {
   return (
     <div className="cat">
       <aside className="cat-lateral">
-        <div className="cat-marca"><span className="cat-logo" aria-hidden="true">K</span><div><strong>Kit SaaS</strong><span>40 módulos</span></div></div>
+        <div className="cat-marca"><span className="cat-logo" aria-hidden="true">K</span><div><strong>Kit SaaS</strong><span>41 módulos</span></div></div>
         <Indice actual={modulo.id} alElegir={ir} />
       </aside>
 

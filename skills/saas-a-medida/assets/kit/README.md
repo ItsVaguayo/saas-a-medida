@@ -1,6 +1,6 @@
 # Kit SaaS
 
-40 módulos de interfaz para los SaaS a medida: 7 funciones, 8 animaciones, 19 componentes interactivos y 6 apartados. React 19, Vite y CSS plano con variables, sin más dependencias que `lucide-react` para los iconos. Nombres en español, tokens `--tinta`, `--linea`, `--e-N`, tema oscuro con `data-tema='oscuro'`.
+40 módulos de interfaz para los SaaS a medida: 7 funciones, 8 animaciones, 19 componentes interactivos y 7 apartados. React 19, Vite y CSS plano con variables, sin más dependencias que `lucide-react` para los iconos. Nombres en español, tokens `--tinta`, `--linea`, `--e-N`, tema oscuro con `data-tema='oscuro'`.
 
 ## Verlo
 
@@ -60,6 +60,7 @@ El catálogo enseña cada módulo con su demo y su ejemplo de uso. Arriba están
 | 38 | Estados | `Estados.jsx` | Vacío, sin resultados, error, sin permiso, sin conexión |
 | 39 | Actividad | `Actividad.jsx` | Historial agrupado por días |
 | 40 | Primeros pasos | `PrimerosPasos.jsx` | Lista de puesta en marcha |
+| 41 | Barra de cristal | `BarraCristal.jsx` | Navegación translúcida sobre una foto o un fondo oscuro, con buscador, ramas y plegado a iconos |
 
 Todo se importa desde `src/kit/index.js`. Los parámetros de cada módulo están documentados encima de su función.
 

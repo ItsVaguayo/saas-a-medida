@@ -82,6 +82,8 @@ export const MODULOS = [
 
   m('marco', 'Marco', 'Apartados', 'Marco.jsx', 'El armazón de la app: lateral plegable, cabecera y contenido. En estrecho, el lateral pasa a panel.',
     "<Marco marca={<Logo />} navegacion={[{ rotulo: 'Cuenta', elementos: [{ id, texto, icono, contador }] }]}\n  actual={ruta} alNavegar={ir} titulo=\"Clientes · 128 activos\"\n  usuario={{ nombre, detalle }} acciones={<Boton variante=\"principal\">Nuevo cliente</Boton>}>\n  …\n</Marco>", P.DemoMarco),
+  m('barra-cristal', 'BarraCristal', 'Apartados', 'BarraCristal.jsx', 'Navegación translúcida que flota sobre una foto o un fondo oscuro, con buscador, ramas y plegado a iconos.',
+    "<BarraCristal navegacion={[{ rotulo: 'Principal', elementos: [{ id, texto, icono, contador, urgente, aviso, hijos }] }]}\n  actual={ruta} alNavegar={ir} nombre=\"Vertix\" detalle=\"Espacio de finanzas\" logo={<Logo />}\n  ajustes={[{ id: 'noche', texto: 'Modo noche', icono: Moon, activo: noche, alCambiar: setNoche }]}\n  usuario={{ nombre, detalle, enLinea: true }} />", P.DemoBarraCristal),
   m('cifras', 'Cifras', 'Apartados', 'Cifras.jsx', 'La cifra que responde a una pregunta, con su cambio y su tendencia. El cambio lleva flecha y texto.',
     '<Cifras>\n  <Cifra rotulo="Cobrado en noviembre" valor={31450} formato={moneda} cambio={0.127} comparado="que en octubre" serie={[…]} />\n  <Cifra rotulo="Pendiente de cobro" valor={4820.5} formato={moneda} cambio={0.31} menosEsMejor />\n</Cifras>', P.DemoCifras),
   m('grafico', 'Gráfico', 'Apartados', 'Grafico.jsx', 'Barras y línea sin librerías. Cada valor se lee con ratón, con teclado y en una tabla para el lector.',

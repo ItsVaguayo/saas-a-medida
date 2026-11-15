@@ -3,14 +3,17 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MODULOS } from '../src/catalogo/modulos.js';
-import { BotonEstado, Tabla, ZonaAvisos, avisar, useBusqueda, useSeleccion } from '../src/kit/index.js';
+import {
+  BarraCristal, BotonEstado, Tabla, ZonaAvisos,
+  avisar, useBusqueda, useSeleccion,
+} from '../src/kit/index.js';
 
 afterEach(cleanup);
 
 describe('catálogo', () => {
-  it('tiene 40 módulos con id único, uso y demo', () => {
-    expect(MODULOS).toHaveLength(40);
-    expect(new Set(MODULOS.map((m) => m.id)).size).toBe(40);
+  it('tiene 41 módulos con id único, uso y demo', () => {
+    expect(MODULOS).toHaveLength(41);
+    expect(new Set(MODULOS.map((m) => m.id)).size).toBe(41);
     for (const m of MODULOS) {
       expect(m.uso.length, m.id).toBeGreaterThan(10);
       expect(typeof m.Demo, m.id).toBe('function');
@@ -151,5 +154,81 @@ describe('useBusqueda', () => {
     await act(async () => { pendientes.a(['vieja']); });
     expect(salida()).toBe('listo:nueva');
     vi.useRealTimers();
+  });
+});
+
+describe('41 BarraCristal', () => {
+  const navegacion = [
+    { rotulo: 'Principal', elementos: [
+      { id: 'panel', texto: 'Panel' },
+      { id: 'actividad', texto: 'Actividad', contador: 12 },
+      { id: 'agenda', texto: 'Agenda', aviso: true },
+    ] },
+    { rotulo: 'Espacio', elementos: [
+      { id: 'mensajes', texto: 'Mensajes', contador: 3, urgente: true },
+      { id: 'proyectos', texto: 'Proyectos', hijos: [{ id: 'web', texto: 'Rediseño de la web' }, { id: 'marca', texto: 'Manual de marca' }] },
+    ] },
+  ];
+  it('marca el apartado abierto, avisa al navegar y se pliega', () => {
+    const alNavegar = vi.fn();
+    const alPlegar = vi.fn();
+    render(<BarraCristal navegacion={navegacion} actual="panel" alNavegar={alNavegar} alPlegar={alPlegar} nombre="Vertix" />);
+    expect(screen.getByRole('button', { name: 'Panel' }).getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('button', { name: /Mensajes/ }).querySelector('[data-urgente]').textContent).toBe('3');
+    fireEvent.click(screen.getByRole('button', { name: /Actividad/ }));
+    expect(alNavegar).toHaveBeenCalledWith('actividad', expect.objectContaining({ texto: 'Actividad' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Plegar menú' }));
+    expect(alPlegar).toHaveBeenCalledWith(true);
+    expect(screen.getByRole('button', { name: 'Desplegar menú' }).getAttribute('aria-expanded')).toBe('false');
+    expect(screen.getByRole('complementary').hasAttribute('data-plegado')).toBe(true);
+  });
+  it('abre la rama, navega a un hijo y deja marcado al padre cuando la rama se cierra', () => {
+    const alNavegar = vi.fn();
+    const { rerender } = render(<BarraCristal navegacion={navegacion} actual="panel" alNavegar={alNavegar} />);
+    const rama = screen.getByRole('button', { name: 'Proyectos' });
+    expect(rama.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(rama);
+    expect(rama.getAttribute('aria-expanded')).toBe('true');
+    expect(alNavegar).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByText('Rediseño de la web'));
+    expect(alNavegar).toHaveBeenCalledWith('web', expect.objectContaining({ texto: 'Rediseño de la web' }));
+    rerender(<BarraCristal navegacion={navegacion} actual="web" alNavegar={alNavegar} />);
+    expect(screen.getByText('Rediseño de la web').closest('button').getAttribute('aria-current')).toBe('page');
+    fireEvent.click(rama);
+    expect(rama.hasAttribute('data-marcado')).toBe(true);
+  });
+  it('filtra al buscar, abre las ramas con coincidencias y Escape limpia', () => {
+    render(<BarraCristal navegacion={navegacion} actual="panel" />);
+    const campo = screen.getByRole('textbox', { name: 'Buscar' });
+    fireEvent.change(campo, { target: { value: 'márca' } });
+    expect(screen.queryByText('Panel')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Proyectos' }).getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByText('Manual de marca')).toBeTruthy();
+    expect(screen.queryByText('Rediseño de la web')).toBeNull();
+    fireEvent.change(campo, { target: { value: 'zzz' } });
+    expect(screen.getByRole('status').textContent).toBe('Sin resultados');
+    fireEvent.keyDown(campo, { key: 'Escape' });
+    expect(campo.value).toBe('');
+    expect(screen.getByText('Panel')).toBeTruthy();
+  });
+  it('atiende a los atajos y a los interruptores del pie', () => {
+    const alPlegar = vi.fn();
+    const alCambiar = vi.fn();
+    render(
+      <BarraCristal
+        navegacion={navegacion} plegadoInicial alPlegar={alPlegar}
+        ajustes={[{ id: 'noche', texto: 'Modo noche', activo: false, alCambiar }]}
+        usuario={{ nombre: 'Álex Morgan', detalle: 'alex@vertix.io' }}
+      />,
+    );
+    fireEvent.keyDown(document.body, { key: 'k', ctrlKey: true });
+    expect(alPlegar).toHaveBeenLastCalledWith(false);
+    expect(document.activeElement).toBe(screen.getByRole('textbox', { name: 'Buscar' }));
+    document.activeElement.blur();
+    fireEvent.keyDown(document.body, { key: '[' });
+    expect(alPlegar).toHaveBeenLastCalledWith(true);
+    fireEvent.click(screen.getByRole('switch', { name: 'Modo noche' }));
+    expect(alCambiar).toHaveBeenCalledWith(true);
+    expect(screen.getByRole('button', { name: /Álex Morgan/ })).toBeTruthy();
   });
 });

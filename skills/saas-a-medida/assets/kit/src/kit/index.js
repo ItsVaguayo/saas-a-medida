@@ -1,4 +1,4 @@
-// Kit SaaS · 40 módulos. Cada uno vive en su fichero (y su .css al lado) y se puede copiar suelto a un proyecto
+// Kit SaaS · 41 módulos. Cada uno vive en su fichero (y su .css al lado) y se puede copiar suelto a un proyecto
 // junto con interno.js, base.jsx y los tokens de src/tema.css.
 
 // Base
@@ -42,6 +42,7 @@ export { Pasos } from './Pasos.jsx';
 
 // Apartados (35–40)
 export { Marco } from './Marco.jsx';
+export { BarraCristal } from './BarraCristal.jsx';
 export { Cifra, Cifras, Minigrafica } from './Cifras.jsx';
 export { GraficoBarras, GraficoLinea, techoRedondo } from './Grafico.jsx';
 export { ErrorCarga, Estado, SinConexion, SinPermiso, SinResultados, Vacio, useConexion } from './Estados.jsx';

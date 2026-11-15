@@ -1,9 +1,9 @@
 // Demos de los apartados (35–40).
-import { CalendarClock, ChartColumn, CreditCard, FileCheck, House, Monitor, Plus, Receipt, Settings, Smartphone, Users } from 'lucide-react';
+import { CalendarClock, ChartColumn, CreditCard, FileCheck, House, Layers, MessageSquare, Monitor, Moon, Plus, Receipt, Settings, Smartphone, Sun, Users, Wallet, Zap } from 'lucide-react';
 import { useState } from 'react';
 import {
-  Actividad, Boton, Cifra, Cifras, ErrorCarga, GraficoBarras, GraficoLinea, Marco, PrimerosPasos, Segmentado, SinConexion, SinPermiso, SinResultados,
-  Tabla, Vacio, moneda, numero, porcentaje,
+  Actividad, BarraCristal, Boton, Cifra, Cifras, ErrorCarga, GraficoBarras, GraficoLinea, Marco, PrimerosPasos, Segmentado, SinConexion, SinPermiso, SinResultados, Tabla, Vacio,
+  moneda, numero, porcentaje,
 } from '../kit/index.js';
 import { CLIENTES, EVENTOS, MESES, esperar } from './datos.js';
 
@@ -38,6 +38,48 @@ export function DemoMarco() {
           />
         </Marco>
       </div>
+    </div>
+  );
+}
+
+const CRISTAL = [
+  { rotulo: 'Principal', elementos: [
+    { id: 'panel', texto: 'Panel', icono: House },
+    { id: 'actividad', texto: 'Actividad', icono: Zap, contador: 12 },
+    { id: 'cartera', texto: 'Cartera', icono: Wallet },
+    { id: 'agenda', texto: 'Agenda', icono: CalendarClock, aviso: true },
+  ] },
+  { rotulo: 'Espacio', elementos: [
+    { id: 'mensajes', texto: 'Mensajes', icono: MessageSquare, contador: 3, urgente: true },
+    { id: 'proyectos', texto: 'Proyectos', icono: Layers, hijos: [
+      { id: 'web', texto: 'Rediseño de la web', color: 'oklch(0.72 0.13 175)' },
+      { id: 'app', texto: 'App móvil', color: 'oklch(0.76 0.14 55)' },
+      { id: 'marca', texto: 'Manual de marca', color: 'oklch(0.68 0.17 295)' },
+    ] },
+    { id: 'informes', texto: 'Informes', icono: ChartColumn },
+    { id: 'ajustes', texto: 'Ajustes', icono: Settings },
+  ] },
+];
+
+export function DemoBarraCristal() {
+  const [actual, setActual] = useState('panel');
+  const [plegado, setPlegado] = useState(false);
+  const [noche, setNoche] = useState(false);
+  return (
+    <div className="demo-cristal" data-noche={noche || undefined}>
+      <BarraCristal
+        navegacion={CRISTAL}
+        actual={actual}
+        alNavegar={setActual}
+        plegado={plegado}
+        alPlegar={setPlegado}
+        logo={<Receipt aria-hidden="true" />}
+        nombre="Vertix"
+        detalle="Espacio de finanzas"
+        ajustes={[{ id: 'noche', texto: 'Modo noche', icono: noche ? Moon : Sun, activo: noche, alCambiar: setNoche }]}
+        usuario={{ nombre: 'Álex Morgan', detalle: 'alex@vertix.io', enLinea: true }}
+      />
+      <p className="demo-nota demo-cristal__nota"><kbd>⌘K</kbd> busca · <kbd>[</kbd> pliega</p>
     </div>
   );
 }
