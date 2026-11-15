@@ -1,0 +1,36 @@
+.c-paneles { --raya: 9px; display: grid; width: 100%; height: 100%; min-height: 0; }
+.c-paneles--horizontal { grid-template-columns: minmax(0, calc(var(--parte) - var(--raya) / 2)) var(--raya) minmax(0, 1fr); }
+.c-paneles--vertical { grid-template-rows: minmax(0, calc(var(--parte) - var(--raya) / 2)) var(--raya) minmax(0, 1fr); }
+.c-paneles__panel { min-width: 0; min-height: 0; overflow: auto; }
+/* Mientras se arrastra no se selecciona texto ni reaccionan los paneles */
+.c-paneles[data-arrastrando] { user-select: none; }
+.c-paneles[data-arrastrando] .c-paneles__panel { pointer-events: none; }
+
+/* La zona que se agarra mide 9 px; lo que se ve es una línea de 1 px que engorda al acercarse */
+.c-paneles__raya { position: relative; touch-action: none; outline: none; }
+.c-paneles--horizontal > .c-paneles__raya { cursor: col-resize; }
+.c-paneles--vertical > .c-paneles__raya { cursor: row-resize; }
+.c-paneles__raya::before {
+  content: ''; position: absolute; background: var(--linea);
+  transition: background-color var(--rapido), scale var(--medio);
+}
+.c-paneles--horizontal > .c-paneles__raya::before { inset: 0 4px; }
+.c-paneles--vertical > .c-paneles__raya::before { inset: 4px 0; }
+/* El asa: una pastilla en el centro que aparece al pasar por encima */
+.c-paneles__raya::after {
+  content: ''; position: absolute; top: 50%; left: 50%; translate: -50% -50%; border-radius: var(--radio-total);
+  background: var(--acento); opacity: 0; scale: 0.6; transition: opacity var(--rapido), scale var(--medio);
+}
+.c-paneles--horizontal > .c-paneles__raya::after { width: 5px; height: 36px; }
+.c-paneles--vertical > .c-paneles__raya::after { width: 36px; height: 5px; }
+
+.c-paneles__raya:focus-visible { box-shadow: none; }
+.c-paneles__raya:focus-visible::before, .c-paneles[data-arrastrando] .c-paneles__raya::before { background: var(--acento); }
+.c-paneles--horizontal > .c-paneles__raya:focus-visible::before, .c-paneles--horizontal[data-arrastrando] > .c-paneles__raya::before { scale: 2 1; }
+.c-paneles--vertical > .c-paneles__raya:focus-visible::before, .c-paneles--vertical[data-arrastrando] > .c-paneles__raya::before { scale: 1 2; }
+.c-paneles__raya:focus-visible::after, .c-paneles[data-arrastrando] .c-paneles__raya::after { opacity: 1; scale: 1; }
+@media (hover: hover) {
+  .c-paneles__raya:hover::before { background: var(--acento); }
+  .c-paneles__raya:hover::after { opacity: 1; scale: 1; }
+}
+@media (pointer: coarse) { .c-paneles { --raya: 21px; } .c-paneles--horizontal > .c-paneles__raya::before { inset: 0 10px; } .c-paneles--vertical > .c-paneles__raya::before { inset: 10px 0; } .c-paneles__raya::after { opacity: 1; scale: 1; background: var(--linea-fuerte); } }

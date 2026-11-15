@@ -1,0 +1,216 @@
+/* El texto es siempre claro, en tema claro y oscuro: la barra va sobre una foto o un fondo oscuro.
+   Al plegar solo cambia el ancho; el contenido no se recoloca, queda recortado y los rótulos se apagan. */
+.c-cristal {
+  --cristal-ancho: 264px;
+  --cristal-plegado: 68px;
+  --cristal-margen: 12px;
+  --cristal-acento: oklch(0.64 0.2 var(--tono));
+  --cristal-acento-claro: oklch(0.74 0.17 calc(var(--tono) + 18));
+  --cristal-desenfoque: 26px;
+  --cristal-tinta: oklch(0.96 0.008 75);
+  --cristal-tinta-2: oklch(0.96 0.008 75 / 0.62);
+  --cristal-tinta-3: oklch(0.96 0.008 75 / 0.42);
+  --cristal-luz: 255 248 240;
+  --cristal-curva: cubic-bezier(0.32, 0.72, 0, 1);
+  --cristal-dur: 550ms;
+  position: relative; display: flex; flex-shrink: 0;
+  width: var(--cristal-ancho); max-height: 100%; min-height: 0;
+  color: var(--cristal-tinta); font-size: 13.5px;
+  transition: width var(--cristal-dur) var(--cristal-curva);
+}
+.c-cristal[data-plegada] { width: var(--cristal-plegado); }
+
+.c-cristal__panel {
+  position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden;
+  padding: var(--cristal-margen); border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgb(var(--cristal-luz) / 0.16) 0%, rgb(var(--cristal-luz) / 0.07) 40%, rgb(var(--cristal-luz) / 0.05) 100%),
+    rgb(18 14 12 / 0.22);
+  -webkit-backdrop-filter: blur(var(--cristal-desenfoque)) saturate(150%);
+  backdrop-filter: blur(var(--cristal-desenfoque)) saturate(150%);
+  border: 1px solid rgb(var(--cristal-luz) / 0.24);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 rgb(255 255 255 / 0.06), 0 24px 60px rgb(20 10 4 / 0.35);
+  transition: border-radius var(--cristal-dur) var(--cristal-curva);
+}
+.c-cristal[data-plegada] .c-cristal__panel { border-radius: 34px; }
+
+/* Los rótulos se apagan antes de que el panel termine de encogerse y vuelven cuando ya hay sitio */
+.c-cristal__texto { white-space: nowrap; transition: opacity 280ms ease 120ms; }
+.c-cristal[data-plegada] .c-cristal__texto { opacity: 0; pointer-events: none; transition-delay: 0s; }
+
+.c-cristal__plegar {
+  position: absolute; top: 26px; right: -11px; z-index: 3; display: grid; place-items: center;
+  width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%; background: #fbf8f5; color: #1c1714; cursor: pointer;
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 0.14), 0 4px 12px rgb(0 0 0 / 0.3); transition: scale 200ms ease;
+}
+.c-cristal__plegar::before { content: ''; position: absolute; inset: -10px; }
+.c-cristal__plegar svg { width: 13px; height: 13px; stroke-width: 2.4; transition: rotate var(--cristal-dur) var(--cristal-curva); }
+.c-cristal[data-plegada] .c-cristal__plegar svg { rotate: 180deg; }
+@media (hover: hover) { .c-cristal__plegar:hover { scale: 1.08; } }
+.c-cristal__plegar:active { scale: 0.94; }
+
+.c-cristal__marca { display: flex; align-items: center; gap: 12px; height: 44px; padding-left: 2px; flex-shrink: 0; }
+.c-cristal__logo {
+  display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; color: #fff;
+  background: radial-gradient(circle at 35% 30%, var(--cristal-acento-claro), var(--cristal-acento) 60%, color-mix(in oklch, var(--cristal-acento) 82%, black));
+  box-shadow: 0 6px 16px color-mix(in oklch, var(--cristal-acento) 45%, transparent), inset 0 1px 0 rgb(255 255 255 / 0.35);
+}
+.c-cristal__logo svg { width: 18px; height: 18px; stroke-width: 3; }
+.c-cristal__nombre { flex: 1; min-width: 0; display: grid; text-align: left; }
+.c-cristal__nombre b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; }
+.c-cristal__nombre span { margin-top: 1px; font-size: 11.5px; color: var(--cristal-tinta-2); overflow: hidden; text-overflow: ellipsis; }
+
+.c-cristal__buscador {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0; height: 40px; margin-top: 14px; padding: 0 8px 0 13px; overflow: hidden;
+  border-radius: 999px; background: rgb(var(--cristal-luz) / 0.08); border: 1px solid rgb(var(--cristal-luz) / 0.1); cursor: text;
+  transition: background-color 200ms, border-color 200ms;
+}
+.c-cristal__buscador:focus-within { background: rgb(var(--cristal-luz) / 0.14); border-color: rgb(var(--cristal-luz) / 0.28); }
+.c-cristal__buscador > svg { flex-shrink: 0; width: 18px; height: 18px; stroke-width: 1.7; color: var(--cristal-tinta-2); }
+.c-cristal__buscador input { flex: 1; min-width: 0; padding: 0; border: 0; outline: 0; background: none; color: inherit; font: inherit; font-size: 13px; }
+.c-cristal__buscador input:focus, .c-cristal__buscador input:focus-visible { outline: 0; box-shadow: none; border-radius: 0; }
+.c-cristal__buscador input::placeholder { color: var(--cristal-tinta-3); }
+.c-cristal[data-plegada] .c-cristal__buscador { cursor: pointer; }
+.c-cristal kbd {
+  padding: 3px 7px; border-radius: 7px; background: rgb(var(--cristal-luz) / 0.1); border: 1px solid rgb(var(--cristal-luz) / 0.12);
+  font-family: inherit; font-size: 10.5px; color: var(--cristal-tinta-2); white-space: nowrap;
+}
+
+.c-cristal__nav {
+  flex: 1; min-height: 0; overflow: hidden auto; margin: 10px calc(var(--cristal-margen) * -1) 0; padding: 0 var(--cristal-margen);
+  scrollbar-width: none;
+}
+.c-cristal__nav::-webkit-scrollbar { display: none; }
+.c-cristal__grupo { display: flex; flex-direction: column; gap: 2px; }
+.c-cristal__titulo {
+  position: relative; display: flex; align-items: flex-end; height: 30px; padding: 0 0 7px 12px;
+  font-size: 10.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cristal-tinta-3);
+}
+.c-cristal__grupo:first-child .c-cristal__titulo { height: 24px; }
+/* Plegada, el rótulo del grupo se queda en una raya */
+.c-cristal__titulo::after {
+  content: ''; position: absolute; left: 13px; bottom: 13px; width: 18px; height: 2px; border-radius: 2px;
+  background: rgb(var(--cristal-luz) / 0.25); opacity: 0; transition: opacity 300ms;
+}
+.c-cristal[data-plegada] .c-cristal__titulo::after { opacity: 1; }
+
+.c-cristal__elemento, .c-cristal__usuario, .c-cristal__hijo {
+  border: 0; background: none; color: inherit; font: inherit; text-align: left; text-decoration: none; cursor: pointer;
+}
+.c-cristal__elemento {
+  display: flex; align-items: center; gap: 12px; width: 100%; height: 40px; padding: 0 10px 0 13px; overflow: hidden;
+  border: 1px solid transparent; border-radius: 999px; color: oklch(0.96 0.008 75 / 0.86);
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms, box-shadow 200ms;
+}
+@media (hover: hover) {
+  .c-cristal__elemento:hover { background: rgb(var(--cristal-luz) / 0.08); border-color: rgb(var(--cristal-luz) / 0.08); }
+}
+.c-cristal__elemento[data-marcado] {
+  color: #fff; border-color: rgb(var(--cristal-luz) / 0.42);
+  background: linear-gradient(180deg, rgb(var(--cristal-luz) / 0.22), rgb(var(--cristal-luz) / 0.08));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 6px 18px rgb(0 0 0 / 0.18);
+}
+.c-cristal :is(.c-cristal__elemento, .c-cristal__usuario, .c-cristal__hijo, .c-cristal__plegar):focus-visible {
+  outline: 2px solid rgb(var(--cristal-luz) / 0.7); outline-offset: 1px; box-shadow: none;
+}
+.c-cristal__elemento:active .c-cristal__icono { scale: 0.9; }
+
+.c-cristal__icono { position: relative; display: grid; place-items: center; flex-shrink: 0; transition: scale 160ms ease; }
+.c-cristal__icono svg { width: 18px; height: 18px; stroke-width: 1.7; }
+.c-cristal__punto {
+  position: absolute; top: -4px; right: -5px; width: 8px; height: 8px; border-radius: 50%; background: var(--cristal-acento);
+  box-shadow: 0 0 0 2px rgb(60 40 30 / 0.5); opacity: 0; scale: 0.4; transition: opacity 250ms, scale 300ms var(--cristal-curva);
+}
+.c-cristal[data-plegada] .c-cristal__punto { opacity: 1; scale: 1; }
+.c-cristal__rotulo { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.c-cristal__cola { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+.c-cristal__contador {
+  display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  background: rgb(var(--cristal-luz) / 0.14); border: 1px solid rgb(var(--cristal-luz) / 0.16);
+  font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.c-cristal__contador[data-urgente] {
+  background: var(--cristal-acento); border-color: transparent; color: #fff;
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--cristal-acento) 50%, transparent);
+}
+.c-cristal__aviso {
+  width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--cristal-acento);
+  box-shadow: 0 0 8px color-mix(in oklch, var(--cristal-acento) 70%, transparent);
+}
+.c-cristal__flecha { width: 14px; height: 14px; color: var(--cristal-tinta-2); transition: rotate 350ms var(--cristal-curva); }
+.c-cristal__elemento[aria-expanded='false'] .c-cristal__flecha { rotate: 180deg; }
+
+/* La rama se abre con el truco de las filas de rejilla: sin medir alturas */
+.c-cristal__rama { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 400ms var(--cristal-curva), opacity 300ms; }
+.c-cristal__rama > div { overflow: hidden; }
+.c-cristal__rama[data-abierta] { grid-template-rows: 1fr; opacity: 1; }
+.c-cristal__hijo {
+  position: relative; display: flex; align-items: center; gap: 10px; box-sizing: border-box;
+  width: calc(100% - 44px); height: 30px; margin: 2px 0 0 44px; padding: 0 12px; border-radius: 999px;
+  color: var(--cristal-tinta-2); font-size: 12.5px; white-space: nowrap; transition: color 160ms, background-color 160ms;
+}
+@media (hover: hover) { .c-cristal__hijo:hover { color: var(--cristal-tinta); background: rgb(var(--cristal-luz) / 0.06); } }
+.c-cristal__hijo::before {
+  content: ''; position: absolute; left: -14px; top: -15px; width: 12px; height: 30px;
+  border-left: 1px solid rgb(var(--cristal-luz) / 0.22); border-bottom: 1px solid rgb(var(--cristal-luz) / 0.22); border-bottom-left-radius: 8px;
+}
+.c-cristal__hijo i {
+  flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--color, var(--cristal-tinta-3));
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.07);
+}
+.c-cristal__hijo[aria-current='page'] { color: #fff; }
+
+.c-cristal__vacio { margin: 0; padding: 14px 13px; font-size: 12.5px; color: var(--cristal-tinta-3); }
+.c-cristal[data-plegada] .c-cristal__vacio { display: none; }
+
+.c-cristal__pie {
+  display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid rgb(var(--cristal-luz) / 0.1);
+}
+.c-cristal__interruptor {
+  position: relative; flex-shrink: 0; width: 34px; height: 20px; border-radius: 999px;
+  background: rgb(var(--cristal-luz) / 0.16); border: 1px solid rgb(var(--cristal-luz) / 0.18); transition: background-color 300ms;
+}
+.c-cristal__interruptor::after {
+  content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35); transition: translate 350ms var(--cristal-curva);
+}
+.c-cristal__elemento[aria-checked='true'] .c-cristal__interruptor { background: var(--cristal-acento); border-color: transparent; }
+.c-cristal__elemento[aria-checked='true'] .c-cristal__interruptor::after { translate: 14px 0; }
+
+.c-cristal__usuario {
+  display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 10px 0 4px; overflow: hidden; border-radius: 999px;
+  background: rgb(var(--cristal-luz) / 0.07); border: 1px solid rgb(var(--cristal-luz) / 0.1); transition: background-color 160ms, border-color 160ms;
+}
+@media (hover: hover) {
+  .c-cristal__usuario:hover { background: rgb(var(--cristal-luz) / 0.1); border-color: rgb(var(--cristal-luz) / 0.14); }
+}
+.c-cristal__avatar { position: relative; display: block; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; }
+.c-cristal__avatar[data-en-linea]::after {
+  content: ''; position: absolute; right: -1px; bottom: -1px; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--bien); box-shadow: 0 0 0 2px rgb(58 44 36);
+}
+/* Plegada, el avatar no se apaga: es lo que queda de la persona */
+.c-cristal[data-plegada] .c-cristal__usuario { background: transparent; border-color: transparent; }
+
+.c-cristal__pista {
+  position: absolute; left: calc(100% + 12px); z-index: 20; display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; border-radius: 10px; font-size: 12px; font-weight: 500; white-space: nowrap; pointer-events: none;
+  background: rgb(250 246 242 / 0.82); color: #1d1814; border: 1px solid rgb(255 255 255 / 0.7);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+  opacity: 0; translate: -4px -50%; transition: opacity 180ms, translate 250ms var(--cristal-curva);
+}
+.c-cristal__pista[data-visible] { opacity: 1; translate: 0 -50%; }
+.c-cristal__pista kbd, .c-cristal__pista .c-cristal__contador { background: rgb(0 0 0 / 0.08); border-color: rgb(0 0 0 / 0.08); color: #4a413a; }
+.c-cristal__pista .c-cristal__contador[data-urgente] { background: var(--cristal-acento); color: #fff; }
+@media (hover: none) { .c-cristal__pista { display: none; } }
+
+@media (max-height: 640px) {
+  .c-cristal__elemento { height: 36px; }
+  .c-cristal__hijo { height: 28px; }
+  .c-cristal__titulo { height: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .c-cristal, .c-cristal *, .c-cristal *::before, .c-cristal *::after { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+}

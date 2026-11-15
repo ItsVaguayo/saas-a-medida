@@ -1,0 +1,28 @@
+.c-anillo { --anillo-lado: 168px; display: flex; align-items: center; flex-wrap: wrap; gap: var(--e-6); min-width: 0; }
+.c-anillo__dibujo { position: relative; width: var(--anillo-lado); height: var(--anillo-lado); flex-shrink: 0; }
+.c-anillo__dibujo svg { display: block; width: 100%; height: 100%; rotate: -90deg; overflow: visible; }
+.c-anillo__pista { fill: none; stroke: var(--superficie-2); }
+/* Cada parte crece desde su arranque, una detrás de otra */
+.c-anillo__parte {
+  fill: none; cursor: pointer;
+  transition: stroke-dasharray 900ms var(--curva) calc(var(--i) * 90ms), stroke-width var(--medio), opacity var(--rapido);
+}
+.c-anillo__parte[data-activo] { stroke-width: 14; }
+.c-anillo[data-con-activo] .c-anillo__parte:not([data-activo]) { opacity: 0.35; }
+
+.c-anillo__centro { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; padding: 22%; pointer-events: none; }
+.c-anillo__cifra { font-size: var(--t-20); font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; animation: c-anillo-cifra var(--dur-2) var(--curva); }
+@keyframes c-anillo-cifra { from { opacity: 0; transform: translateY(4px); filter: blur(2px); } }
+.c-anillo__rotulo { font-size: var(--t-12); line-height: 1.25; color: var(--tinta-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.c-anillo__leyenda { flex: 1; min-width: 200px; display: grid; gap: 2px; }
+.c-anillo__leyenda li {
+  display: flex; align-items: center; gap: var(--e-2); padding: 6px var(--e-2); border-radius: var(--radio-chico);
+  font-size: var(--t-13); cursor: default; transition: background-color var(--rapido), opacity var(--rapido);
+}
+.c-anillo__leyenda li[data-activo] { background: var(--superficie-2); }
+.c-anillo__leyenda li:focus-visible { box-shadow: inset 0 0 0 2px var(--acento); }
+.c-anillo[data-con-activo] .c-anillo__leyenda li:not([data-activo]) { opacity: 0.55; }
+.c-anillo__nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-anillo__valor { font-weight: 550; font-variant-numeric: tabular-nums; }
+.c-anillo__parte-texto { width: 6ch; text-align: right; color: var(--tinta-2); font-variant-numeric: tabular-nums; }

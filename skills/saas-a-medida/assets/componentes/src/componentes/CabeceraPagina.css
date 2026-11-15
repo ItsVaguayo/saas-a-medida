@@ -1,0 +1,40 @@
+.c-migas ol { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+.c-migas__miga { display: flex; min-width: 0; }
+.c-migas__miga[data-nueva] { animation: c-miga-entra var(--dur-2) var(--curva) backwards; }
+@keyframes c-miga-entra { from { opacity: 0; translate: -6px 0; } }
+.c-migas__enlace, .c-migas__actual {
+  display: inline-flex; align-items: center; max-width: 22ch; height: 24px; padding: 0 6px;
+  border: 0; border-radius: var(--radio-chico); background: none;
+  font-size: var(--t-13); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none;
+}
+.c-migas__enlace { color: var(--tinta-2); cursor: pointer; transition: color var(--rapido), background-color var(--rapido); }
+@media (hover: hover) { .c-migas__enlace:hover { color: var(--tinta); background: var(--superficie-2); } }
+.c-migas__actual { color: var(--tinta); font-weight: 550; }
+.c-migas__mas svg { width: 16px; height: 16px; }
+.c-migas__separador { display: grid; place-items: center; color: var(--tinta-3); }
+.c-migas__separador svg { width: 14px; height: 14px; }
+
+.c-cabecera { display: grid; gap: var(--e-2); min-width: 0; }
+.c-cabecera .c-migas { margin-left: -6px; }
+.c-cabecera__fila { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--e-3) var(--e-4); }
+.c-cabecera__titulo { display: flex; align-items: center; gap: var(--e-3); min-width: 0; }
+.c-cabecera__titulo :is(h1, h2, h3) {
+  font-size: var(--t-24); font-weight: 650; letter-spacing: -0.02em; line-height: 1.2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.c-cabecera__recuento { color: var(--tinta-2); font-size: var(--t-18); font-variant-numeric: tabular-nums; }
+.c-cabecera__acciones { display: flex; align-items: center; gap: var(--e-2); }
+.c-cabecera__bajo { margin-top: var(--e-2); }
+
+/* Fija: se pega arriba y deja ver el contenido que pasa por debajo */
+.c-cabecera--fija {
+  position: sticky; top: 0; z-index: 10; padding-block: var(--e-3);
+  background: color-mix(in oklch, var(--fondo) 82%, transparent);
+  backdrop-filter: blur(12px) saturate(1.4);
+}
+
+@media (max-width: 560px) {
+  .c-cabecera__titulo :is(h1, h2, h3) { font-size: var(--t-20); }
+  .c-cabecera__acciones { width: 100%; }
+  .c-cabecera__acciones > :last-child { margin-left: auto; }
+}

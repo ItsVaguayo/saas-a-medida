@@ -1,0 +1,39 @@
+/* Oscura sobre claro y clara sobre oscuro: tiene que verse encima de cualquier tabla */
+.c-lote { display: flex; justify-content: center; pointer-events: none; }
+.c-lote--flotante { position: fixed; z-index: 40; left: 0; right: 0; bottom: max(var(--e-6), env(safe-area-inset-bottom)); padding: 0 var(--e-3); }
+
+.c-lote__barra {
+  display: flex; align-items: center; gap: var(--e-1); max-width: 100%; padding: 6px; pointer-events: auto;
+  border-radius: calc(var(--radio) + 6px); background: var(--tinta); color: var(--superficie);
+  box-shadow: var(--sombra); overflow-x: auto; scrollbar-width: none;
+  animation: c-lote-entra var(--dur-3) var(--curva);
+}
+.c-lote[data-saliendo] .c-lote__barra { animation: c-lote-sale 180ms ease-in forwards; }
+@keyframes c-lote-entra { from { opacity: 0; transform: translateY(16px) scale(0.96); } }
+@keyframes c-lote-sale { to { opacity: 0; transform: translateY(10px) scale(0.98); } }
+
+.c-lote__cuenta { padding: 0 var(--e-2) 0 var(--e-3); white-space: nowrap; font-size: var(--t-13); color: color-mix(in oklch, var(--superficie) 72%, var(--tinta)); }
+.c-lote__numero { display: inline-block; color: var(--superficie); font-variant-numeric: tabular-nums; animation: c-lote-cifra var(--dur-2) var(--curva); }
+@keyframes c-lote-cifra { from { opacity: 0; transform: translateY(5px); filter: blur(2px); } }
+.c-lote__raya { width: 1px; height: 18px; flex-shrink: 0; background: color-mix(in oklch, var(--superficie) 22%, transparent); margin-right: var(--e-1); }
+
+.c-lote__boton {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--e-3); flex-shrink: 0;
+  border: 0; border-radius: var(--radio); background: none; color: inherit;
+  font-size: var(--t-13); font-weight: 550; white-space: nowrap; cursor: pointer;
+  transition: background-color var(--rapido), transform var(--rapido);
+}
+.c-lote__boton svg { width: 15px; height: 15px; }
+.c-lote__boton:active:not(:disabled) { transform: scale(0.96); }
+.c-lote__boton:disabled { opacity: 0.45; cursor: not-allowed; }
+.c-lote__boton:focus-visible { box-shadow: 0 0 0 2px var(--tinta), 0 0 0 4px var(--superficie); }
+@media (hover: hover) { .c-lote__boton:hover:not(:disabled) { background: color-mix(in oklch, var(--superficie) 14%, transparent); } }
+.c-lote__boton[data-peligro] { color: color-mix(in oklch, var(--mal) 55%, var(--superficie)); }
+.c-lote__limpiar { width: 32px; padding: 0; justify-content: center; color: color-mix(in oklch, var(--superficie) 65%, var(--tinta)); }
+
+/* En pantallas estrechas las acciones se quedan en icono */
+@media (max-width: 520px) {
+  .c-lote__boton:has(svg) > span { display: none; }
+  .c-lote__boton:has(svg) { width: 36px; padding: 0; justify-content: center; }
+}
+@media (pointer: coarse) { .c-lote__boton { height: 40px; } }

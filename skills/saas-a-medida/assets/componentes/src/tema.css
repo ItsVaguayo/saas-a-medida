@@ -1,0 +1,122 @@
+/* Tema del kit. Todos los colores, letras, espacios, radios y tiempos salen de aquí:
+   ningún módulo escribe un color ni una medida suelta.
+
+   Para adaptar el kit a un cliente se toca solo este fichero:
+   - `--tono` gira el acento y el tinte de los grises (0 rojo, 145 verde, 256 azul, 300 violeta);
+   - si la marca trae un color exacto, se pisa `--acento` y sus tres derivados con el hexadecimal;
+   - `--radio` y `--alto-control` cambian la forma y la densidad de todo a la vez.
+   Los nombres son los mismos que usan los proyectos de la casa (--tinta, --linea, --e-N, data-tema). */
+
+:root {
+  color-scheme: light;
+
+  /* Acento: acciones, enlaces, lo activo. Texto blanco encima: 6:1 */
+  --tono: 256;
+  --acento: oklch(0.5 0.17 var(--tono));
+  --acento-fuerte: oklch(0.42 0.16 var(--tono));   /* hover y pulsado */
+  --acento-suave: oklch(0.955 0.025 var(--tono));  /* fondo de lo seleccionado */
+  --sobre-acento: #fff;
+
+  /* Neutros, con un punto del tono para que no salgan grises muertos */
+  --tinta: oklch(0.24 0.02 var(--tono));
+  --tinta-2: oklch(0.47 0.02 var(--tono));   /* texto secundario: 7:1 sobre blanco */
+  --tinta-3: oklch(0.66 0.02 var(--tono));   /* solo iconos y bordes, nunca texto que haya que leer */
+  --linea: oklch(0.915 0.008 var(--tono));
+  --linea-fuerte: oklch(0.84 0.012 var(--tono));
+  --fondo: oklch(0.972 0.005 var(--tono));
+  --superficie: #fff;
+  --superficie-2: oklch(0.955 0.007 var(--tono));
+
+  /* Estados. Nunca van solos: siempre con icono o texto */
+  --bien: #1e7b4f;      --bien-suave: #e4f3ea;
+  --atencion: #9a5b00;  --atencion-suave: #fbf0da;
+  --mal: #b42318;       --mal-suave: #fbe9e7;
+  --sobre-mal: #fff;
+
+  --letra: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --letra-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+  --t-12: 0.75rem; --t-13: 0.8125rem; --t-14: 0.875rem; --t-16: 1rem;
+  --t-18: 1.125rem; --t-20: 1.25rem; --t-24: 1.5rem; --t-30: 1.875rem;
+
+  /* Espacio en múltiplos de 4 px */
+  --e-1: 4px; --e-2: 8px; --e-3: 12px; --e-4: 16px; --e-5: 20px;
+  --e-6: 24px; --e-8: 32px; --e-10: 40px; --e-12: 48px;
+
+  --radio: 8px;
+  --radio-chico: calc(var(--radio) * 0.625);
+  --radio-tarjeta: calc(var(--radio) * 1.5);
+  --radio-total: 999px;
+
+  /* Densidad: alto de botones y campos, y aire de las filas */
+  --alto-control: 36px;
+  --fila: 10px;
+  --toque: 44px;   /* zona táctil mínima en móvil */
+
+  --sombra-reposo: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.05);
+  --sombra-elevada: 0 2px 4px rgb(16 24 40 / 0.05), 0 12px 28px -6px rgb(16 24 40 / 0.14);
+  --sombra: 0 4px 8px rgb(16 24 40 / 0.06), 0 24px 48px -12px rgb(16 24 40 / 0.22);
+  --foco: 0 0 0 2px var(--superficie), 0 0 0 4px var(--acento);
+  --velo: rgb(10 14 24 / 0.45);
+
+  /* Movimiento. Lo que entra o responde usa --curva (arranca rápido y frena);
+     lo que se desplaza de un sitio a otro sin entrar ni salir usa --curva-mover. */
+  --curva: cubic-bezier(0.23, 1, 0.32, 1);
+  --curva-mover: cubic-bezier(0.77, 0, 0.175, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --rapido: var(--dur-1) var(--curva);
+  --medio: var(--dur-2) var(--curva);
+  --lento: var(--dur-3) var(--curva);
+}
+
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+  --acento: oklch(0.76 0.12 var(--tono));
+  --acento-fuerte: oklch(0.83 0.1 var(--tono));
+  --acento-suave: oklch(0.3 0.05 var(--tono));
+  --sobre-acento: oklch(0.18 0.03 var(--tono));
+  --tinta: oklch(0.93 0.01 var(--tono));
+  --tinta-2: oklch(0.74 0.015 var(--tono));
+  --tinta-3: oklch(0.55 0.015 var(--tono));
+  --linea: oklch(0.29 0.012 var(--tono));
+  --linea-fuerte: oklch(0.38 0.015 var(--tono));
+  --fondo: oklch(0.165 0.01 var(--tono));
+  --superficie: oklch(0.21 0.012 var(--tono));
+  --superficie-2: oklch(0.25 0.014 var(--tono));
+  --bien: #5cc894;      --bien-suave: #13291c;
+  --atencion: #e6a23c;  --atencion-suave: #30240e;
+  --mal: #f2877c;       --mal-suave: #361a17;
+  --sobre-mal: #2a0f0c;
+  --sombra-reposo: 0 1px 2px rgb(0 0 0 / 0.4);
+  --sombra-elevada: 0 2px 4px rgb(0 0 0 / 0.4), 0 12px 28px rgb(0 0 0 / 0.45);
+  --sombra: 0 12px 32px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.3);
+  --velo: rgb(0 0 0 / 0.6);
+}
+
+:root[data-densidad='compacta'] {
+  --alto-control: 30px;
+  --fila: 6px;
+}
+
+/* ── Añadido de componentes-saas ─────────────────────────────────────────────
+   Colores de las series de los gráficos. Salen del mismo --tono, girado, para que
+   cambiar la marca cambie también los gráficos. Se distinguen también por luminosidad:
+   siguen leyéndose en gris y con daltonismo. Para fijarlos a mano, pisa --serie-N. */
+:root {
+  --serie-1: var(--acento);
+  --serie-2: oklch(0.72 0.13 calc(var(--tono) - 60));
+  --serie-3: oklch(0.6 0.17 calc(var(--tono) + 75));
+  --serie-4: oklch(0.8 0.12 calc(var(--tono) + 160));
+  --serie-5: oklch(0.45 0.09 calc(var(--tono) + 215));
+  --serie-6: oklch(0.7 0.02 var(--tono));
+  --info: var(--acento-fuerte);
+  --info-suave: var(--acento-suave);
+}
+:root[data-tema='oscuro'] {
+  --serie-2: oklch(0.62 0.12 calc(var(--tono) - 60));
+  --serie-3: oklch(0.7 0.15 calc(var(--tono) + 75));
+  --serie-4: oklch(0.85 0.11 calc(var(--tono) + 160));
+  --serie-5: oklch(0.55 0.1 calc(var(--tono) + 215));
+  --serie-6: oklch(0.6 0.02 var(--tono));
+}

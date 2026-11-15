@@ -1,0 +1,37 @@
+.c-metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(var(--minimo), 100%), 1fr)); gap: var(--e-4); }
+
+.c-metrica {
+  --color-tono: var(--tinta-2); --fondo-tono: var(--superficie-2);
+  display: grid; gap: var(--e-2); align-content: start; min-width: 0; padding: var(--e-4) var(--e-4) var(--e-3);
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-reposo); text-align: left; overflow: hidden;
+}
+.c-metrica[data-tono='bien'] { --color-tono: var(--bien); --fondo-tono: var(--bien-suave); }
+.c-metrica[data-tono='mal'] { --color-tono: var(--mal); --fondo-tono: var(--mal-suave); }
+
+.c-metrica--pulsable { cursor: pointer; transition: border-color var(--medio), box-shadow var(--medio), transform var(--medio); }
+.c-metrica--pulsable:active { transform: scale(0.985); }
+@media (hover: hover) { .c-metrica--pulsable:hover { border-color: var(--linea-fuerte); box-shadow: var(--sombra-elevada); transform: translateY(-2px); } }
+
+.c-metrica__titulo { display: flex; align-items: center; gap: var(--e-2); font-size: var(--t-13); font-weight: 550; color: var(--tinta-2); }
+.c-metrica__titulo svg { width: 15px; height: 15px; color: var(--tinta-3); }
+.c-metrica__valor { font-size: var(--t-30); font-weight: 650; letter-spacing: -0.025em; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.c-metrica__pie { display: flex; align-items: center; flex-wrap: wrap; gap: var(--e-2); font-size: var(--t-12); }
+.c-metrica__variacion {
+  display: inline-flex; align-items: center; gap: 2px; height: 20px; padding: 0 6px 0 4px; border-radius: var(--radio-total);
+  background: var(--fondo-tono); color: var(--color-tono); font-weight: 600; font-variant-numeric: tabular-nums;
+  animation: c-metrica-sale var(--dur-3) var(--curva) 500ms backwards;
+}
+.c-metrica__variacion svg { width: 14px; height: 14px; }
+@keyframes c-metrica-sale { from { opacity: 0; scale: 0.8; } }
+.c-metrica__periodo { color: var(--tinta-2); }
+.c-metrica__serie { --color: var(--color-tono); margin-top: var(--e-1); }
+.c-metrica[data-tono='neutro'] .c-metrica__serie { --color: var(--acento); }
+
+/* Hueco con un brillo que lo recorre mientras se cargan los datos */
+.c-metrica__hueco {
+  width: 60%; height: calc(var(--t-30) * 1.1); border-radius: var(--radio-chico);
+  background: linear-gradient(90deg, var(--superficie-2) 25%, color-mix(in oklch, var(--superficie-2) 55%, var(--superficie)) 50%, var(--superficie-2) 75%) 0 0 / 200% 100%;
+  animation: c-metrica-brillo 1.4s linear infinite;
+}
+@keyframes c-metrica-brillo { to { background-position: -200% 0; } }

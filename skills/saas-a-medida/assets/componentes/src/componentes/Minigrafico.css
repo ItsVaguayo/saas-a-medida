@@ -1,0 +1,16 @@
+.c-mini { --color: var(--acento); display: inline-block; vertical-align: middle; line-height: 0; }
+.c-mini--fluido { display: block; width: 100%; }
+.c-mini svg { display: block; overflow: visible; }
+
+/* La línea se descubre de izquierda a derecha, como si se dibujara */
+.c-mini[data-tipo='linea'] svg { clip-path: inset(-4px 100% -4px -4px); transition: clip-path 900ms var(--curva); }
+.c-mini[data-tipo='linea'][data-visto] svg { clip-path: inset(-4px -4px -4px -4px); }
+.c-mini__fin { fill: var(--color); stroke: var(--superficie); stroke-width: 1.5; opacity: 0; scale: 0; transform-box: fill-box; transform-origin: center; transition: opacity var(--medio) 600ms, scale var(--dur-3) var(--curva) 600ms; }
+.c-mini[data-visto] .c-mini__fin { opacity: 1; scale: 1; }
+
+.c-mini__barra {
+  fill: color-mix(in oklch, var(--color) 38%, var(--superficie)); transform-box: fill-box; transform-origin: bottom;
+  scale: 1 0; transition: scale 500ms var(--curva) calc(var(--i) * 18ms);
+}
+.c-mini__barra[data-ultima] { fill: var(--color); }
+.c-mini[data-visto] .c-mini__barra { scale: 1 1; }

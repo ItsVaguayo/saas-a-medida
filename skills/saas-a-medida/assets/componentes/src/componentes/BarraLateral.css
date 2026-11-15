@@ -1,0 +1,98 @@
+/* Al plegar solo cambia el ancho de la barra: el contenido no se recoloca, queda recortado.
+   Por eso el plegado va fino aunque haya muchos apartados. */
+.c-lateral {
+  --lateral-ancho: 248px;
+  --lateral-plegado: 60px;
+  --lateral-margen: 12px;
+  display: flex; flex-direction: column; flex-shrink: 0;
+  width: var(--lateral-ancho); height: 100%; min-height: 0; overflow: hidden;
+  background: var(--superficie); border-right: 1px solid var(--linea);
+  transition: width var(--dur-3) var(--curva);
+}
+.c-lateral[data-plegada] { width: var(--lateral-plegado); }
+
+.c-lateral__cabecera { flex-shrink: 0; padding: var(--lateral-margen); width: var(--lateral-ancho); }
+.c-lateral[data-plegada] .c-lateral__cabecera { width: var(--lateral-plegado); }
+
+.c-lateral__nav {
+  position: relative; flex: 1; min-height: 0; overflow: hidden auto;
+  width: var(--lateral-ancho); padding: var(--e-1) var(--lateral-margen) var(--lateral-margen);
+  scrollbar-width: thin;
+}
+.c-lateral__grupo { display: grid; gap: 2px; }
+.c-lateral__grupo + .c-lateral__grupo { margin-top: var(--e-4); }
+
+/* El rótulo del grupo se queda en una raya cuando la barra está plegada */
+.c-lateral__titulo {
+  position: relative; display: flex; align-items: center; height: 24px; padding: 0 var(--e-2);
+  font-size: var(--t-12); font-weight: 550; color: var(--tinta-2); white-space: nowrap;
+}
+.c-lateral__titulo span { transition: opacity var(--medio); }
+.c-lateral__titulo::after {
+  content: ''; position: absolute; left: var(--e-2); top: 50%; width: 20px; height: 1px;
+  background: var(--linea-fuerte); opacity: 0; transition: opacity var(--medio);
+}
+.c-lateral[data-plegada] .c-lateral__titulo span { opacity: 0; }
+.c-lateral[data-plegada] .c-lateral__titulo::after { opacity: 1; }
+
+.c-lateral__elemento {
+  position: relative; z-index: 1; display: flex; align-items: center; gap: var(--e-2);
+  width: 100%; height: var(--alto-control); padding: 0; border: 0; border-radius: var(--radio);
+  background: none; color: var(--tinta-2); text-align: left; text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: color var(--rapido), background-color var(--rapido);
+}
+@media (hover: hover) { .c-lateral__elemento:hover { color: var(--tinta); background: color-mix(in oklch, var(--superficie-2) 70%, transparent); } }
+.c-lateral__elemento[aria-current='page'] { color: var(--tinta); font-weight: 550; }
+.c-lateral__elemento:active .c-lateral__icono { scale: 0.9; }
+
+.c-lateral__icono {
+  position: relative; display: grid; place-items: center; flex-shrink: 0;
+  width: calc(var(--lateral-plegado) - var(--lateral-margen) * 2); height: 100%;
+  transition: scale var(--rapido);
+}
+.c-lateral__icono svg { width: 18px; height: 18px; }
+.c-lateral__elemento[aria-current='page'] .c-lateral__icono { color: var(--acento); }
+
+.c-lateral__texto { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; transition: opacity var(--medio); }
+.c-lateral__contador {
+  margin-right: var(--e-2); min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--radio-total);
+  display: grid; place-items: center; background: var(--superficie-2); color: var(--tinta-2);
+  font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; transition: opacity var(--medio);
+}
+.c-lateral__elemento[aria-current='page'] .c-lateral__contador { background: var(--acento); color: var(--sobre-acento); }
+/* Plegada, el contador se resume en un punto sobre el icono */
+.c-lateral__punto {
+  position: absolute; top: 7px; right: 6px; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--acento); box-shadow: 0 0 0 2px var(--superficie); scale: 0; transition: scale var(--medio);
+}
+.c-lateral[data-plegada] .c-lateral__texto, .c-lateral[data-plegada] .c-lateral__contador { opacity: 0; }
+.c-lateral[data-plegada] .c-lateral__punto { scale: 1; }
+.c-lateral[data-plegada] .c-lateral__elemento { width: calc(var(--lateral-plegado) - var(--lateral-margen) * 2); }
+
+/* La pastilla del apartado abierto */
+.c-lateral__indicador {
+  position: absolute; top: 0; left: var(--lateral-margen); z-index: 0;
+  width: calc(var(--lateral-ancho) - var(--lateral-margen) * 2); height: var(--ind-h, 0);
+  translate: 0 var(--ind-y, 0); border-radius: var(--radio); background: var(--acento-suave); opacity: 0;
+}
+.c-lateral__nav[data-con-activo] .c-lateral__indicador { opacity: 1; }
+.c-lateral__nav[data-medido] .c-lateral__indicador { transition: translate var(--dur-3) var(--curva), height var(--medio), width var(--dur-3) var(--curva), opacity var(--medio); }
+.c-lateral[data-plegada] .c-lateral__indicador { width: calc(var(--lateral-plegado) - var(--lateral-margen) * 2); }
+
+.c-lateral__pie {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--e-2);
+  padding: var(--e-2) var(--lateral-margen); border-top: 1px solid var(--linea);
+}
+.c-lateral__pie-contenido { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; transition: opacity var(--medio); }
+.c-lateral[data-plegada] .c-lateral__pie-contenido { flex: 0; width: 0; opacity: 0; }
+.c-lateral[data-plegada] .c-lateral__pie { gap: 0; }
+.c-lateral__plegar {
+  display: grid; place-items: center; flex-shrink: 0; margin-left: auto;
+  width: calc(var(--lateral-plegado) - var(--lateral-margen) * 2); height: var(--alto-control);
+  border: 0; border-radius: var(--radio); background: none; color: var(--tinta-3); cursor: pointer;
+  transition: color var(--rapido), background-color var(--rapido);
+}
+.c-lateral__plegar svg { width: 18px; height: 18px; }
+@media (hover: hover) { .c-lateral__plegar:hover { color: var(--tinta); background: var(--superficie-2); } }
+
+@media (pointer: coarse) { .c-lateral__elemento { height: var(--toque); } }

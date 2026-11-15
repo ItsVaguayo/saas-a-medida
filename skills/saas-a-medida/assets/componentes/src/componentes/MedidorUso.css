@@ -1,0 +1,29 @@
+.c-uso { --color-uso: var(--acento); display: grid; gap: var(--e-2); min-width: 0; }
+.c-uso[data-estado='aviso'] { --color-uso: var(--atencion); }
+.c-uso[data-estado='lleno'] { --color-uso: var(--mal); }
+
+.c-uso__cabecera { display: flex; align-items: baseline; justify-content: space-between; gap: var(--e-3); }
+.c-uso__titulo { display: flex; align-items: center; gap: var(--e-2); font-weight: 550; }
+.c-uso__titulo svg { width: 15px; height: 15px; color: var(--tinta-3); align-self: center; }
+.c-uso__cifras { font-size: var(--t-13); color: var(--tinta-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.c-uso__cifras b { color: var(--tinta); font-weight: 600; }
+
+.c-uso__pista { position: relative; height: 8px; border-radius: var(--radio-total); background: var(--superficie-2); overflow: hidden; }
+/* La barra se descubre con un recorte: no cambia el tamaño de nada y los extremos siguen redondos */
+.c-uso__barra {
+  position: absolute; inset: 0; border-radius: inherit; background: var(--color-uso);
+  clip-path: inset(0 calc((1 - var(--parte)) * 100%) 0 0 round 999px);
+  transition: clip-path 900ms var(--curva), background-color var(--dur-3);
+}
+/* Una muesca marca dónde empieza el aviso */
+.c-uso__umbral { position: absolute; top: 0; bottom: 0; left: calc(var(--umbral) * 100%); width: 2px; background: var(--superficie); opacity: 0.7; }
+
+.c-uso__pie { display: flex; align-items: center; justify-content: space-between; gap: var(--e-3); min-height: 24px; }
+.c-uso__aviso { display: flex; align-items: center; gap: 6px; font-size: var(--t-12); font-weight: 550; color: var(--color-uso); animation: c-uso-aviso var(--dur-3) var(--curva); }
+.c-uso__aviso svg { width: 14px; height: 14px; }
+@keyframes c-uso-aviso { from { opacity: 0; translate: 0 -3px; } }
+.c-uso__accion { margin-left: auto; }
+
+.c-usos { border: 1px solid var(--linea); border-radius: var(--radio-tarjeta); background: var(--superficie); }
+.c-usos > * { padding: var(--e-4); }
+.c-usos > * + * { border-top: 1px solid var(--linea); }

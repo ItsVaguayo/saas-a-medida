@@ -1,0 +1,50 @@
+.c-guia { border: 1px solid var(--linea); border-radius: var(--radio-tarjeta); background: var(--superficie); box-shadow: var(--sombra-reposo); overflow: hidden; }
+.c-guia__cabecera { display: flex; align-items: center; gap: var(--e-3); padding: var(--e-4); border-bottom: 1px solid var(--linea); }
+.c-guia__titulos { flex: 1; min-width: 0; }
+.c-guia__titulos h2 { font-size: var(--t-16); font-weight: 600; }
+.c-guia__titulos p { font-size: var(--t-13); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+
+/* El anillo de avance: se va cerrando con cada paso y, al acabar, se llena y dibuja el visto */
+.c-guia__anillo { width: 36px; height: 36px; flex-shrink: 0; }
+.c-guia__anillo circle { fill: none; stroke: var(--superficie-2); stroke-width: 3.5; transform-origin: center; rotate: -90deg; }
+.c-guia__anillo circle + circle { stroke: var(--acento); stroke-linecap: round; transition: stroke-dasharray 800ms var(--curva), stroke var(--dur-3); }
+.c-guia__anillo path { fill: none; stroke: var(--bien); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 500ms var(--curva) 500ms; }
+.c-guia[data-completa] .c-guia__anillo circle + circle { stroke: var(--bien); }
+.c-guia[data-completa] .c-guia__anillo path { stroke-dashoffset: 0; }
+
+.c-guia__ocultar {
+  display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: var(--radio-chico);
+  background: none; color: var(--tinta-3); cursor: pointer; transition: color var(--rapido), background-color var(--rapido);
+}
+.c-guia__ocultar svg { width: 16px; height: 16px; }
+@media (hover: hover) { .c-guia__ocultar:hover { color: var(--tinta); background: var(--superficie-2); } }
+
+.c-guia__paso + .c-guia__paso { border-top: 1px solid var(--linea); }
+.c-guia__paso[data-abierto] { background: color-mix(in oklch, var(--superficie-2) 45%, var(--superficie)); }
+.c-guia__paso { transition: background-color var(--medio); }
+.c-guia__fila {
+  display: flex; align-items: center; gap: var(--e-3); width: 100%; min-height: var(--toque); padding: var(--e-2) var(--e-4);
+  border: 0; background: none; text-align: left; cursor: pointer;
+}
+.c-guia__fila:focus-visible { box-shadow: inset 0 0 0 2px var(--acento); }
+.c-guia__nombre { flex: 1; min-width: 0; font-weight: 550; transition: color var(--medio); }
+.c-guia__paso[data-hecho] .c-guia__nombre { color: var(--tinta-2); text-decoration: line-through; text-decoration-color: var(--tinta-3); }
+.c-guia__flecha { width: 16px; height: 16px; color: var(--tinta-3); transition: rotate var(--medio); }
+.c-guia__paso[data-abierto] .c-guia__flecha { rotate: 180deg; }
+
+.c-guia__marca {
+  display: grid; place-items: center; flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--linea-fuerte); color: var(--sobre-acento);
+  transition: background-color var(--medio), border-color var(--medio);
+}
+.c-guia__marca svg { width: 12px; height: 12px; stroke-width: 3.5; scale: 0; transition: scale var(--dur-3) var(--curva); }
+.c-guia__paso[data-hecho] .c-guia__marca { background: var(--bien); border-color: var(--bien); animation: c-guia-hecho 450ms var(--curva); }
+.c-guia__paso[data-hecho] .c-guia__marca svg { scale: 1; }
+@keyframes c-guia-hecho { 40% { scale: 1.3; } }
+
+.c-guia__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-3) var(--curva); }
+.c-guia__paso[data-abierto] .c-guia__panel { grid-template-rows: 1fr; }
+.c-guia__panel > div { min-height: 0; overflow: hidden; padding: 0 var(--e-4) 0 calc(var(--e-4) + 20px + var(--e-3)); opacity: 0; transition: opacity var(--medio), padding var(--dur-3) var(--curva); }
+.c-guia__paso[data-abierto] .c-guia__panel > div { opacity: 1; padding-bottom: var(--e-4); }
+.c-guia__panel p { color: var(--tinta-2); font-size: var(--t-13); max-width: 60ch; }
+.c-guia__acciones { display: flex; flex-wrap: wrap; gap: var(--e-2); margin-top: var(--e-3); }

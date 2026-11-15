@@ -1,0 +1,62 @@
+/* Lo que comparten el gráfico de barras y el de área: ejes, rejilla, leyenda y globo. */
+.c-grafico { margin: 0; min-width: 0; }
+.c-grafico__leyenda { display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-4); margin-bottom: var(--e-3); font-size: var(--t-12); color: var(--tinta-2); }
+.c-grafico__leyenda li { display: flex; align-items: center; gap: 6px; }
+
+.c-grafico__cuerpo {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: var(--alto) auto; column-gap: var(--e-3);
+  font-size: var(--t-12); color: var(--tinta-2); font-variant-numeric: tabular-nums;
+}
+/* Las marcas del eje se centran en su línea de rejilla */
+.c-grafico__eje-y { display: flex; flex-direction: column; justify-content: space-between; text-align: right; }
+.c-grafico__eje-y span { height: 0; display: flex; align-items: center; justify-content: flex-end; }
+.c-grafico__zona { position: relative; border-radius: var(--radio-chico); touch-action: pan-y; outline: none; }
+.c-grafico__zona:focus-visible { box-shadow: 0 0 0 2px var(--superficie), 0 0 0 4px var(--acento); }
+.c-grafico__rejilla { position: absolute; inset: 0; display: flex; flex-direction: column-reverse; justify-content: space-between; pointer-events: none; }
+.c-grafico__rejilla span { height: 0; border-top: 1px dashed var(--linea); }
+.c-grafico__rejilla span:first-child { border-top: 1px solid var(--linea-fuerte); }
+.c-grafico__eje-x { grid-column: 2; display: flex; padding-top: var(--e-2); min-height: 26px; }
+.c-grafico__eje-x span { flex: 1; min-width: 0; text-align: center; white-space: nowrap; transition: color var(--rapido); }
+.c-grafico__eje-x span[data-activa] { color: var(--tinta); font-weight: 550; }
+
+/* El globo se coloca junto al dato y cambia de lado en la mitad derecha para no salirse */
+.c-grafico__globo {
+  position: absolute; z-index: 5; left: var(--x); top: var(--y);
+  translate: 12px calc(-100% - 8px);
+  animation: c-globo-entra var(--dur-1) var(--curva);
+  transition: left var(--dur-1) var(--curva), top var(--dur-1) var(--curva);
+}
+.c-grafico__globo[data-lado='izquierda'] { translate: calc(-100% - 12px) calc(-100% - 8px); }
+@keyframes c-globo-entra { from { opacity: 0; scale: 0.94; } }
+.c-globo__total { margin-top: var(--e-1); padding-top: var(--e-1); border-top: 1px solid color-mix(in oklch, var(--superficie) 22%, transparent); }
+
+/* ── Barras ────────────────────────────────────────── */
+.c-barras__columnas { position: absolute; inset: 0; display: flex; align-items: flex-end; }
+.c-barras__columna { position: relative; flex: 1; min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: center; }
+/* La columna entera reacciona, no solo la barra: es más fácil acertar */
+.c-barras__columna::before { content: ''; position: absolute; inset: 0 1px; border-radius: var(--radio-chico); background: var(--superficie-2); opacity: 0; transition: opacity var(--rapido); }
+.c-barras__columna[data-activa]::before { opacity: 0.8; }
+.c-barras__pila {
+  position: relative; display: flex; flex-direction: column-reverse; gap: 1px; width: 72%; max-width: 44px; min-height: 2px;
+  border-radius: var(--radio-chico) var(--radio-chico) 0 0; overflow: hidden;
+  transform-origin: bottom; scale: 1 0;
+  transition: scale 700ms var(--curva) calc(var(--i) * 22ms), height var(--dur-3) var(--curva), opacity var(--rapido);
+}
+.c-grafico[data-visto] .c-barras__pila { scale: 1 1; }
+.c-barras__tramo { background: var(--color); min-height: 0; transition: flex-grow var(--dur-3) var(--curva); }
+.c-barras__columnas[data-con-activa] .c-barras__columna:not([data-activa]) .c-barras__pila { opacity: 0.45; }
+
+/* ── Área ──────────────────────────────────────────── */
+.c-area__lienzo { position: absolute; inset: 0; clip-path: inset(-6px 100% -6px -6px); transition: clip-path 1100ms var(--curva); pointer-events: none; }
+.c-grafico[data-visto] .c-area__lienzo { clip-path: inset(-6px -6px -6px -6px); }
+.c-area__lienzo svg { display: block; overflow: visible; }
+.c-area__guia { position: absolute; top: 0; bottom: 0; left: var(--x); width: 1px; background: var(--linea-fuerte); pointer-events: none; transition: left 80ms linear; }
+.c-area__punto {
+  position: absolute; left: var(--x); top: var(--y); width: 10px; height: 10px; translate: -50% -50%; border-radius: 50%;
+  background: var(--color); box-shadow: 0 0 0 2px var(--superficie), 0 0 0 5px color-mix(in oklch, var(--color) 25%, transparent);
+  pointer-events: none; transition: left 80ms linear, top 80ms linear;
+}
+.c-area__eje-x { position: relative; display: block; height: 26px; }
+.c-area__eje-x span { position: absolute; left: var(--x); translate: -50% 0; }
+.c-area__eje-x span[data-borde='inicio'] { translate: 0 0; }
+.c-area__eje-x span[data-borde='fin'] { translate: -100% 0; }

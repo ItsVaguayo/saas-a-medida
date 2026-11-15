@@ -1,0 +1,22 @@
+.c-vacio { display: grid; justify-items: center; gap: var(--e-2); padding: var(--e-10) var(--e-6); text-align: center; animation: c-vacio-entra var(--dur-3) var(--curva); }
+@keyframes c-vacio-entra { from { opacity: 0; transform: translateY(6px); } }
+.c-vacio--tarjeta { border: 1px dashed var(--linea-fuerte); border-radius: var(--radio-tarjeta); background: color-mix(in oklch, var(--superficie) 60%, transparent); }
+.c-vacio--compacto { padding: var(--e-6) var(--e-4); }
+
+/* El icono sobre dos anillos que respiran despacio: la pantalla está viva, no rota */
+.c-vacio__dibujo { position: relative; display: grid; place-items: center; width: 88px; height: 88px; margin-bottom: var(--e-2); }
+.c-vacio--compacto .c-vacio__dibujo { width: 56px; height: 56px; margin-bottom: 0; }
+.c-vacio__anillo { position: absolute; inset: 0; border: 1px solid var(--linea); border-radius: 50%; animation: c-vacio-respira 4s ease-in-out infinite; }
+.c-vacio__anillo + .c-vacio__anillo { inset: 12px; border-color: var(--linea-fuerte); animation-delay: -2s; }
+@keyframes c-vacio-respira { 50% { scale: 1.07; opacity: 0.5; } }
+.c-vacio--compacto .c-vacio__anillo { display: none; }
+.c-vacio__icono {
+  position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: calc(var(--radio) + 4px);
+  background: var(--superficie); border: 1px solid var(--linea); box-shadow: var(--sombra-reposo); color: var(--tinta-2);
+}
+.c-vacio__icono svg { width: 20px; height: 20px; }
+
+.c-vacio__titulo { font-size: var(--t-16); font-weight: 600; }
+.c-vacio--compacto .c-vacio__titulo { font-size: var(--t-14); }
+.c-vacio__detalle { max-width: 44ch; color: var(--tinta-2); text-wrap: balance; }
+.c-vacio__acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--e-2); margin-top: var(--e-3); }

@@ -1,0 +1,36 @@
+.c-clasificada { --clasificada-color: var(--acento); display: grid; min-width: 0; }
+.c-clasificada__columnas { display: flex; justify-content: space-between; padding-bottom: var(--e-2); font-size: var(--t-12); font-weight: 550; color: var(--tinta-2); }
+.c-clasificada__lista { display: grid; gap: var(--e-1); min-height: 0; overflow: hidden; }
+
+.c-clasificada__fila { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--e-4); min-height: 32px; }
+/* La barra va detrás del nombre y crece desde la izquierda; el valor queda fuera, alineado a la derecha */
+.c-clasificada__barra {
+  position: absolute; inset: 0 auto 0 0; width: calc(100% - 9ch); border-radius: var(--radio-chico);
+  background: color-mix(in oklch, var(--clasificada-color) 16%, var(--superficie));
+  clip-path: inset(0 calc((1 - var(--parte)) * 100%) 0 0 round var(--radio-chico));
+  transition: clip-path 800ms var(--curva) calc(var(--i) * 45ms), background-color var(--rapido);
+}
+@media (hover: hover) { .c-clasificada__fila:hover .c-clasificada__barra { background: color-mix(in oklch, var(--clasificada-color) 26%, var(--superficie)); } }
+.c-clasificada__nombre {
+  position: relative; display: flex; align-items: center; gap: var(--e-2); min-width: 0; padding: 0 var(--e-2);
+  border: 0; background: none; color: inherit; text-decoration: none; text-align: left; font-size: var(--t-13);
+}
+.c-clasificada__nombre svg { width: 14px; height: 14px; color: var(--tinta-2); }
+.c-clasificada__nombre span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:is(a, button).c-clasificada__nombre { cursor: pointer; border-radius: var(--radio-chico); }
+@media (hover: hover) { :is(a, button).c-clasificada__nombre:hover span { text-decoration: underline; text-underline-offset: 3px; } }
+.c-clasificada__valor { position: relative; flex-shrink: 0; font-size: var(--t-13); font-weight: 550; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.c-clasificada__resto { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-3) var(--curva); }
+.c-clasificada__resto[data-abierto] { grid-template-rows: 1fr; margin-top: var(--e-1); }
+.c-clasificada__resto > ol { opacity: 0; transition: opacity var(--medio); }
+.c-clasificada__resto[data-abierto] > ol { opacity: 1; }
+
+.c-clasificada__mas {
+  display: inline-flex; align-items: center; gap: var(--e-1); justify-self: start; height: 28px; margin-top: var(--e-2); padding: 0 var(--e-2);
+  border: 0; border-radius: var(--radio-chico); background: none; color: var(--tinta-2); font-size: var(--t-13); font-weight: 550; cursor: pointer;
+  transition: color var(--rapido), background-color var(--rapido);
+}
+.c-clasificada__mas svg { width: 14px; height: 14px; transition: rotate var(--medio); }
+.c-clasificada__mas[aria-expanded='true'] svg { rotate: 180deg; }
+@media (hover: hover) { .c-clasificada__mas:hover { color: var(--tinta); background: var(--superficie-2); } }

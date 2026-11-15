@@ -1,0 +1,38 @@
+.c-opciones { min-width: 0; margin: 0; padding: 0; border: 0; }
+.c-opciones__etiqueta { padding: 0; margin-bottom: var(--e-2); font-size: var(--t-13); font-weight: 550; }
+.c-opciones__rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: var(--e-3); }
+.c-opciones[data-columnas] .c-opciones__rejilla { grid-template-columns: repeat(var(--columnas), minmax(0, 1fr)); }
+@media (max-width: 560px) { .c-opciones[data-columnas] .c-opciones__rejilla { grid-template-columns: minmax(0, 1fr); } }
+
+.c-opcion {
+  position: relative; display: flex; align-items: flex-start; gap: var(--e-3); padding: var(--e-3) var(--e-4);
+  border: 1px solid var(--linea-fuerte); border-radius: calc(var(--radio) + 2px); background: var(--superficie); cursor: pointer;
+  transition: border-color var(--rapido), background-color var(--medio), box-shadow var(--rapido), transform var(--rapido);
+}
+.c-opcion:active:not([data-deshabilitada]) { transform: scale(0.99); }
+@media (hover: hover) { .c-opcion:hover:not([data-deshabilitada], :has(:checked)) { border-color: var(--tinta-3); } }
+.c-opcion:has(:checked) { border-color: var(--acento); background: var(--acento-suave); box-shadow: 0 0 0 1px var(--acento); }
+.c-opcion:has(:focus-visible) { box-shadow: var(--foco); }
+.c-opcion[data-deshabilitada] { opacity: 0.5; cursor: not-allowed; }
+
+.c-opcion__icono {
+  display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 32px; border-radius: var(--radio);
+  background: var(--superficie-2); color: var(--tinta-2); transition: background-color var(--medio), color var(--medio);
+}
+.c-opcion__icono svg { width: 16px; height: 16px; }
+.c-opcion:has(:checked) .c-opcion__icono { background: var(--acento); color: var(--sobre-acento); }
+.c-opcion__texto { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.c-opcion__titulo { font-weight: 550; }
+.c-opcion__detalle { font-size: var(--t-13); color: var(--tinta-2); }
+.c-opcion__extra { flex-shrink: 0; font-size: var(--t-13); font-weight: 550; font-variant-numeric: tabular-nums; }
+
+/* La marca: un círculo (o un cuadrado, con `multiple`) que se llena y dibuja su visto */
+.c-opcion__marca {
+  display: grid; place-items: center; flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px;
+  border: 1.5px solid var(--linea-fuerte); border-radius: 50%; background: var(--superficie); color: var(--sobre-acento);
+  transition: background-color var(--rapido), border-color var(--rapido);
+}
+.c-opcion__marca[data-forma='casilla'] { border-radius: 5px; }
+.c-opcion__marca svg { width: 11px; height: 11px; stroke-width: 3.5; scale: 0; transition: scale var(--dur-3) var(--curva); }
+.c-opcion:has(:checked) .c-opcion__marca { background: var(--acento); border-color: var(--acento); }
+.c-opcion:has(:checked) .c-opcion__marca svg { scale: 1; }

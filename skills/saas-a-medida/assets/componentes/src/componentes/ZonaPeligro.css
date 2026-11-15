@@ -1,0 +1,30 @@
+.c-peligro { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--e-3) var(--e-6); min-width: 0; }
+.c-peligro__texto { flex: 1; min-width: min(240px, 100%); display: grid; gap: 2px; }
+.c-peligro__titulo { font-weight: 550; }
+.c-peligro__detalle { font-size: var(--t-13); color: var(--tinta-2); }
+
+.c-peligros > h2 { margin-bottom: var(--e-2); font-size: var(--t-14); font-weight: 600; color: var(--mal); }
+.c-peligros > div { border: 1px solid color-mix(in srgb, var(--mal) 45%, var(--superficie)); border-radius: var(--radio-tarjeta); background: var(--superficie); }
+.c-peligros > div > * { padding: var(--e-4); }
+.c-peligros > div > * + * { border-top: 1px solid var(--linea); }
+
+/* El diálogo nativo: el navegador encierra el foco dentro, lo devuelve al cerrar y atiende Escape */
+.c-peligro__dialogo {
+  width: min(440px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--linea); border-radius: calc(var(--radio-tarjeta) + 4px);
+  background: var(--superficie); color: var(--tinta); box-shadow: var(--sombra);
+}
+.c-peligro__dialogo[open] { animation: c-peligro-entra var(--dur-3) var(--curva); }
+.c-peligro__dialogo::backdrop { background: var(--velo); backdrop-filter: blur(2px); animation: c-peligro-velo var(--dur-2) ease-out; }
+@keyframes c-peligro-entra { from { opacity: 0; transform: translateY(12px) scale(0.96); } }
+@keyframes c-peligro-velo { from { opacity: 0; } }
+
+.c-peligro__dialogo form { display: grid; gap: var(--e-3); padding: var(--e-6); }
+.c-peligro__icono { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--mal-suave); color: var(--mal); }
+.c-peligro__icono svg { width: 20px; height: 20px; }
+.c-peligro__dialogo h2 { font-size: var(--t-18); font-weight: 650; letter-spacing: -0.01em; }
+.c-peligro__consecuencia { color: var(--tinta-2); }
+.c-peligro__pide { font-weight: 400; color: var(--tinta-2); }
+.c-peligro__pide b { color: var(--tinta); font-weight: 600; user-select: all; }
+.c-peligro__dialogo .c-control[data-coincide] { border-color: var(--bien); box-shadow: 0 0 0 3px color-mix(in oklch, var(--bien) 20%, transparent); }
+.c-peligro__botones { display: flex; justify-content: flex-end; gap: var(--e-2); margin-top: var(--e-2); }
+@media (max-width: 480px) { .c-peligro__botones { flex-direction: column-reverse; } .c-peligro__botones .c-boton { width: 100%; height: var(--toque); } }

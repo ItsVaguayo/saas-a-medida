@@ -1,0 +1,36 @@
+.c-tiempo { --tiempo-marca: 24px; display: grid; gap: var(--e-5); min-width: 0; }
+.c-tiempo__dia { margin-bottom: var(--e-3); font-size: var(--t-12); font-weight: 600; color: var(--tinta-2); }
+.c-tiempo__lista { display: grid; }
+
+.c-tiempo__evento {
+  --color-tono: var(--tinta-2); --fondo-tono: var(--superficie-2);
+  position: relative; display: grid; grid-template-columns: var(--tiempo-marca) minmax(0, 1fr) auto; column-gap: var(--e-3);
+  padding-bottom: var(--e-4);
+  animation: c-tiempo-entra var(--dur-3) var(--curva) calc(var(--i) * 45ms) backwards;
+}
+@keyframes c-tiempo-entra { from { opacity: 0; transform: translateY(-8px); } }
+.c-tiempo__evento[data-tono='acento'] { --color-tono: var(--acento-fuerte); --fondo-tono: var(--acento-suave); }
+.c-tiempo__evento[data-tono='bien'] { --color-tono: var(--bien); --fondo-tono: var(--bien-suave); }
+.c-tiempo__evento[data-tono='atencion'] { --color-tono: var(--atencion); --fondo-tono: var(--atencion-suave); }
+.c-tiempo__evento[data-tono='mal'] { --color-tono: var(--mal); --fondo-tono: var(--mal-suave); }
+.c-tiempo__lista > :last-child { padding-bottom: 0; }
+
+/* La línea que une un evento con el siguiente */
+.c-tiempo__evento::before {
+  content: ''; position: absolute; left: calc(var(--tiempo-marca) / 2 - 0.5px); top: calc(var(--tiempo-marca) + 4px); bottom: 4px;
+  width: 1px; background: var(--linea);
+}
+.c-tiempo__lista > :last-child::before { display: none; }
+
+.c-tiempo__marca { display: grid; place-items: center; width: var(--tiempo-marca); height: var(--tiempo-marca); }
+.c-tiempo__marca::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--color-tono); box-shadow: 0 0 0 4px var(--fondo-tono); }
+.c-tiempo__marca[data-con-icono] { border-radius: 50%; background: var(--fondo-tono); color: var(--color-tono); }
+.c-tiempo__marca[data-con-icono]::before { display: none; }
+.c-tiempo__marca svg { width: 13px; height: 13px; }
+
+.c-tiempo__cuerpo { display: grid; gap: var(--e-2); min-width: 0; padding-top: 2px; }
+.c-tiempo__titulo { color: var(--tinta-2); overflow-wrap: anywhere; }
+.c-tiempo__titulo b { color: var(--tinta); font-weight: 550; }
+.c-tiempo__detalle { padding: var(--e-2) var(--e-3); border: 1px solid var(--linea); border-radius: var(--radio); background: var(--superficie); font-size: var(--t-13); overflow-wrap: anywhere; }
+.c-tiempo__hora { padding-top: 3px; font-size: var(--t-12); color: var(--tinta-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.c-tiempo__mas { justify-self: start; margin-left: calc(var(--tiempo-marca) + var(--e-1)); }

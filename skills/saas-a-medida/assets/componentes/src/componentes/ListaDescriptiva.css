@@ -1,0 +1,21 @@
+.c-descriptiva { --descriptiva-termino: 160px; display: grid; grid-template-columns: repeat(var(--columnas), minmax(0, 1fr)); column-gap: var(--e-8); min-width: 0; }
+.c-descriptiva__par { display: grid; align-items: start; min-width: 0; padding: var(--fila) 0; border-bottom: 1px solid var(--linea); }
+.c-descriptiva__par[data-ancho='completo'] { grid-column: 1 / -1; }
+.c-descriptiva--fila .c-descriptiva__par { grid-template-columns: var(--descriptiva-termino) minmax(0, 1fr); column-gap: var(--e-4); }
+.c-descriptiva--pila .c-descriptiva__par { gap: 2px; border-bottom: 0; }
+
+.c-descriptiva dt { color: var(--tinta-2); font-size: var(--t-13); line-height: 28px; }
+.c-descriptiva--pila dt { line-height: 1.4; font-size: var(--t-12); font-weight: 550; }
+.c-descriptiva dd { display: flex; align-items: center; gap: var(--e-1); min-width: 0; min-height: 28px; }
+.c-descriptiva__valor { min-width: 0; overflow-wrap: anywhere; }
+.c-descriptiva dd[data-mono] .c-descriptiva__valor { font-family: var(--letra-mono); font-size: var(--t-13); }
+.c-descriptiva dd[data-falta] { color: var(--tinta-3); }
+/* El botón de copiar se ve al pasar por la fila o al llegar con el teclado; en táctil, siempre */
+.c-descriptiva .c-copiar { opacity: 0; }
+.c-descriptiva__par:hover .c-copiar, .c-descriptiva .c-copiar:focus-visible, .c-descriptiva .c-copiar[data-copiado] { opacity: 1; }
+@media (hover: none) { .c-descriptiva .c-copiar { opacity: 1; } }
+
+@media (max-width: 640px) {
+  .c-descriptiva { grid-template-columns: minmax(0, 1fr); }
+  .c-descriptiva--fila .c-descriptiva__par { --descriptiva-termino: 38%; }
+}

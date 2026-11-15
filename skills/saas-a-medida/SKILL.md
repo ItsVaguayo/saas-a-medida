@@ -24,7 +24,7 @@ Las rutas de esta skill: los scripts están en `${CLAUDE_SKILL_DIR}/scripts/`, l
 - **Nada sale al cliente sin que lo revise la persona**: documentos, mensajes, demos, respuestas. Tú lo preparas y ella lo envía.
 - **Los planes no llevan fechas ni semanas.** El orden lo dan las dependencias. Si la persona da una fecha, se apunta como dato, no se reparte el trabajo por semanas.
 - **La especificación manda** sobre cualquier conversación y sobre el código. Si el código hace algo distinto de lo que dice, es un error y se arregla el código; si lo que hay que cambiar es la regla, se cambia primero en la especificación. La única excepción son los nombres (de un campo, una ruta o un estado): si no coinciden, se deja el del código y se corrige la especificación.
-- **Antes de escribir un componente de interfaz, mira el kit** de `assets/kit/`: 41 módulos hechos y probados (tabla, diálogo, avisos, selector de fecha, tablero, esqueletos, gráficos…). Qué hay y cómo se lleva uno al proyecto: `references/kit-componentes.md`.
+- **Antes de escribir un componente de interfaz, mira el kit** de `assets/kit/`: 41 módulos hechos y probados (tabla, diálogo, avisos, selector de fecha, tablero, esqueletos, gráficos…). Si no está ahí, mira los 31 de `assets/componentes/` (estructura, cifras, gráficos, formularios, bloques de producto), con las mismas convenciones y prefijo `c-`. Qué hay y cómo se lleva uno al proyecto: `references/kit-componentes.md` y `references/componentes-complementarios.md`.
 - **Al construir se siguen `references/desarrollo-backend.md` y `references/desarrollo-frontend.md`.** Dicen paso a paso cómo se hace cada cosa y cómo se comprueba, y valen para cualquier modelo o agente que trabaje en el proyecto.
 - **Desde la rama de un módulo solo se toca lo de ese módulo.** Los documentos comunes (`docs/decisiones.md`, `docs/dudas.md`, `docs/dudas-cliente.md`, el estado de las fases) se cambian en una rama `docs/<tema>` con su PR pequeño, que se integra en el momento. Trabajando solo se pueden cambiar directamente en `develop`.
 - **Las dudas no se quedan en el chat.** Las del cliente van al panel de dudas (`references/dudas-cliente.md`); las del equipo, a `docs/dudas.md`; las decisiones tomadas, a `docs/decisiones.md`.
@@ -82,5 +82,6 @@ Si una skill no está instalada, sigue sin ella, dilo y ofrece instalarla con `b
 - `references/textos-interfaz.md` y `references/texto-demo.md`: textos de la app.
 - `references/desarrollo-backend.md` y `references/desarrollo-frontend.md`: cómo se construye y se comprueba cada módulo.
 - `references/kit-componentes.md`: el kit de 41 módulos de interfaz y cómo se copia uno al proyecto.
+- `references/componentes-complementarios.md`: los otros 31 componentes de `assets/componentes/`, cuándo se usan en vez de los del kit y cómo se copian.
 - `references/lecciones.md`: qué se apunta al cerrar para mejorar la skill.
 - `references/skills.md` y `references/ahorro-tokens.md`.

@@ -57,7 +57,7 @@ hooks/hooks.json      fase en curso al abrir la sesión y aviso de PR cada 15 mi
 skills/saas-a-medida/
   SKILL.md            el flujo, las reglas y la tabla de fases
   references/         una guía por fase y las transversales
-  assets/             plantillas de documentos, PDF, panel de dudas, texto de demo, despliegue y el kit de componentes
+  assets/             plantillas de documentos, PDF, panel de dudas, texto de demo, despliegue, el kit de componentes (`kit/`) y los componentes complementarios (`componentes/`)
   scripts/            PDF, aviso de PR, avance, protección de ramas, comprobación de texto de demo y de skills
 skills/<otras>/       skills de terceros incluidas, cada una con su LICENSE y su ORIGEN.md
 ```

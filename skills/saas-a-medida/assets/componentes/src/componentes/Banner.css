@@ -1,0 +1,36 @@
+/* El hueco es lo que se pliega al cerrar: lo de debajo sube suave en vez de dar un salto */
+.c-banner-hueco { display: grid; grid-template-rows: 1fr; animation: c-banner-abre var(--dur-3) var(--curva); }
+.c-banner-hueco > * { min-height: 0; }
+.c-banner-hueco[data-saliendo] { grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 280ms var(--curva), opacity var(--medio); }
+@keyframes c-banner-abre { from { grid-template-rows: 0fr; opacity: 0; } }
+
+.c-banner {
+  --color-tono: var(--info); --fondo-tono: var(--info-suave);
+  display: flex; align-items: flex-start; gap: var(--e-3); padding: var(--e-3) var(--e-4); overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-tono) 30%, var(--superficie)); border-radius: calc(var(--radio) + 2px);
+  background: var(--fondo-tono);
+}
+.c-banner[data-tono='bien'] { --color-tono: var(--bien); --fondo-tono: var(--bien-suave); }
+.c-banner[data-tono='atencion'] { --color-tono: var(--atencion); --fondo-tono: var(--atencion-suave); }
+.c-banner[data-tono='mal'] { --color-tono: var(--mal); --fondo-tono: var(--mal-suave); }
+
+.c-banner__icono { width: 18px; height: 18px; margin-top: 1px; color: var(--color-tono); }
+.c-banner__texto { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.c-banner__titulo { font-weight: 600; }
+.c-banner__detalle { color: var(--tinta-2); font-size: var(--t-13); }
+.c-banner__detalle a { color: inherit; font-weight: 550; text-underline-offset: 3px; }
+.c-banner__accion { flex-shrink: 0; align-self: center; }
+.c-banner__cerrar {
+  display: grid; place-items: center; flex-shrink: 0; width: 24px; height: 24px; margin: -2px -6px 0 0; padding: 0;
+  border: 0; border-radius: var(--radio-chico); background: none; color: var(--tinta-2); cursor: pointer;
+  transition: background-color var(--rapido), color var(--rapido);
+}
+.c-banner__cerrar svg { width: 15px; height: 15px; }
+@media (hover: hover) { .c-banner__cerrar:hover { background: color-mix(in oklch, var(--color-tono) 14%, transparent); color: var(--tinta); } }
+@media (pointer: coarse) { .c-banner__cerrar { position: relative; } .c-banner__cerrar::before { content: ''; position: absolute; inset: -10px; } }
+
+@media (max-width: 520px) {
+  .c-banner { flex-wrap: wrap; }
+  .c-banner__texto { flex-basis: calc(100% - 70px); }
+  .c-banner__accion { margin-left: calc(18px + var(--e-3)); }
+}

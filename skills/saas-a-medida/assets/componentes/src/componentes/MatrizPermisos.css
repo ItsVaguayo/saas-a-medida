@@ -1,0 +1,32 @@
+/* Con muchos roles la tabla se desliza de lado; la columna de permisos y la cabecera se quedan a la vista */
+.c-permisos { --permisos-rol: 112px; overflow: auto; max-height: var(--permisos-alto, none); border: 1px solid var(--linea); border-radius: var(--radio-tarjeta); background: var(--superficie); scrollbar-width: thin; }
+.c-permisos table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.c-permisos th, .c-permisos td { padding: var(--fila) var(--e-4); border-bottom: 1px solid var(--linea); text-align: left; font-weight: 400; }
+.c-permisos tbody:last-child tr:last-child > * { border-bottom: 0; }
+.c-permisos td { width: var(--permisos-rol); min-width: var(--permisos-rol); text-align: center; vertical-align: middle; }
+.c-permisos td .c-casilla { vertical-align: middle; }
+
+.c-permisos thead th { position: sticky; top: 0; z-index: 2; background: var(--superficie); border-bottom-color: var(--linea-fuerte); }
+.c-permisos__esquina { left: 0; z-index: 3 !important; font-size: var(--t-12); font-weight: 550 !important; color: var(--tinta-2); }
+.c-permisos__rol { width: var(--permisos-rol); text-align: center !important; white-space: nowrap; }
+.c-permisos__rol span { display: block; font-weight: 600; }
+.c-permisos__rol small { font-size: 11px; color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+
+.c-permisos tbody th { position: sticky; left: 0; z-index: 1; background: var(--superficie); min-width: 220px; }
+.c-permisos__grupo > * { background: var(--superficie-2) !important; padding-block: var(--e-2) !important; }
+.c-permisos__grupo button {
+  display: inline-flex; align-items: center; gap: var(--e-2); padding: 2px var(--e-2) 2px 0; border: 0; border-radius: var(--radio-chico);
+  background: none; font-size: var(--t-13); font-weight: 600; cursor: pointer;
+}
+.c-permisos__grupo svg { width: 14px; height: 14px; color: var(--tinta-3); transition: rotate var(--medio); }
+.c-permisos tbody[data-plegado] .c-permisos__grupo svg { rotate: -90deg; }
+
+.c-permisos__fila { animation: c-permisos-entra var(--dur-2) var(--curva) calc(var(--i) * 25ms) backwards; }
+@keyframes c-permisos-entra { from { opacity: 0; transform: translateY(-4px); } }
+.c-permisos__fila th span { display: block; font-weight: 550; }
+.c-permisos__fila th small { display: block; margin-top: 1px; font-size: var(--t-12); color: var(--tinta-2); }
+.c-permisos__fila > * { transition: background-color var(--rapido); }
+@media (hover: hover) { .c-permisos__fila:hover > * { background: color-mix(in oklch, var(--superficie-2) 55%, var(--superficie)); } }
+.c-permisos__candado { width: 14px; height: 14px; color: var(--tinta-3); vertical-align: middle; }
+
+@media (max-width: 640px) { .c-permisos { --permisos-rol: 88px; } .c-permisos tbody th { min-width: 160px; } .c-permisos th, .c-permisos td { padding-inline: var(--e-3); } }

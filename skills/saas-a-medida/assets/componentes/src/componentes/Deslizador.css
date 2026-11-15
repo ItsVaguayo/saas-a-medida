@@ -1,0 +1,39 @@
+.c-deslizador { --mando: 18px; display: grid; gap: var(--e-1); width: 100%; min-width: 0; padding: 0 calc(var(--mando) / 2); }
+.c-deslizador[data-deshabilitado] { opacity: 0.5; }
+
+/* La zona que se toca mide 28 px de alto aunque el carril se vea de 4 */
+.c-deslizador__pista { position: relative; height: 28px; cursor: pointer; touch-action: none; }
+.c-deslizador[data-deshabilitado] .c-deslizador__pista { cursor: not-allowed; }
+.c-deslizador__carril, .c-deslizador__relleno { position: absolute; top: 50%; height: 4px; translate: 0 -50%; border-radius: var(--radio-total); }
+.c-deslizador__carril { left: calc(var(--mando) / -2); right: calc(var(--mando) / -2); background: var(--superficie-2); box-shadow: inset 0 0 0 1px var(--linea); }
+.c-deslizador__relleno { left: var(--desde); width: calc(var(--hasta) - var(--desde)); background: var(--acento); }
+/* Sin tramo, el relleno arranca en el borde del carril */
+.c-deslizador__relleno[data-borde] { left: calc(var(--mando) / -2); width: calc(var(--hasta) + var(--mando) / 2); }
+
+.c-deslizador__marca { position: absolute; top: 50%; left: var(--x); width: 2px; height: 2px; translate: -50% -50%; border-radius: 50%; background: var(--tinta-3); }
+.c-deslizador__marca[data-dentro] { background: var(--sobre-acento); opacity: 0.8; }
+
+.c-deslizador__mando {
+  position: absolute; top: 50%; left: var(--x); width: var(--mando); height: var(--mando); translate: -50% -50%;
+  border-radius: 50%; background: #fff; border: 1px solid var(--linea-fuerte);
+  box-shadow: 0 1px 3px rgb(16 24 40 / 0.25); cursor: grab; outline: none;
+  transition: scale var(--medio), box-shadow var(--rapido), border-color var(--rapido);
+}
+.c-deslizador__mando:focus-visible { border-color: var(--acento); box-shadow: 0 0 0 4px color-mix(in oklch, var(--acento) 28%, transparent); z-index: 1; }
+.c-deslizador__mando[data-activo] { scale: 1.15; cursor: grabbing; border-color: var(--acento); box-shadow: 0 0 0 6px color-mix(in oklch, var(--acento) 20%, transparent); z-index: 1; }
+@media (hover: hover) { .c-deslizador__mando:hover { scale: 1.1; } }
+@media (pointer: coarse) { .c-deslizador { --mando: 24px; } .c-deslizador__pista { height: var(--toque); } }
+
+/* El globo con el valor asoma al arrastrar, al pasar por encima y con el foco */
+.c-deslizador__globo {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; translate: -50% 4px; padding: 3px 7px;
+  border-radius: var(--radio-chico); background: var(--tinta); color: var(--superficie);
+  font-size: var(--t-12); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap;
+  opacity: 0; scale: 0.9; transform-origin: bottom; pointer-events: none;
+  transition: opacity var(--rapido), scale var(--medio), translate var(--medio);
+}
+.c-deslizador__mando[data-activo] .c-deslizador__globo, .c-deslizador__mando:focus-visible .c-deslizador__globo { opacity: 1; scale: 1; translate: -50% 0; }
+@media (hover: hover) { .c-deslizador__mando:hover .c-deslizador__globo { opacity: 1; scale: 1; translate: -50% 0; } }
+
+.c-deslizador__rotulos { position: relative; height: 18px; font-size: var(--t-12); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+.c-deslizador__rotulos span { position: absolute; left: var(--x); translate: -50% 0; white-space: nowrap; }

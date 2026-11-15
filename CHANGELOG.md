@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.2.1
+
+- Otros 31 componentes de React en `assets/componentes/`, que complementan al kit: estructura, cifras y gráficos, formularios y bloques de producto. Mismos tokens (`--tono`, `--acento`, `--tinta`, `--linea`, `--e-N`, `--radio`), prefijo `c-`, catálogo propio (puerto 5191) y 61 pruebas. Guía nueva, `references/componentes-complementarios.md`.
+- Módulo 41 del kit, `BarraCristal`: navegación translúcida que flota sobre una foto o un fondo oscuro, con buscador, ramas, interruptores y plegado a iconos.
+
 ## 1.2.0
 
 - Kit de 40 módulos de interfaz en `assets/kit/` (7 funciones, 8 animaciones, 19 interactivos y 6 apartados), con catálogo y 69 pruebas. Guía nueva, `references/kit-componentes.md`; el catálogo de la fase 5 y los componentes de la fase 7 salen de ahí.

@@ -1,0 +1,14 @@
+/* Botón de copiar: los dos iconos ocupan el mismo sitio y se cruzan */
+.c-copiar {
+  position: relative; display: inline-grid; place-items: center; flex-shrink: 0;
+  width: 28px; height: 28px; padding: 0; border: 0; border-radius: var(--radio-chico);
+  background: none; color: var(--tinta-3); cursor: pointer;
+  transition: background-color var(--rapido), color var(--rapido), transform var(--rapido);
+}
+.c-copiar:active { transform: scale(0.92); }
+@media (hover: hover) { .c-copiar:hover { background: var(--superficie-2); color: var(--tinta); } }
+.c-copiar svg { grid-area: 1 / 1; width: 15px; height: 15px; transition: opacity var(--rapido), scale var(--medio), filter var(--rapido); }
+.c-copiar__hecho { opacity: 0; scale: 0.4; filter: blur(2px); color: var(--bien); }
+.c-copiar[data-copiado] .c-copiar__icono { opacity: 0; scale: 0.4; filter: blur(2px); }
+.c-copiar[data-copiado] .c-copiar__hecho { opacity: 1; scale: 1; filter: none; }
+@media (pointer: coarse) { .c-copiar::before { content: ''; position: absolute; inset: -8px; } }

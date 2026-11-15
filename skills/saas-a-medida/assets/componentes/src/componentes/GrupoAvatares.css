@@ -1,0 +1,30 @@
+.c-avatares { --solape: calc(var(--lado) * -0.22); display: inline-flex; align-items: center; isolation: isolate; }
+.c-avatares__uno {
+  /* La primera cara queda encima: así se ven enteras sus iniciales y su punto de presencia */
+  position: relative; z-index: calc(20 - var(--i)); display: inline-grid; flex-shrink: 0; border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--superficie);
+  transition: margin var(--dur-3) var(--curva), translate var(--medio);
+  animation: c-avatar-entra var(--dur-3) var(--curva) calc(var(--i) * 40ms) backwards;
+}
+@keyframes c-avatar-entra { from { opacity: 0; scale: 0.6; } }
+.c-avatares__uno + .c-avatares__uno { margin-left: var(--solape); }
+/* Al pasar por el grupo se separan un poco, y la cara señalada sube */
+@media (hover: hover) {
+  .c-avatares:hover .c-avatares__uno + .c-avatares__uno { margin-left: calc(var(--lado) * -0.08); }
+  .c-avatares__uno:hover { translate: 0 -3px; z-index: 30; }
+}
+
+.c-avatares__presencia {
+  position: absolute; right: -1px; bottom: -1px; width: 28%; height: 28%; min-width: 8px; min-height: 8px; border-radius: 50%;
+  background: var(--tinta-3); box-shadow: 0 0 0 2px var(--superficie);
+}
+.c-avatares__presencia[data-estado='activo'] { background: var(--bien); }
+.c-avatares__presencia[data-estado='ausente'] { background: var(--atencion); }
+
+.c-avatares__resto {
+  place-items: center; width: var(--lado); height: var(--lado); padding: 0; border: 0;
+  background: var(--superficie-2); color: var(--tinta-2);
+  font-size: calc(var(--lado) * 0.36); font-weight: 600; font-variant-numeric: tabular-nums;
+}
+button.c-avatares__resto { cursor: pointer; }
+button.c-avatares__resto:focus-visible { box-shadow: var(--foco); z-index: 30; }

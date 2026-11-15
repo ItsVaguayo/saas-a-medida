@@ -1,0 +1,47 @@
+.c-calor { --calor-celda: 13px; --calor-hueco: 3px; --calor-color: var(--acento); display: grid; gap: var(--e-3); min-width: 0; }
+/* Con muchas semanas en una pantalla estrecha, el mapa se desliza y empieza enseñando lo más reciente */
+.c-calor__desplaza { overflow-x: auto; scrollbar-width: thin; display: flex; flex-direction: row-reverse; padding: 2px; }
+.c-calor__lienzo { display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; gap: var(--e-1) var(--e-2); margin-right: auto; }
+
+.c-calor__meses {
+  grid-column: 2; display: grid; grid-template-columns: repeat(var(--semanas), var(--calor-celda)); column-gap: var(--calor-hueco);
+  font-size: 11px; color: var(--tinta-2); height: 16px; white-space: nowrap;
+}
+.c-calor__dias { display: grid; grid-template-rows: repeat(7, var(--calor-celda)); row-gap: var(--calor-hueco); font-size: 10px; color: var(--tinta-3); line-height: var(--calor-celda); }
+.c-calor__dias span:nth-child(1) { grid-row: 1; }
+.c-calor__dias span:nth-child(2) { grid-row: 3; }
+.c-calor__dias span:nth-child(3) { grid-row: 5; }
+
+.c-calor__rejilla { position: relative; display: grid; grid-template-columns: repeat(var(--semanas), var(--calor-celda)); grid-auto-rows: var(--calor-celda); gap: var(--calor-hueco); }
+.c-calor__fila { display: contents; }
+.c-calor__celda {
+  display: block; width: var(--calor-celda); height: var(--calor-celda); padding: 0; border: 0; border-radius: 3px;
+  background: var(--superficie-2); cursor: pointer;
+  transition: scale var(--rapido), box-shadow var(--rapido);
+}
+.c-calor__celda[data-nivel='1'] { background: color-mix(in oklch, var(--calor-color) 28%, var(--superficie-2)); }
+.c-calor__celda[data-nivel='2'] { background: color-mix(in oklch, var(--calor-color) 52%, var(--superficie-2)); }
+.c-calor__celda[data-nivel='3'] { background: color-mix(in oklch, var(--calor-color) 76%, var(--superficie-2)); }
+.c-calor__celda[data-nivel='4'] { background: var(--calor-color); }
+/* Entra por columnas, de la más antigua a la más reciente */
+.c-calor__rejilla .c-calor__celda { opacity: 0; scale: 0.5; }
+.c-calor[data-visto] .c-calor__rejilla .c-calor__celda { opacity: 1; scale: 1; transition: opacity var(--dur-3) calc(var(--col) * 14ms), scale var(--dur-3) var(--curva) calc(var(--col) * 14ms), box-shadow var(--rapido); }
+.c-calor__rejilla .c-calor__celda:focus-visible { box-shadow: 0 0 0 2px var(--superficie), 0 0 0 4px var(--acento); position: relative; z-index: 1; }
+@media (hover: hover) { .c-calor[data-visto] .c-calor__rejilla .c-calor__celda:hover { scale: 1.25; transition-delay: 0ms; box-shadow: 0 0 0 1px var(--tinta-3); position: relative; z-index: 1; } }
+
+.c-calor__globo {
+  position: absolute; z-index: 5;
+  left: calc(var(--col) * (var(--calor-celda) + var(--calor-hueco)) + var(--calor-celda) / 2);
+  top: calc(var(--fila) * (var(--calor-celda) + var(--calor-hueco)));
+  translate: -12px calc(-100% - 8px); padding: var(--e-1) var(--e-2);
+  animation: c-globo-calor var(--dur-1) var(--curva);
+}
+.c-calor__globo[data-lado='izquierda'] { translate: calc(-100% + 12px) calc(-100% - 8px); }
+@keyframes c-globo-calor { from { opacity: 0; scale: 0.94; } }
+
+.c-calor__pie { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--e-2); font-size: var(--t-12); color: var(--tinta-2); }
+.c-calor__total b { color: var(--tinta); font-weight: 600; font-variant-numeric: tabular-nums; }
+.c-calor__escala { display: flex; align-items: center; gap: var(--calor-hueco); }
+.c-calor__escala .c-calor__celda { cursor: default; }
+.c-calor__escala .c-calor__celda:first-of-type { margin-left: var(--e-1); }
+.c-calor__escala .c-calor__celda:last-of-type { margin-right: var(--e-1); }

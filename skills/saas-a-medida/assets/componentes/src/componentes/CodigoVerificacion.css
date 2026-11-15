@@ -1,0 +1,29 @@
+.c-codigo { --codigo-ancho: 44px; --codigo-alto: 52px; display: inline-grid; gap: var(--e-2); max-width: 100%; }
+.c-codigo__casillas { position: relative; display: flex; align-items: center; gap: var(--e-2); }
+.c-codigo[data-error] .c-codigo__casillas { animation: c-codigo-sacude 380ms var(--curva-mover); }
+@keyframes c-codigo-sacude { 20% { translate: -6px 0; } 40% { translate: 5px 0; } 60% { translate: -3px 0; } 80% { translate: 2px 0; } }
+
+.c-codigo__casilla {
+  display: grid; place-items: center; flex: 0 1 var(--codigo-ancho); min-width: 0; height: var(--codigo-alto);
+  border: 1px solid var(--linea-fuerte); border-radius: var(--radio); background: var(--superficie);
+  font-family: var(--letra-mono); font-size: var(--t-20); font-weight: 600;
+  transition: border-color var(--rapido), box-shadow var(--rapido), background-color var(--rapido);
+}
+.c-codigo__casilla[data-activa] { border-color: var(--acento); box-shadow: 0 0 0 3px color-mix(in oklch, var(--acento) 22%, transparent); }
+.c-codigo[data-error] .c-codigo__casilla { border-color: var(--mal); }
+.c-codigo[data-error] .c-codigo__casilla[data-activa] { box-shadow: 0 0 0 3px color-mix(in oklch, var(--mal) 22%, transparent); }
+.c-codigo[data-deshabilitado] .c-codigo__casilla { background: var(--superficie-2); opacity: 0.6; }
+.c-codigo__separador { width: 10px; height: 2px; flex-shrink: 0; border-radius: 1px; background: var(--linea-fuerte); }
+
+/* Cada cifra cae en su casilla */
+.c-codigo__cifra { animation: c-codigo-cifra var(--dur-2) var(--curva); }
+@keyframes c-codigo-cifra { from { opacity: 0; transform: translateY(-6px) scale(0.8); } }
+.c-codigo__cursor { width: 1.5px; height: 40%; background: var(--tinta); animation: c-codigo-parpadea 1.1s steps(1) infinite; }
+@keyframes c-codigo-parpadea { 50% { opacity: 0; } }
+
+/* El campo de verdad cubre las casillas, invisible: recibe los toques, el pegado y el autorrelleno */
+.c-codigo__entrada {
+  position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: none;
+  opacity: 0; font-size: 16px; cursor: text;
+}
+.c-codigo__entrada:disabled { cursor: not-allowed; }
