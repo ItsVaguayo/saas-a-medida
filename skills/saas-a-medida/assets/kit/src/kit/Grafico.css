@@ -1,0 +1,54 @@
+.k-grafico { --eje: 56px; margin: 0; }
+.k-grafico__lienzo { display: grid; grid-template-columns: var(--eje) minmax(0, 1fr); }
+.k-grafico__eje { display: flex; flex-direction: column; justify-content: space-between; padding-right: var(--e-3); text-align: right; font-size: var(--t-12); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+/* Cada cifra del eje queda centrada en su raya */
+.k-grafico__eje span { height: 0; line-height: 0; white-space: nowrap; }
+.k-grafico__zona { position: relative; border-radius: var(--radio-chico); }
+.k-grafico__raya { position: absolute; left: 0; right: 0; height: 1px; background: var(--linea); }
+.k-grafico__raya:last-of-type { background: var(--linea-fuerte); }
+
+.k-grafico__etiquetas { display: flex; margin: var(--e-2) 0 0 var(--eje); font-size: var(--t-12); color: var(--tinta-2); }
+.k-grafico__etiquetas span { flex: 1; min-width: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--rapido); }
+.k-grafico__etiquetas span[data-activa] { color: var(--tinta); font-weight: 600; }
+.k-grafico__etiquetas--extremos { justify-content: space-between; }
+.k-grafico__etiquetas--extremos span { flex: 0 1 auto; }
+
+.k-grafico__globo {
+  position: absolute; z-index: 5; left: 50%; bottom: calc(100% + 8px); translate: -50% 0;
+  display: grid; justify-items: center; padding: 5px var(--e-2); border-radius: var(--radio-chico);
+  background: var(--tinta); color: var(--superficie); font-size: var(--t-12); white-space: nowrap; pointer-events: none;
+  animation: k-globo var(--dur-1) var(--curva);
+}
+.k-grafico__globo strong { font-size: var(--t-13); font-variant-numeric: tabular-nums; }
+.k-grafico__globo[data-borde='inicio'] { left: 0; translate: -12px 0; }
+.k-grafico__globo[data-borde='fin'] { left: auto; right: 0; translate: 12px 0; }
+@keyframes k-globo { from { opacity: 0; } }
+
+/* Barras: crecen desde la base, una detrás de otra */
+.k-barras { position: absolute; inset: 0; display: flex; align-items: flex-end; }
+.k-barras__columna { flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; min-width: 0; }
+.k-barras__barra {
+  position: relative; width: 64%; max-width: 44px; border-radius: var(--radio-chico) var(--radio-chico) 0 0;
+  background: color-mix(in oklch, var(--acento) 55%, var(--superficie));
+  transform-origin: bottom; animation: k-barra-crece 600ms var(--curva) calc(var(--i) * 30ms) both;
+  transition: background-color var(--rapido), opacity var(--rapido);
+}
+.k-barras__barra[data-destacado] { background: var(--acento); }
+@keyframes k-barra-crece { from { transform: scaleY(0); } }
+/* Con una barra señalada, las demás se apagan un poco */
+.k-barras[data-activa] .k-barras__columna:not([data-activa]) .k-barras__barra { opacity: 0.45; }
+.k-barras__columna[data-activa] .k-barras__barra { background: var(--acento); }
+
+/* Línea */
+.k-linea { cursor: crosshair; }
+.k-linea svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.k-linea__trazo { fill: none; stroke: var(--acento); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; animation: k-mini-traza 1100ms var(--curva) both; }
+.k-linea__area { animation: k-globo 700ms ease-out 400ms both; }
+@keyframes k-mini-traza { from { stroke-dashoffset: 1; } }
+.k-linea__guia { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--linea-fuerte); pointer-events: none; }
+.k-linea__punto {
+  position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%;
+  background: var(--acento); box-shadow: 0 0 0 2px var(--superficie), 0 0 0 5px color-mix(in oklch, var(--acento) 25%, transparent); pointer-events: none;
+}
+
+@media (max-width: 520px) { .k-grafico { --eje: 44px; } }

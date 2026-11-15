@@ -1,0 +1,23 @@
+.k-boton-estado { display: inline-grid; }
+.k-boton-estado[aria-disabled='true'] { cursor: progress; }
+.k-boton-estado[data-estado='error'] { background: var(--mal); color: var(--sobre-mal); }
+.k-boton-estado[data-estado='hecho'] { background: var(--bien); color: var(--superficie); border-color: transparent; }
+
+.k-boton-estado__cara {
+  grid-area: 1 / 1;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--e-2);
+  opacity: 0; transform: translateY(6px) scale(0.96); filter: blur(3px);
+  transition: opacity var(--medio), transform var(--medio), filter var(--medio);
+}
+/* La cara que se va sale hacia arriba; la que entra viene desde abajo */
+.k-boton-estado[data-estado='reposo'] [data-cara='reposo'],
+.k-boton-estado[data-estado='cargando'] [data-cara='cargando'],
+.k-boton-estado[data-estado='hecho'] [data-cara='hecho'],
+.k-boton-estado[data-estado='error'] [data-cara='error'] { opacity: 1; transform: none; filter: none; }
+
+.k-boton-estado [data-cara='cargando'] svg { animation: k-giro 0.8s linear infinite; }
+@keyframes k-giro { to { transform: rotate(360deg); } }
+/* El giro del indicador de carga informa de que algo sigue en marcha: se mantiene aunque se pida menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .k-boton-estado [data-cara='cargando'] svg { animation-duration: 1.6s !important; animation-iteration-count: infinite !important; }
+}

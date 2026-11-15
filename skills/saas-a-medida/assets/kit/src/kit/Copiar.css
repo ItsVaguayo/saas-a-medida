@@ -1,0 +1,13 @@
+.k-copiar {
+  display: inline-flex; align-items: center; gap: var(--e-2); height: 28px; min-width: 28px; padding: 0 6px; justify-content: center;
+  border: 0; border-radius: var(--radio-chico); background: none; color: var(--tinta-2); font-size: var(--t-13); font-weight: 550; cursor: pointer;
+  transition: background-color var(--rapido), color var(--rapido), transform var(--rapido);
+}
+.k-copiar:active { transform: scale(0.94); }
+@media (hover: hover) { .k-copiar:hover { background: var(--superficie-2); color: var(--tinta); } }
+.k-copiar[data-copiado] { color: var(--bien); }
+/* Los dos iconos ocupan el mismo sitio y se cruzan: uno se encoge y se desenfoca mientras el otro llega */
+.k-copiar__iconos { display: inline-grid; }
+.k-copiar__iconos svg { grid-area: 1 / 1; width: 14px; height: 14px; transition: opacity var(--medio), scale var(--medio), filter var(--medio); }
+.k-copiar__iconos svg:last-child, .k-copiar[data-copiado] .k-copiar__iconos svg:first-child { opacity: 0; scale: 0.5; filter: blur(2px); }
+.k-copiar[data-copiado] .k-copiar__iconos svg:last-child { opacity: 1; scale: 1; filter: none; }

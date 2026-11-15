@@ -1,7 +1,7 @@
 {
   "name": "saas-a-medida",
   "displayName": "SaaS a medida",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Acompaña el desarrollo de un SaaS a medida para un cliente, solo o en equipo: información del cliente, alcance en PDF, mockups, plan técnico con reparto y ramas, desarrollo por módulos con revisiones, panel de dudas, demo, producción, seguridad, legal y soporte.",
   "author": {
     "name": "ItsVaguayo",

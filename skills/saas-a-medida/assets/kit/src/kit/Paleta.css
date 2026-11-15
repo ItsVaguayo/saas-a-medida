@@ -1,0 +1,45 @@
+/* La paleta se abre cien veces al día: entra casi sin animación (un fundido de 120 ms y nada de desplazamiento) */
+.k-paleta {
+  width: min(600px, calc(100vw - var(--e-6))); max-height: none;
+  margin: 14vh auto auto; padding: 0;
+  border: 1px solid var(--linea); border-radius: calc(var(--radio-tarjeta) + 2px);
+  background: var(--superficie); color: var(--tinta); box-shadow: var(--sombra);
+  opacity: 0; transform: scale(0.985);
+  transition: opacity var(--dur-1) ease-out, transform var(--dur-1) ease-out, overlay var(--dur-1) allow-discrete, display var(--dur-1) allow-discrete;
+}
+.k-paleta[open] { opacity: 1; transform: none; }
+@starting-style { .k-paleta[open] { opacity: 0; transform: scale(0.985); } }
+.k-paleta::backdrop { background: var(--velo); }
+
+.k-paleta__caja { display: flex; flex-direction: column; max-height: min(60dvh, 480px); }
+.k-paleta__buscador { display: flex; align-items: center; gap: var(--e-3); padding: 0 var(--e-4); border-bottom: 1px solid var(--linea); }
+.k-paleta__buscador > svg { width: 18px; height: 18px; color: var(--tinta-3); }
+.k-paleta__buscador input {
+  flex: 1; min-width: 0; height: 52px; border: 0; background: none; font-size: var(--t-16);
+}
+.k-paleta__buscador input:focus-visible { box-shadow: none; }
+.k-paleta__buscador input::placeholder { color: var(--tinta-3); }
+
+.k-paleta__lista { flex: 1; min-height: 0; padding: var(--e-2); overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: var(--e-8); }
+.k-paleta__grupo { padding: var(--e-3) var(--e-3) var(--e-1); font-size: var(--t-12); font-weight: 550; color: var(--tinta-2); }
+.k-paleta__opcion {
+  display: flex; align-items: center; gap: var(--e-3); min-height: 40px; padding: 0 var(--e-3);
+  border-radius: var(--radio); cursor: pointer;
+}
+.k-paleta__opcion > svg { width: 16px; height: 16px; color: var(--tinta-3); }
+.k-paleta__opcion > span:first-of-type { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* El resalte no lleva transición: tiene que ir pegado a la tecla */
+.k-paleta__opcion[aria-selected='true'] { background: var(--acento-suave); color: var(--acento-fuerte); }
+.k-paleta__opcion[aria-selected='true'] > svg { color: currentColor; }
+.k-paleta__vacio { padding: var(--e-8) var(--e-4); text-align: center; color: var(--tinta-2); }
+
+.k-paleta__pie { display: flex; gap: var(--e-4); padding: var(--e-2) var(--e-4); border-top: 1px solid var(--linea); font-size: var(--t-12); color: var(--tinta-2); }
+.k-paleta__pie span { display: inline-flex; align-items: center; gap: var(--e-1); }
+.k-paleta__pie svg { width: 10px; height: 10px; }
+.k-teclas { display: inline-flex; gap: 3px; }
+
+@media (max-width: 560px) {
+  .k-paleta { margin-top: var(--e-3); }
+  .k-paleta__pie, .k-paleta__buscador kbd { display: none; }
+  .k-paleta__opcion { min-height: var(--toque); }
+}

@@ -1,0 +1,21 @@
+.k-paginacion { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-3) var(--e-5); font-size: var(--t-13); color: var(--tinta-2); }
+.k-paginacion__tramo { margin-right: auto; font-variant-numeric: tabular-nums; }
+.k-paginacion__tramo strong { color: var(--tinta); font-weight: 550; }
+.k-paginacion__tamano { display: inline-flex; align-items: center; gap: var(--e-2); }
+.k-paginacion__tamano .k-control { width: auto; height: calc(var(--alto-control) - 8px); padding: 0 var(--e-2); font-size: var(--t-13); }
+.k-paginacion__botones { display: inline-flex; align-items: center; gap: 2px; }
+.k-paginacion__pagina {
+  min-width: calc(var(--alto-control) - 8px); height: calc(var(--alto-control) - 8px); padding: 0 6px;
+  border: 0; border-radius: var(--radio-chico); background: none; color: var(--tinta-2);
+  font-size: var(--t-13); font-weight: 550; font-variant-numeric: tabular-nums; cursor: pointer;
+  transition: background-color var(--rapido), color var(--rapido), transform var(--rapido);
+}
+.k-paginacion__pagina:active { transform: scale(0.94); }
+.k-paginacion__pagina[aria-current='page'] { background: var(--acento-suave); color: var(--acento-fuerte); }
+@media (hover: hover) { .k-paginacion__pagina:not([aria-current]):hover { background: var(--superficie-2); color: var(--tinta); } }
+.k-paginacion__hueco { width: 20px; text-align: center; color: var(--tinta-3); }
+/* En móvil sobran los números: quedan el tramo y las dos flechas, grandes */
+@media (max-width: 520px) {
+  .k-paginacion__pagina, .k-paginacion__hueco, .k-paginacion__tamano { display: none; }
+  .k-paginacion__botones .k-boton { width: var(--toque); height: var(--toque); }
+}

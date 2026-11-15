@@ -1,0 +1,10 @@
+.k-aparecer {
+  opacity: 0;
+  transform: translate(var(--dx, 0), var(--dy, 0));
+  transition: opacity var(--dur-3) var(--curva) var(--retraso, 0ms), transform var(--dur-3) var(--curva) var(--retraso, 0ms);
+}
+.k-aparecer[data-desde='abajo'] { --dy: 10px; }
+.k-aparecer[data-desde='arriba'] { --dy: -10px; }
+.k-aparecer[data-desde='izquierda'] { --dx: -12px; }
+.k-aparecer[data-desde='derecha'] { --dx: 12px; }
+.k-aparecer[data-visto] { opacity: 1; transform: none; }

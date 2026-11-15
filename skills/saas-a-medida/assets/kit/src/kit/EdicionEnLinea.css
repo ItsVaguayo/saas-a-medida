@@ -1,0 +1,23 @@
+.k-enlinea {
+  display: inline-flex; align-items: center; gap: var(--e-2); max-width: 100%;
+  min-height: calc(var(--alto-control) - 6px); margin: 0 calc(var(--e-2) * -1); padding: 0 var(--e-2);
+  border: 0; border-radius: var(--radio-chico); background: none; text-align: left; cursor: text;
+  transition: background-color var(--rapido);
+}
+.k-enlinea__valor { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.k-enlinea[data-vacio] .k-enlinea__valor { color: var(--tinta-3); }
+.k-enlinea svg { width: 13px; height: 13px; }
+/* El lápiz solo asoma al pasar o al llegar con el teclado: el dato manda, la edición se descubre */
+.k-enlinea__lapiz { color: var(--tinta-3); opacity: 0; transition: opacity var(--rapido); }
+@media (hover: hover) { .k-enlinea:hover { background: var(--superficie-2); } .k-enlinea:hover .k-enlinea__lapiz { opacity: 1; } }
+.k-enlinea:focus-visible .k-enlinea__lapiz { opacity: 1; }
+@media (pointer: coarse) { .k-enlinea__lapiz { opacity: 1; } }
+.k-enlinea__hecho { color: var(--bien); animation: k-enlinea-hecho var(--dur-3) var(--curva); }
+@keyframes k-enlinea-hecho { from { opacity: 0; transform: scale(0.5); } }
+
+.k-enlinea--editando { position: relative; display: inline-flex; flex-direction: column; align-items: stretch; margin: 0; padding: 0; cursor: default; }
+.k-enlinea--editando .k-control { height: calc(var(--alto-control) - 6px); padding: 0 var(--e-2); margin: 0 calc(var(--e-2) * -1); width: calc(100% + var(--e-4)); min-width: 180px; }
+.k-enlinea__guardando { position: absolute; right: 0; top: 50%; translate: 0 -50%; color: var(--tinta-3); animation: k-giro 0.8s linear infinite; }
+.k-enlinea__error { position: absolute; top: calc(100% + 4px); left: calc(var(--e-2) * -1); z-index: 5; padding: 3px var(--e-2); border-radius: var(--radio-chico); background: var(--mal); color: var(--sobre-mal); font-size: var(--t-12); white-space: nowrap; animation: k-flotante-entra var(--dur-2) var(--curva); transform-origin: top left; }
+@keyframes k-giro { to { transform: rotate(360deg); } }
+@keyframes k-flotante-entra { from { opacity: 0; transform: scale(0.95); } }

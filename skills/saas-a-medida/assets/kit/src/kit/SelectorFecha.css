@@ -1,0 +1,31 @@
+.k-calendario { --celda: 36px; width: calc(var(--celda) * 7); user-select: none; }
+.k-calendario__cabecera { display: flex; align-items: center; gap: 2px; margin-bottom: var(--e-2); }
+.k-calendario__mes { flex: 1; padding-left: var(--e-2); font-weight: 600; }
+.k-calendario__mes::first-letter { text-transform: uppercase; }
+.k-calendario__semana, .k-calendario__fila { display: grid; grid-template-columns: repeat(7, var(--celda)); }
+.k-calendario__semana span { display: grid; place-items: center; height: 28px; font-size: var(--t-12); font-weight: 550; color: var(--tinta-2); }
+
+.k-calendario__dia {
+  position: relative; display: grid; place-items: center; width: var(--celda); height: var(--celda); padding: 0;
+  border: 0; border-radius: var(--radio); background: none;
+  font-variant-numeric: tabular-nums; cursor: pointer;
+  transition: background-color var(--rapido), color var(--rapido), transform var(--rapido);
+}
+.k-calendario__dia:active:not([aria-disabled]) { transform: scale(0.92); }
+.k-calendario__dia[data-otro-mes] { color: var(--tinta-3); }
+.k-calendario__dia[aria-disabled] { color: var(--tinta-3); opacity: 0.5; cursor: not-allowed; text-decoration: line-through; }
+@media (hover: hover) { .k-calendario__dia:hover:not([aria-disabled], [aria-selected='true']) { background: var(--superficie-2); } }
+/* Hoy: un punto debajo del número. No depende solo del color */
+.k-calendario__dia[aria-current='date'] { font-weight: 700; color: var(--acento-fuerte); }
+.k-calendario__dia[aria-current='date']::after { content: ''; position: absolute; bottom: 5px; width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+.k-calendario__dia[aria-selected='true'] { background: var(--acento); color: var(--sobre-acento); font-weight: 600; }
+
+.k-fecha { position: relative; }
+.k-fecha__boton { display: flex; align-items: center; gap: var(--e-2); text-align: left; cursor: pointer; }
+.k-fecha__boton svg { width: 16px; height: 16px; color: var(--tinta-3); }
+.k-fecha__boton[data-vacio] { color: var(--tinta-3); }
+.k-fecha__panel { right: auto; max-width: none; padding: var(--e-3); }
+.k-fecha__pie { display: flex; justify-content: space-between; gap: var(--e-2); margin-top: var(--e-2); padding-top: var(--e-2); border-top: 1px solid var(--linea); }
+.k-fecha__pie:empty { display: none; }
+
+@media (pointer: coarse) { .k-calendario { --celda: 44px; } }

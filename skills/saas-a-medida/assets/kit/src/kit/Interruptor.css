@@ -1,0 +1,30 @@
+.k-interruptor { display: flex; align-items: center; justify-content: space-between; gap: var(--e-6); min-height: var(--toque); }
+.k-interruptor__texto { display: grid; gap: 2px; min-width: 0; }
+.k-interruptor__etiqueta { font-weight: 550; }
+.k-interruptor__detalle { font-size: var(--t-13); color: var(--tinta-2); }
+
+.k-interruptor__boton {
+  --ancho: 38px; --alto: 22px; --bola: 18px;
+  position: relative; flex-shrink: 0; width: var(--ancho); height: var(--alto); padding: 0;
+  border: 0; border-radius: var(--radio-total); background: var(--linea-fuerte); cursor: pointer;
+  transition: background-color var(--medio);
+}
+/* La zona que se toca es mayor que el dibujo */
+.k-interruptor__boton::before { content: ''; position: absolute; inset: -11px -6px; }
+.k-interruptor__boton[aria-checked='true'] { background: var(--acento); }
+.k-interruptor__boton:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.k-interruptor__bola {
+  position: absolute; top: 2px; left: 2px; width: var(--bola); height: var(--bola);
+  border-radius: var(--radio-total); background: #fff;
+  box-shadow: 0 1px 3px rgb(16 24 40 / 0.3);
+  transition: translate 260ms var(--curva), width var(--medio);
+}
+.k-interruptor__boton[aria-checked='true'] .k-interruptor__bola { translate: calc(var(--ancho) - var(--bola) - 4px) 0; }
+/* Mientras se mantiene pulsado la bola se estira hacia donde va a ir */
+.k-interruptor__boton:active:not(:disabled) .k-interruptor__bola { width: calc(var(--bola) + 5px); }
+.k-interruptor__boton[aria-checked='true']:active:not(:disabled) .k-interruptor__bola { translate: calc(var(--ancho) - var(--bola) - 9px) 0; }
+
+.k-opciones { border: 1px solid var(--linea); border-radius: var(--radio-tarjeta); background: var(--superficie); }
+.k-opciones > * { padding: var(--e-3) var(--e-4); }
+.k-opciones > * + * { border-top: 1px solid var(--linea); }

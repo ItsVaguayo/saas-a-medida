@@ -61,7 +61,7 @@ Con la dirección elegida:
 
 1. Sus variables pasan a ser los estilos base. Se borran las otras direcciones y el cambio por URL.
 2. Todo texto cumple contraste 4,5:1 sobre su fondo.
-3. Un catálogo de componentes base en una ruta de desarrollo (`/catalogo`): botones, campos, tablas, tarjetas, etiquetas de estado, listas vacías, diálogos y avisos, cada uno en sus estados.
+3. Un catálogo de componentes base en una ruta de desarrollo (`/catalogo`): botones, campos, tablas, tarjetas, etiquetas de estado, listas vacías, diálogos y avisos, cada uno en sus estados. No se escriben desde cero: salen del kit de `assets/kit/` con el tema de la dirección elegida (`kit-componentes.md`).
 4. Apunta en `docs/decisiones.md` la dirección elegida, por qué y en qué referencias se apoya.
 
 Los colores y la tipografía quedan fijados aquí, antes de que nadie construya en paralelo: si cada uno elige los suyos por el camino, al juntar los módulos no encajan.

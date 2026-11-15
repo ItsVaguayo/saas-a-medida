@@ -1,0 +1,142 @@
+/* Base del kit: reinicio mínimo, foco, y las cuatro piezas que usan casi todos los módulos
+   (botón, campo, etiqueta y avatar). Todo lo demás vive junto a su componente. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--letra);
+  font-size: var(--t-14);
+  line-height: 1.45;
+  color: var(--tinta);
+  background: var(--fondo);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+svg { flex-shrink: 0; }
+
+:focus-visible { outline: none; box-shadow: var(--foco); }
+
+/* Visible solo para el lector de pantalla */
+.oculto-accesible {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* Quien pide menos movimiento se queda sin desplazamientos ni rebotes; los cambios siguen ocurriendo, de golpe.
+   Las animaciones hechas con JavaScript lo comprueban con `sinMovimiento()` (kit/interno.js). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Botón ─────────────────────────────────────────── */
+.k-boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--e-2);
+  height: var(--alto-control); padding: 0 var(--e-3);
+  border: 1px solid transparent; border-radius: var(--radio);
+  font-weight: 550; font-size: var(--t-14); white-space: nowrap; text-decoration: none;
+  cursor: pointer; user-select: none;
+  transition: background-color var(--rapido), border-color var(--rapido), color var(--rapido), transform var(--rapido);
+}
+.k-boton svg { width: 16px; height: 16px; }
+/* Al pulsar se hunde un pelo: la interfaz responde antes de que pase nada más */
+.k-boton:active:not(:disabled) { transform: scale(0.97); }
+.k-boton:disabled, .k-boton[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
+
+.k-boton--principal { background: var(--acento); color: var(--sobre-acento); }
+.k-boton--secundario { background: var(--superficie); color: var(--tinta); border-color: var(--linea-fuerte); }
+.k-boton--discreto { background: transparent; color: var(--tinta-2); }
+.k-boton--peligro { background: var(--mal); color: var(--sobre-mal); }
+@media (hover: hover) {
+  .k-boton--principal:hover:not(:disabled) { background: var(--acento-fuerte); }
+  .k-boton--secundario:hover:not(:disabled) { background: var(--superficie-2); }
+  .k-boton--discreto:hover:not(:disabled) { background: var(--superficie-2); color: var(--tinta); }
+  .k-boton--peligro:hover:not(:disabled) { filter: brightness(0.92); }
+}
+.k-boton--chico { height: calc(var(--alto-control) - 8px); padding: 0 var(--e-2); font-size: var(--t-13); }
+.k-boton--icono { width: var(--alto-control); padding: 0; }
+.k-boton--icono.k-boton--chico { width: calc(var(--alto-control) - 8px); }
+.k-boton--bloque { width: 100%; }
+
+/* ── Campo ─────────────────────────────────────────── */
+.k-campo { display: grid; gap: var(--e-1); }
+.k-campo__etiqueta { font-size: var(--t-13); font-weight: 550; }
+.k-campo__opcional { font-weight: 400; color: var(--tinta-2); }
+.k-control {
+  width: 100%; height: var(--alto-control); padding: 0 var(--e-3);
+  background: var(--superficie); border: 1px solid var(--linea-fuerte); border-radius: var(--radio);
+  transition: border-color var(--rapido), box-shadow var(--rapido);
+}
+textarea.k-control { height: auto; min-height: 84px; padding: var(--e-2) var(--e-3); resize: vertical; }
+.k-control::placeholder { color: var(--tinta-3); }
+.k-control:focus-visible { border-color: var(--acento); box-shadow: 0 0 0 3px color-mix(in oklch, var(--acento) 22%, transparent); }
+.k-control[aria-invalid='true'] { border-color: var(--mal); }
+.k-campo__ayuda { font-size: var(--t-12); color: var(--tinta-2); }
+.k-campo__error { display: flex; align-items: center; gap: var(--e-1); font-size: var(--t-12); color: var(--mal); }
+.k-campo__error svg { width: 14px; height: 14px; }
+/* En el móvil, por debajo de 16 px el iPhone amplía la página al tocar el campo */
+@media (pointer: coarse) { .k-control { font-size: 16px; } }
+
+/* ── Etiqueta de estado ────────────────────────────── */
+.k-etiqueta {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 22px; padding: 0 var(--e-2);
+  border-radius: var(--radio-total); font-size: var(--t-12); font-weight: 550; white-space: nowrap;
+  background: var(--superficie-2); color: var(--tinta-2);
+}
+.k-etiqueta svg { width: 12px; height: 12px; }
+.k-etiqueta--punto::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.k-etiqueta--acento { background: var(--acento-suave); color: var(--acento-fuerte); }
+.k-etiqueta--bien { background: var(--bien-suave); color: var(--bien); }
+.k-etiqueta--atencion { background: var(--atencion-suave); color: var(--atencion); }
+.k-etiqueta--mal { background: var(--mal-suave); color: var(--mal); }
+
+/* ── Avatar ────────────────────────────────────────── */
+.k-avatar {
+  display: inline-grid; place-items: center; flex-shrink: 0;
+  width: var(--lado, 32px); height: var(--lado, 32px); border-radius: 50%;
+  background: var(--acento-suave); color: var(--acento-fuerte);
+  font-size: calc(var(--lado, 32px) * 0.38); font-weight: 600; letter-spacing: 0.02em;
+  object-fit: cover;
+}
+
+/* ── Tarjeta ───────────────────────────────────────── */
+.k-tarjeta {
+  background: var(--superficie); border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-reposo);
+}
+
+/* Tecla de atajo */
+.k-tecla {
+  display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px;
+  border: 1px solid var(--linea-fuerte); border-bottom-width: 2px; border-radius: var(--radio-chico);
+  background: var(--superficie); color: var(--tinta-2);
+  font-family: var(--letra); font-size: 11px; font-weight: 550; line-height: 1;
+}
+
+/* ── Casilla ───────────────────────────────────────── */
+.k-casilla {
+  appearance: none; display: inline-grid; place-content: center; flex-shrink: 0;
+  width: 16px; height: 16px; margin: 0;
+  border: 1.5px solid var(--linea-fuerte); border-radius: 4px; background: var(--superficie); cursor: pointer;
+  transition: background-color var(--rapido), border-color var(--rapido);
+}
+.k-casilla::after {
+  content: ''; width: 10px; height: 10px; background: var(--sobre-acento);
+  clip-path: polygon(14% 52%, 0 66%, 40% 100%, 100% 22%, 86% 10%, 38% 70%);
+  scale: 0; transition: scale var(--dur-1) var(--curva);
+}
+.k-casilla:checked, .k-casilla:indeterminate { background: var(--acento); border-color: var(--acento); }
+.k-casilla:checked::after { scale: 1; }
+.k-casilla:indeterminate::after { clip-path: inset(40% 5% 40% 5% round 1px); scale: 1; }
+/* La zona que se toca es mayor que el dibujo */
+.k-casilla { position: relative; }
+.k-casilla::before { content: ''; position: absolute; inset: -12px; }

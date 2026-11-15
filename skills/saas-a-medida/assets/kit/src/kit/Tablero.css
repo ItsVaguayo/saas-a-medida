@@ -1,0 +1,45 @@
+.k-tablero { display: flex; align-items: flex-start; gap: var(--e-3); overflow-x: auto; padding-bottom: var(--e-2); }
+
+.k-tablero__columna {
+  flex: 1 0 240px; max-width: 340px; display: flex; flex-direction: column;
+  padding: var(--e-2); border-radius: var(--radio-tarjeta); background: var(--superficie-2);
+  transition: background-color var(--medio), box-shadow var(--medio);
+}
+.k-tablero__columna[data-destino] { background: color-mix(in oklch, var(--acento-suave) 70%, var(--superficie-2)); box-shadow: inset 0 0 0 1.5px color-mix(in oklch, var(--acento) 40%, transparent); }
+.k-tablero__cabecera { display: flex; align-items: center; gap: var(--e-2); padding: var(--e-1) var(--e-2) var(--e-2); }
+.k-tablero__cabecera h3 { font-size: var(--t-13); font-weight: 600; }
+.k-tablero__cuenta { font-size: var(--t-12); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+.k-tablero__lista { display: flex; flex-direction: column; gap: var(--e-2); min-height: 48px; }
+.k-tablero__pie { padding: var(--e-2) var(--e-2) var(--e-1); font-size: var(--t-12); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+
+.k-tablero__tarjeta {
+  position: relative; display: flex; gap: var(--e-1); padding: var(--e-3) var(--e-3) var(--e-3) var(--e-1);
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio);
+  box-shadow: var(--sombra-reposo); cursor: grab;
+  transition: box-shadow var(--medio), border-color var(--medio);
+}
+@media (hover: hover) { .k-tablero__tarjeta:hover { border-color: var(--linea-fuerte); box-shadow: var(--sombra-elevada); } }
+.k-tablero__contenido { flex: 1; min-width: 0; }
+.k-tablero__asa {
+  display: grid; place-items: center; align-self: stretch; width: 18px; padding: 0;
+  border: 0; background: none; color: var(--tinta-3); cursor: grab; touch-action: none;
+  opacity: 0; transition: opacity var(--rapido);
+}
+.k-tablero__asa svg { width: 14px; height: 14px; }
+.k-tablero__tarjeta:hover .k-tablero__asa, .k-tablero__tarjeta:focus-visible .k-tablero__asa { opacity: 1; }
+@media (pointer: coarse) { .k-tablero__asa { opacity: 1; width: 28px; } }
+
+/* El hueco marca dónde caerá la tarjeta */
+.k-tablero__hueco {
+  border: 1.5px dashed color-mix(in oklch, var(--acento) 55%, transparent); border-radius: var(--radio);
+  background: color-mix(in oklch, var(--acento) 7%, transparent);
+}
+
+/* La tarjeta en el aire: se levanta, gira un poco y sigue al puntero sin transición (iría con retraso) */
+.k-tablero__vuelo { position: fixed; top: 0; left: 0; z-index: 60; pointer-events: none; }
+.k-tablero__vuelo .k-tablero__tarjeta {
+  box-shadow: var(--sombra); border-color: var(--linea-fuerte); cursor: grabbing;
+  animation: k-tablero-levanta var(--dur-2) var(--curva) forwards;
+}
+.k-tablero__vuelo .k-tablero__asa { opacity: 1; }
+@keyframes k-tablero-levanta { to { transform: rotate(2deg) scale(1.03); } }

@@ -1,0 +1,22 @@
+.k-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--e-3); }
+
+.k-cifra { display: grid; gap: var(--e-2); padding: var(--e-4) var(--e-5); }
+.k-cifra__rotulo { display: flex; align-items: center; gap: var(--e-2); color: var(--tinta-2); }
+.k-cifra__rotulo svg { width: 15px; height: 15px; }
+.k-cifra__rotulo h3 { font-size: var(--t-13); font-weight: 550; }
+.k-cifra__fila { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--e-3); }
+.k-cifra__valor { font-size: var(--t-24); font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; white-space: nowrap; }
+.k-cifra__cambio { font-size: var(--t-13); color: var(--tinta-2); }
+.k-cifra__delta { display: inline-flex; align-items: baseline; gap: 2px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.k-cifra__delta svg { width: 14px; height: 14px; align-self: center; }
+.k-cifra__cambio[data-tono='bien'] .k-cifra__delta { color: var(--bien); }
+.k-cifra__cambio[data-tono='mal'] .k-cifra__delta { color: var(--mal); }
+
+.k-mini { --color: var(--tinta-3); overflow: visible; flex-shrink: 0; }
+.k-mini--bien { --color: var(--bien); }
+.k-mini--mal { --color: var(--mal); }
+.k-mini__linea { fill: none; stroke: var(--color); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; animation: k-mini-traza 900ms var(--curva) both; }
+.k-mini__area { fill: color-mix(in oklch, var(--color) 12%, transparent); animation: k-mini-funde 600ms ease-out 300ms both; }
+.k-mini__punto { fill: var(--color); stroke: var(--superficie); stroke-width: 1.5; animation: k-mini-funde 300ms ease-out 700ms both; }
+@keyframes k-mini-traza { from { stroke-dashoffset: 1; } }
+@keyframes k-mini-funde { from { opacity: 0; } }

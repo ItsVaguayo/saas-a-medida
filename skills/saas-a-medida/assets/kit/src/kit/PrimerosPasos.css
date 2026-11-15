@@ -1,0 +1,34 @@
+.k-primeros { overflow: hidden; }
+.k-primeros__cabecera { display: flex; align-items: center; gap: var(--e-3); padding: var(--e-4) var(--e-4) var(--e-3); }
+.k-primeros__cabecera > div { flex: 1; min-width: 0; }
+.k-primeros__cabecera h2 { font-size: var(--t-16); font-weight: 600; }
+.k-primeros__cabecera p { font-size: var(--t-13); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+.k-primeros .k-anillo__dentro svg { width: 16px; height: 16px; color: var(--bien); }
+
+.k-primeros__lista { margin: 0; padding: 0 var(--e-2) var(--e-2); list-style: none; }
+.k-primeros__paso { border-radius: var(--radio); transition: background-color var(--medio); }
+.k-primeros__paso[data-abierto] { background: var(--superficie-2); }
+
+.k-primeros__fila {
+  display: flex; align-items: center; gap: var(--e-3); width: 100%; min-height: 40px; padding: 0 var(--e-3);
+  border: 0; border-radius: var(--radio); background: none; text-align: left; font-weight: 550; cursor: pointer;
+}
+.k-primeros__fila:disabled { cursor: default; }
+@media (hover: hover) { .k-primeros__paso:not([data-abierto]) .k-primeros__fila:hover:not(:disabled) { background: var(--superficie-2); } }
+
+.k-primeros__marca {
+  display: grid; place-items: center; width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%;
+  border: 1.5px solid var(--linea-fuerte); color: transparent;
+  transition: background-color var(--medio), border-color var(--medio), color var(--medio);
+}
+.k-primeros__marca svg { width: 11px; height: 11px; stroke-width: 3; scale: 0.3; transition: scale var(--lento); }
+.k-primeros__paso[data-hecho] .k-primeros__marca { background: var(--bien); border-color: var(--bien); color: var(--superficie); }
+.k-primeros__paso[data-hecho] .k-primeros__marca svg { scale: 1; }
+/* Lo hecho se tacha y se apaga: la vista va a lo que falta */
+.k-primeros__titulo { transition: color var(--medio); text-decoration: line-through transparent; }
+.k-primeros__paso[data-hecho] .k-primeros__titulo { color: var(--tinta-2); text-decoration-color: currentColor; font-weight: 400; }
+
+.k-primeros__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-3) var(--curva); }
+.k-primeros__paso[data-abierto] .k-primeros__panel { grid-template-rows: 1fr; }
+.k-primeros__panel > div { overflow: hidden; min-height: 0; }
+.k-primeros__dentro { display: grid; justify-items: start; gap: var(--e-3); padding: 0 var(--e-3) var(--e-3) calc(var(--e-3) + 18px + var(--e-3)); color: var(--tinta-2); font-size: var(--t-13); }

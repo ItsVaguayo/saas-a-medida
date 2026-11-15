@@ -1,0 +1,31 @@
+.k-combo { position: relative; }
+.k-combo__caja { position: relative; }
+.k-combo__caja .k-control { padding-right: var(--e-8); text-overflow: ellipsis; cursor: default; }
+.k-combo__caja .k-control:focus { cursor: text; }
+/* Lo elegido se sigue leyendo en el marcador mientras se escribe encima, pero más tenue */
+.k-combo__caja .k-control[data-con-valor]::placeholder { color: var(--tinta-2); }
+.k-combo__flecha, .k-combo__quitar { position: absolute; top: 50%; right: var(--e-2); translate: 0 -50%; }
+.k-combo__flecha { width: 16px; height: 16px; color: var(--tinta-3); pointer-events: none; }
+.k-combo__quitar {
+  display: grid; place-items: center; width: 22px; height: 22px;
+  border: 0; border-radius: var(--radio-chico); background: none; color: var(--tinta-3); cursor: pointer;
+}
+.k-combo__quitar svg { width: 14px; height: 14px; }
+@media (hover: hover) { .k-combo__quitar:hover { background: var(--superficie-2); color: var(--tinta); } }
+
+.k-combo .k-combo__lista {
+  left: 0; right: 0; max-width: none; max-height: 264px; margin: 0; list-style: none;
+  overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: var(--e-1);
+}
+.k-combo__opcion {
+  display: flex; align-items: center; gap: var(--e-2); min-height: 34px; padding: var(--e-1) var(--e-2);
+  border-radius: var(--radio-chico); cursor: pointer;
+}
+.k-combo__opcion[data-activo] { background: var(--superficie-2); }
+.k-combo__texto { flex: 1; min-width: 0; display: grid; }
+.k-combo__texto small { font-size: var(--t-12); color: var(--tinta-2); }
+.k-combo__marca { width: 16px; height: 16px; color: var(--acento); visibility: hidden; }
+.k-combo__opcion[aria-selected='true'] { font-weight: 550; }
+.k-combo__opcion[aria-selected='true'] .k-combo__marca { visibility: visible; }
+.k-combo__vacio { padding: var(--e-4) var(--e-2); text-align: center; color: var(--tinta-2); }
+@media (pointer: coarse) { .k-combo__opcion { min-height: var(--toque); } }

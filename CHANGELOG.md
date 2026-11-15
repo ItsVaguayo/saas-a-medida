@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.2.0
+
+- Kit de 40 módulos de interfaz en `assets/kit/` (7 funciones, 8 animaciones, 19 interactivos y 6 apartados), con catálogo y 69 pruebas. Guía nueva, `references/kit-componentes.md`; el catálogo de la fase 5 y los componentes de la fase 7 salen de ahí.
+
 ## 1.1.0
 
 Desarrollo

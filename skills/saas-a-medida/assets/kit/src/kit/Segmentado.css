@@ -1,0 +1,31 @@
+.k-segmentado {
+  position: relative; display: inline-flex; padding: 3px;
+  background: var(--superficie-2); border-radius: calc(var(--radio) + 1px);
+  /* Si no cabe, se desplaza él y no la página */
+  width: fit-content; max-width: 100%; overflow-x: auto; scrollbar-width: none;
+}
+.k-segmentado--bloque { display: flex; width: auto; }
+.k-segmentado--bloque .k-segmentado__opcion { flex: 1; }
+
+.k-segmentado__opcion {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--e-2);
+  height: calc(var(--alto-control) - 6px); padding: 0 var(--e-3);
+  border: 0; border-radius: calc(var(--radio) - 2px); background: none;
+  color: var(--tinta-2); font-weight: 550; white-space: nowrap; cursor: pointer;
+  transition: color var(--medio);
+}
+.k-segmentado__opcion svg { width: 16px; height: 16px; }
+.k-segmentado__opcion[aria-checked='true'] { color: var(--tinta); }
+@media (hover: hover) { .k-segmentado__opcion:hover { color: var(--tinta); } }
+.k-segmentado--chico .k-segmentado__opcion { height: calc(var(--alto-control) - 12px); padding: 0 var(--e-2); font-size: var(--t-13); }
+
+.k-segmentado__pastilla {
+  position: absolute; top: 3px; bottom: 3px; left: 0; width: var(--ind-w, 0);
+  border-radius: calc(var(--radio) - 2px); background: var(--superficie);
+  box-shadow: 0 1px 2px rgb(16 24 40 / 0.12), 0 0 0 0.5px rgb(16 24 40 / 0.06);
+  transform: translateX(var(--ind-x, 0));
+}
+.k-segmentado[data-medido] .k-segmentado__pastilla { transition: transform 240ms var(--curva), width 240ms var(--curva); }
+/* Al pulsar, la pastilla se encoge un pelo: se nota que es ella la que se agarra */
+.k-segmentado:active .k-segmentado__pastilla { scale: 0.97; }
+:root[data-tema='oscuro'] .k-segmentado__pastilla { background: var(--linea-fuerte); box-shadow: none; }

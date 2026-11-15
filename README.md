@@ -17,6 +17,7 @@ Claude sigue once fases: equipo y proyecto, información del cliente, maqueta, d
 - **Revisiones en dos niveles**: en cada PR, simplificación, código, datos extremos y seguridad si toca; antes de la demo, una pasada completa de diseño, móvil y accesibilidad sobre toda la app.
 - **Textos de la app sin tono de IA**, y un bloque marcado para el texto que explica cosas en las demos, con un comprobador que impide que llegue a producción.
 - **Producción con lista**: seguridad, documentos legales para España y la UE, un script de despliegue con copia previa, comprobación de salud y vuelta atrás automática, y otro de copia nocturna que saca la copia del servidor.
+- **Kit de 40 módulos de interfaz** en React y CSS plano, con su catálogo y sus pruebas: tabla, diálogo, avisos, paleta de comandos, selector de fecha, tablero con arrastre, gráficos, estados vacíos y de error. Se copian al proyecto y toman su tema de las variables.
 - **Skills de diseño, móvil y accesibilidad incluidas**: `impeccable`, `web-design-guidelines`, `emil-design-eng`, `mobile-native`, `fixing-accessibility`, `break-ui` y `vercel-react-best-practices`, copiadas de sus autores con su licencia (ver `THIRD_PARTY_NOTICES.md`).
 - **Migración de datos como módulo**, con ensayo antes de producción, y **lecciones** al cerrar cada proyecto para mejorar la skill.
 - **Ahorro de tokens**: hábitos de trabajo y, si quieres, el LSP de TypeScript, graphify y ccusage.
@@ -56,7 +57,7 @@ hooks/hooks.json      fase en curso al abrir la sesión y aviso de PR cada 15 mi
 skills/saas-a-medida/
   SKILL.md            el flujo, las reglas y la tabla de fases
   references/         una guía por fase y las transversales
-  assets/             plantillas de documentos, PDF, panel de dudas, texto de demo y despliegue
+  assets/             plantillas de documentos, PDF, panel de dudas, texto de demo, despliegue y el kit de componentes
   scripts/            PDF, aviso de PR, avance, protección de ramas, comprobación de texto de demo y de skills
 skills/<otras>/       skills de terceros incluidas, cada una con su LICENSE y su ORIGEN.md
 ```

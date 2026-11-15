@@ -1,0 +1,31 @@
+.k-colapsable__boton {
+  display: flex; align-items: center; gap: var(--e-3); width: 100%; min-height: var(--toque);
+  padding: var(--e-2) var(--e-4); border: 0; border-radius: var(--radio); background: none;
+  text-align: left; font-weight: 550; cursor: pointer;
+  transition: background-color var(--rapido);
+}
+@media (hover: hover) { .k-colapsable__boton:hover { background: var(--superficie-2); } }
+.k-colapsable__titulo { flex: 1; min-width: 0; }
+.k-colapsable__detalle { font-weight: 400; font-size: var(--t-13); color: var(--tinta-2); }
+.k-colapsable__flecha { width: 16px; height: 16px; color: var(--tinta-3); transition: transform var(--medio); }
+.k-colapsable[data-abierto] .k-colapsable__flecha { transform: rotate(180deg); }
+
+/* La altura: una rejilla de una fila que va de 0fr a 1fr. El contenido funde un poco más tarde al abrir
+   y un poco antes al cerrar, para que no se vea texto cortado a media altura. */
+.k-colapsable__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-3) var(--curva); }
+.k-colapsable[data-abierto] > .k-colapsable__panel { grid-template-rows: 1fr; }
+.k-colapsable__dentro { overflow: hidden; min-height: 0; }
+.k-colapsable__contenido {
+  padding: var(--e-1) var(--e-4) var(--e-4); color: var(--tinta-2);
+  opacity: 0; transform: translateY(-4px);
+  transition: opacity var(--dur-1) var(--curva), transform var(--dur-3) var(--curva);
+}
+.k-colapsable[data-abierto] > .k-colapsable__panel .k-colapsable__contenido {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-3) var(--curva) 60ms, transform var(--dur-3) var(--curva);
+}
+
+.k-acordeon { border: 1px solid var(--linea); border-radius: var(--radio-tarjeta); background: var(--superficie); overflow: hidden; }
+.k-acordeon > .k-colapsable + .k-colapsable { border-top: 1px solid var(--linea); }
+.k-acordeon .k-colapsable__boton { border-radius: 0; }
+.k-acordeon .k-colapsable__boton:focus-visible { box-shadow: inset 0 0 0 2px var(--acento); }

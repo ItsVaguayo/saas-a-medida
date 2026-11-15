@@ -47,7 +47,7 @@ El caso con datos normales es uno entre muchos. Antes de dar la pantalla por hec
 - **Tablas para comparar filas**, no tarjetas. Los números, a la derecha y con cifras del mismo ancho (`font-variant-numeric: tabular-nums`).
 - **Importes y fechas con el formato del cliente**: `Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' })` y `Intl.DateTimeFormat`. Las fechas cercanas, como se dicen («hoy», «ayer», «lun 16»).
 - **Solo las variables de estilo del proyecto.** Ningún color en hexadecimal, tamaño de letra ni espaciado suelto dentro de un componente. Si te falta un valor, es que falta una variable: dilo, no lo inventes.
-- **Si necesitas un componente que no está en el catálogo**, añádelo al catálogo con sus estados. No lo dejes escondido dentro de una pantalla.
+- **Si necesitas un componente que no está en el catálogo**, búscalo primero en el kit de la skill (`kit-componentes.md`) y añádelo al catálogo con sus estados. No lo dejes escondido dentro de una pantalla.
 - **Densidad según el uso**, la que se decidió en la fase 5. Una app de gestión enseña mucha información junta y bien alineada.
 - Repasa la lista «Señales de diseño inventado» de `referencias-reales.md`.
 
@@ -120,7 +120,7 @@ Si no tienes navegador o no puedes ver imágenes, no declares la pantalla revisa
 ## Señales de que vas mal
 
 - No has abierto el navegador y vas por la tercera pantalla.
-- Has creado un botón, una tarjeta o una tabla que ya estaban en el catálogo.
+- Has creado un botón, una tarjeta o una tabla que ya estaban en el catálogo o en el kit.
 - Hay un color en hexadecimal o un tamaño en píxeles dentro de un componente.
 - La pantalla tiene un texto que explica para qué sirve.
 - Has añadido cifras, gráficas o un saludo que nadie pidió.

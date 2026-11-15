@@ -1,0 +1,65 @@
+.k-tabla {
+  position: relative; background: var(--superficie);
+  border: 1px solid var(--linea); border-radius: var(--radio-tarjeta);
+}
+.k-tabla__desplaza { overflow-x: auto; border-radius: inherit; }
+.k-tabla table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+
+.k-tabla th {
+  position: sticky; top: 0; z-index: 1;
+  height: 38px; padding: 0 var(--e-4); background: var(--superficie);
+  border-bottom: 1px solid var(--linea);
+  text-align: left; font-size: var(--t-12); font-weight: 550; color: var(--tinta-2); white-space: nowrap;
+}
+.k-tabla td { padding: var(--fila) var(--e-4); border-bottom: 1px solid var(--linea); max-width: 320px; }
+.k-tabla tbody tr:last-child td { border-bottom: 0; }
+.k-tabla [data-alinear='derecha'] { text-align: right; }
+
+.k-tabla__dato { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.k-tabla__dato:has(.k-etiqueta, .k-avatar, button) { overflow: visible; }
+.k-tabla__falta { color: var(--tinta-3); }
+
+.k-tabla tbody tr { transition: background-color var(--rapido); }
+@media (hover: hover) { .k-tabla tbody tr:hover { background: color-mix(in oklch, var(--superficie-2) 55%, transparent); } }
+.k-tabla tbody tr[data-marcada] { background: var(--acento-suave); }
+.k-tabla tbody tr[data-pulsable] { cursor: pointer; }
+.k-tabla tbody tr:focus-visible { box-shadow: inset 0 0 0 2px var(--acento); }
+
+.k-tabla__casilla { width: 40px; padding-right: 0 !important; }
+.k-tabla__casilla .k-casilla { display: grid; }
+.k-tabla__menu { width: 48px; padding: 0 var(--e-2) !important; text-align: right; }
+
+.k-tabla__ordenar {
+  display: inline-flex; align-items: center; gap: var(--e-1); height: 26px; margin: 0 calc(var(--e-2) * -1); padding: 0 var(--e-2);
+  border: 0; border-radius: var(--radio-chico); background: none; color: inherit; font: inherit; cursor: pointer;
+  transition: background-color var(--rapido), color var(--rapido);
+}
+.k-tabla__ordenar svg { width: 13px; height: 13px; opacity: 0.45; }
+.k-tabla__ordenar[data-activo] { color: var(--tinta); }
+.k-tabla__ordenar[data-activo] svg { opacity: 1; color: var(--acento); }
+[data-alinear='derecha'] > .k-tabla__ordenar { flex-direction: row-reverse; }
+@media (hover: hover) { .k-tabla__ordenar:hover { background: var(--superficie-2); color: var(--tinta); } }
+
+/* La barra de lo seleccionado sube desde abajo y flota sobre la tabla */
+.k-tabla__barra {
+  position: sticky; bottom: var(--e-3); z-index: 2;
+  display: flex; align-items: center; gap: var(--e-2); width: fit-content; max-width: calc(100% - var(--e-6)); height: 40px;
+  /* El margen negativo compensa su altura: aparece encima de la tabla sin empujar lo de debajo */
+  margin: -52px auto var(--e-3); padding: var(--e-1) var(--e-1) var(--e-1) var(--e-4);
+  background: var(--tinta); color: var(--superficie); border-radius: calc(var(--radio) + 4px); box-shadow: var(--sombra);
+  animation: k-tabla-barra var(--dur-3) var(--curva);
+}
+@keyframes k-tabla-barra { from { opacity: 0; transform: translateY(12px) scale(0.97); } }
+.k-tabla__cuenta { margin-right: var(--e-2); font-weight: 550; white-space: nowrap; }
+.k-tabla__barra .k-boton { color: inherit; background: transparent; border-color: color-mix(in oklch, var(--superficie) 25%, transparent); }
+.k-tabla__barra .k-boton--discreto { border-color: transparent; opacity: 0.7; }
+@media (hover: hover) { .k-tabla__barra .k-boton:hover:not(:disabled) { background: color-mix(in oklch, var(--superficie) 14%, transparent); color: inherit; opacity: 1; } }
+.k-tabla__barra :focus-visible { box-shadow: 0 0 0 2px var(--superficie); }
+
+/* En pantallas estrechas se desplaza solo la tabla y la primera columna de datos se queda fija */
+@media (max-width: 640px) {
+  .k-tabla td:first-child:not(.k-tabla__casilla), .k-tabla th:first-child:not(.k-tabla__casilla) {
+    position: sticky; left: 0; z-index: 1; background: var(--superficie); box-shadow: 1px 0 0 var(--linea);
+  }
+  .k-tabla td { white-space: nowrap; }
+}

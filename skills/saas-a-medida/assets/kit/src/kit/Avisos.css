@@ -1,0 +1,40 @@
+.k-avisos {
+  position: fixed; inset: auto var(--e-4) var(--e-4) auto; z-index: 100;
+  width: min(380px, calc(100vw - var(--e-8)));
+  margin: 0; padding: 0; border: 0; background: none; overflow: visible; color: inherit;
+  pointer-events: none;
+}
+/* Sin soporte de popover la zona se ve igualmente */
+.k-avisos:not(:popover-open) { display: block; }
+.k-avisos__pila { display: flex; flex-direction: column; gap: var(--e-2); }
+.k-avisos__pila > * { pointer-events: auto; }
+
+.k-aviso {
+  display: flex; align-items: flex-start; gap: var(--e-3);
+  padding: var(--e-3) var(--e-3) var(--e-3) var(--e-4);
+  background: var(--tinta); color: var(--superficie);
+  border-radius: var(--radio-tarjeta); box-shadow: var(--sombra);
+}
+.k-aviso__icono { width: 16px; height: 16px; margin-top: 2px; opacity: 0.7; }
+.k-aviso[data-tono='bien'] .k-aviso__icono { opacity: 1; color: color-mix(in oklch, var(--bien) 55%, var(--superficie)); }
+.k-aviso[data-tono='mal'] .k-aviso__icono { opacity: 1; color: color-mix(in oklch, var(--mal) 55%, var(--superficie)); }
+.k-aviso__texto { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.k-aviso__texto strong { font-weight: 550; }
+.k-aviso__texto span { font-size: var(--t-13); opacity: 0.72; }
+
+.k-aviso__accion, .k-aviso__cerrar {
+  border: 0; background: none; color: inherit; cursor: pointer; border-radius: var(--radio-chico);
+  transition: background-color var(--rapido), opacity var(--rapido), transform var(--rapido);
+}
+.k-aviso__accion { padding: 2px var(--e-2); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.k-aviso__cerrar { display: grid; place-items: center; width: 24px; height: 24px; opacity: 0.6; }
+.k-aviso__cerrar svg { width: 14px; height: 14px; }
+.k-aviso__accion:active, .k-aviso__cerrar:active { transform: scale(0.94); }
+.k-aviso :focus-visible { box-shadow: 0 0 0 2px var(--superficie); }
+@media (hover: hover) {
+  .k-aviso__accion:hover, .k-aviso__cerrar:hover { background: color-mix(in oklch, var(--superficie) 16%, transparent); opacity: 1; }
+}
+
+@media (max-width: 560px) {
+  .k-avisos { inset: auto var(--e-3) var(--e-3) var(--e-3); width: auto; }
+}

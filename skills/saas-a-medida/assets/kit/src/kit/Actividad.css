@@ -1,0 +1,27 @@
+.k-actividad { display: grid; gap: var(--e-5); justify-items: start; }
+.k-actividad__dia { width: 100%; }
+.k-actividad__dia h3 { margin-bottom: var(--e-3); font-size: var(--t-12); font-weight: 600; color: var(--tinta-2); }
+.k-actividad ol { margin: 0; padding: 0; list-style: none; }
+
+.k-actividad__evento { position: relative; display: flex; gap: var(--e-3); padding-bottom: var(--e-4); }
+.k-actividad__evento:last-child { padding-bottom: 0; }
+/* El hilo que une un evento con el siguiente */
+.k-actividad__evento:not(:last-child)::before { content: ''; position: absolute; left: 13.5px; top: 32px; bottom: 4px; width: 1px; background: var(--linea); }
+
+.k-actividad__marca {
+  display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%;
+  background: var(--superficie-2); color: var(--tinta-2);
+}
+.k-actividad__marca svg { width: 14px; height: 14px; }
+.k-actividad__marca[data-tono='bien'] { background: var(--bien-suave); color: var(--bien); }
+.k-actividad__marca[data-tono='atencion'] { background: var(--atencion-suave); color: var(--atencion); }
+.k-actividad__marca[data-tono='mal'] { background: var(--mal-suave); color: var(--mal); }
+
+.k-actividad__cuerpo { flex: 1; min-width: 0; padding-top: 4px; }
+.k-actividad__cuerpo p { color: var(--tinta-2); overflow-wrap: anywhere; }
+.k-actividad__cuerpo strong { color: var(--tinta); font-weight: 600; }
+.k-actividad__cuerpo blockquote {
+  margin: var(--e-2) 0 0; padding: var(--e-2) var(--e-3); border-radius: var(--radio);
+  background: var(--superficie-2); font-size: var(--t-13); overflow-wrap: anywhere;
+}
+.k-actividad time { padding-top: 5px; font-size: var(--t-12); color: var(--tinta-2); font-variant-numeric: tabular-nums; white-space: nowrap; }

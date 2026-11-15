@@ -1,0 +1,76 @@
+.k-marco {
+  --ancho-lateral: 244px; --ancho-tira: 60px;
+  position: relative; display: grid; grid-template-columns: var(--ancho-lateral) minmax(0, 1fr);
+  height: 100%; min-height: 0; background: var(--fondo); overflow: hidden;
+  /* El lateral cambia de ancho moviendo la rejilla: el contenido lo acompaña sin saltos */
+  transition: grid-template-columns 280ms var(--curva);
+}
+.k-marco[data-plegado] { grid-template-columns: var(--ancho-tira) minmax(0, 1fr); }
+
+.k-marco__saltar { position: absolute; z-index: 80; top: var(--e-2); left: var(--e-2); padding: var(--e-2) var(--e-3); border-radius: var(--radio); background: var(--acento); color: var(--sobre-acento); font-weight: 600; transform: translateY(-200%); }
+.k-marco__saltar:focus { transform: none; }
+
+.k-marco__lateral {
+  display: flex; flex-direction: column; min-width: 0; min-height: 0;
+  background: var(--superficie); border-right: 1px solid var(--linea); overflow: hidden;
+}
+.k-marco__marca { display: flex; align-items: center; justify-content: space-between; gap: var(--e-2); height: 56px; padding: 0 var(--e-4); flex-shrink: 0; white-space: nowrap; }
+.k-marco__nav { flex: 1; min-height: 0; padding: var(--e-2); overflow-y: auto; overflow-x: hidden; }
+.k-marco__grupo + .k-marco__grupo { margin-top: var(--e-4); }
+.k-marco__rotulo { height: 26px; padding: 0 var(--e-2); font-size: var(--t-12); font-weight: 550; color: var(--tinta-2); white-space: nowrap; transition: opacity var(--medio); }
+.k-marco .k-pista { display: flex; }
+
+.k-marco__enlace {
+  position: relative; display: flex; align-items: center; gap: var(--e-3); width: 100%; height: 36px; padding: 0 var(--e-3);
+  border-radius: var(--radio); color: var(--tinta-2); font-weight: 550; text-decoration: none; white-space: nowrap;
+  transition: background-color var(--rapido), color var(--rapido);
+}
+.k-marco__enlace svg { width: 18px; height: 18px; }
+@media (hover: hover) { .k-marco__enlace:hover { background: var(--superficie-2); color: var(--tinta); } }
+.k-marco__enlace[aria-current='page'] { background: var(--acento-suave); color: var(--acento-fuerte); }
+.k-marco__texto { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; transition: opacity var(--medio); }
+.k-marco__contador {
+  min-width: 20px; padding: 0 6px; border-radius: var(--radio-total); background: var(--superficie-2);
+  font-size: var(--t-12); line-height: 20px; text-align: center; font-variant-numeric: tabular-nums;
+}
+.k-marco__enlace[aria-current='page'] .k-marco__contador { background: color-mix(in oklch, var(--acento) 16%, transparent); }
+
+.k-marco__usuario { display: flex; align-items: center; gap: var(--e-3); padding: var(--e-3) var(--e-4); border-top: 1px solid var(--linea); white-space: nowrap; }
+.k-marco__usuario .k-marco__texto { display: grid; }
+.k-marco__usuario strong { font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+.k-marco__usuario span { font-size: var(--t-12); color: var(--tinta-2); overflow: hidden; text-overflow: ellipsis; }
+
+/* Plegado: quedan los iconos. Los textos se funden en vez de cortarse a medias */
+.k-marco[data-plegado] .k-marco__texto, .k-marco[data-plegado] .k-marco__rotulo { opacity: 0; }
+.k-marco[data-plegado] .k-marco__marca > :first-child > :not(:first-child) { opacity: 0; }
+.k-marco[data-plegado] .k-marco__marca { padding: 0 calc((var(--ancho-tira) - 28px) / 2); }
+.k-marco[data-plegado] .k-marco__usuario { padding-inline: calc((var(--ancho-tira) - 32px) / 2 - 0.5px); }
+.k-marco[data-plegado] .k-marco__enlace { padding: 0 calc((var(--ancho-tira) - 18px) / 2 - var(--e-2)); }
+.k-marco[data-plegado] .k-marco__contador {
+  position: absolute; top: 4px; right: 6px; min-width: 8px; width: 8px; height: 8px; padding: 0;
+  background: var(--acento); color: transparent; font-size: 0;
+}
+
+.k-marco__principal { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.k-marco__cabecera {
+  display: flex; align-items: center; gap: var(--e-2); height: 56px; padding: 0 var(--e-5) 0 var(--e-3); flex-shrink: 0;
+  background: var(--superficie); border-bottom: 1px solid var(--linea);
+}
+.k-marco__titulo { flex: 1; min-width: 0; font-size: var(--t-16); font-weight: 600; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.k-marco__acciones { display: flex; align-items: center; gap: var(--e-2); }
+.k-marco__contenido { flex: 1; min-height: 0; padding: var(--e-6); overflow-y: auto; }
+.k-marco__contenido:focus-visible { box-shadow: none; }
+
+/* Estrecho: el lateral sale de la rejilla y entra por la izquierda sobre un velo */
+.k-marco[data-estrecho] { grid-template-columns: minmax(0, 1fr); }
+.k-marco[data-estrecho] .k-marco__lateral {
+  position: absolute; inset: 0 auto 0 0; z-index: 70; width: min(288px, 86%);
+  box-shadow: var(--sombra); transform: translateX(-102%);
+  transition: transform var(--dur-2) ease-in;
+}
+.k-marco[data-estrecho][data-abierto] .k-marco__lateral { transform: none; transition: transform 340ms var(--curva); }
+.k-marco__velo { position: absolute; inset: 0; z-index: 65; background: var(--velo); opacity: 0; pointer-events: none; transition: opacity var(--medio); }
+.k-marco[data-abierto] .k-marco__velo { opacity: 1; pointer-events: auto; }
+.k-marco[data-estrecho] .k-marco__enlace { height: var(--toque); }
+.k-marco[data-estrecho] .k-marco__contenido { padding: var(--e-4); }
+.k-marco[data-estrecho] .k-marco__cabecera { padding-right: var(--e-3); }

@@ -1,0 +1,38 @@
+.k-menu { position: relative; display: inline-flex; }
+
+/* La lista flotante crece desde la esquina del botón que la abre, no desde su centro.
+   El mismo aspecto lo reutilizan el combo y el selector de fecha (.k-flotante). */
+.k-menu__lista, .k-flotante {
+  position: absolute; z-index: 30; top: calc(100% + 6px); right: 0;
+  min-width: 200px; max-width: min(320px, calc(100vw - 16px)); padding: var(--e-1);
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: calc(var(--radio) + 2px);
+  box-shadow: var(--sombra-elevada);
+  transform-origin: top right;
+  animation: k-flotante-entra var(--dur-2) var(--curva);
+}
+.k-menu__lista[data-alinear='inicio'], .k-flotante[data-alinear='inicio'] { right: auto; left: 0; transform-origin: top left; }
+.k-menu__lista[data-arriba], .k-flotante[data-arriba] { top: auto; bottom: calc(100% + 6px); transform-origin: bottom right; }
+.k-menu__lista[data-arriba][data-alinear='inicio'], .k-flotante[data-arriba][data-alinear='inicio'] { transform-origin: bottom left; }
+@keyframes k-flotante-entra { from { opacity: 0; transform: scale(0.95); } }
+
+.k-menu__elemento {
+  display: flex; align-items: center; gap: var(--e-2); width: 100%; min-height: 32px; padding: 0 var(--e-2);
+  border: 0; border-radius: var(--radio-chico); background: none; text-align: left; cursor: pointer; white-space: nowrap;
+}
+.k-menu__elemento > span:first-of-type { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.k-menu__elemento > svg { width: 16px; height: 16px; color: var(--tinta-3); }
+.k-menu__elemento:disabled { opacity: 0.45; cursor: not-allowed; }
+/* El foco es el resalte: con teclado y con ratón se ve lo mismo */
+.k-menu__elemento:focus-visible { box-shadow: none; background: var(--superficie-2); }
+@media (hover: hover) { .k-menu__elemento:hover:not(:disabled) { background: var(--superficie-2); } }
+.k-menu__elemento[data-peligro] { color: var(--mal); }
+.k-menu__elemento[data-peligro] > svg { color: currentColor; }
+.k-menu__elemento[data-peligro]:focus-visible { background: var(--mal-suave); }
+@media (hover: hover) { .k-menu__elemento[data-peligro]:hover { background: var(--mal-suave); } }
+
+.k-menu__marca { visibility: hidden; }
+.k-menu__elemento[aria-checked='true'] .k-menu__marca { visibility: visible; color: var(--acento); }
+.k-menu__separador { height: 1px; margin: var(--e-1) calc(var(--e-1) * -1); background: var(--linea); }
+.k-menu__rotulo { padding: var(--e-2) var(--e-2) var(--e-1); font-size: var(--t-12); font-weight: 550; color: var(--tinta-2); }
+
+@media (pointer: coarse) { .k-menu__elemento { min-height: var(--toque); } }

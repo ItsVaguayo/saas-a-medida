@@ -1,0 +1,31 @@
+.k-barra { --color: var(--acento); display: grid; gap: var(--e-2); }
+.k-barra--bien, .k-anillo--bien { --color: var(--bien); }
+.k-barra--atencion, .k-anillo--atencion { --color: var(--atencion); }
+.k-barra--mal, .k-anillo--mal { --color: var(--mal); }
+
+.k-barra__cabecera { display: flex; justify-content: space-between; font-size: var(--t-13); color: var(--tinta-2); }
+.k-barra__cifra { font-variant-numeric: tabular-nums; color: var(--tinta); font-weight: 550; }
+.k-barra__pista { height: 6px; border-radius: var(--radio-total); background: var(--superficie-2); overflow: hidden; }
+/* Se anima la escala, no el ancho: no recoloca nada y va fluido aunque haya veinte barras subiendo a la vez */
+.k-barra__relleno {
+  height: 100%; border-radius: inherit; background: var(--color);
+  transform-origin: left; transition: transform var(--dur-3) var(--curva);
+}
+.k-barra__pista[data-indeterminada] .k-barra__relleno {
+  width: 40%; animation: k-barra-ida 1.3s var(--curva-mover) infinite;
+}
+@keyframes k-barra-ida {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-barra__pista[data-indeterminada] .k-barra__relleno { width: 100%; animation: k-barra-pulso 1.6s ease-in-out infinite !important; animation-duration: 1.6s !important; animation-iteration-count: infinite !important; }
+}
+@keyframes k-barra-pulso { 50% { opacity: 0.4; } }
+
+.k-anillo { --color: var(--acento); position: relative; display: inline-grid; place-items: center; flex-shrink: 0; }
+.k-anillo svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.k-anillo circle { fill: none; }
+.k-anillo__pista { stroke: var(--superficie-2); }
+.k-anillo__trazo { stroke: var(--color); stroke-linecap: round; transition: stroke-dashoffset 600ms var(--curva); }
+.k-anillo__dentro { position: relative; font-size: var(--t-12); font-weight: 600; font-variant-numeric: tabular-nums; }

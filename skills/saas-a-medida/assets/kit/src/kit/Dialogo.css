@@ -1,0 +1,40 @@
+/* El diálogo entra creciendo un poco desde abajo y sale más rápido de lo que entra.
+   `allow-discrete` y `@starting-style` dejan animar la entrada y la salida de un elemento que pasa por display: none. */
+.k-dialogo {
+  width: min(var(--ancho, 480px), calc(100vw - var(--e-8)));
+  max-height: min(85dvh, 720px);
+  padding: 0; border: 1px solid var(--linea); border-radius: calc(var(--radio-tarjeta) + 2px);
+  background: var(--superficie); color: var(--tinta); box-shadow: var(--sombra);
+  opacity: 0; transform: translateY(8px) scale(0.97);
+  transition:
+    opacity var(--dur-1) ease-out, transform var(--dur-1) ease-out,
+    overlay var(--dur-1) allow-discrete, display var(--dur-1) allow-discrete;
+}
+.k-dialogo[open] {
+  opacity: 1; transform: none;
+  transition:
+    opacity var(--dur-2) var(--curva), transform var(--dur-3) var(--curva),
+    overlay var(--dur-3) allow-discrete, display var(--dur-3) allow-discrete;
+}
+@starting-style { .k-dialogo[open] { opacity: 0; transform: translateY(8px) scale(0.97); } }
+
+.k-dialogo::backdrop {
+  background: transparent;
+  transition: background-color var(--dur-2) ease-out, overlay var(--dur-2) allow-discrete, display var(--dur-2) allow-discrete;
+}
+.k-dialogo[open]::backdrop { background: var(--velo); }
+@starting-style { .k-dialogo[open]::backdrop { background: transparent; } }
+
+.k-dialogo__caja { display: flex; flex-direction: column; max-height: inherit; }
+.k-dialogo__cabecera { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--e-4); padding: var(--e-5) var(--e-5) 0 var(--e-6); }
+.k-dialogo__cabecera h2 { font-size: var(--t-18); font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+.k-dialogo__cabecera p { margin-top: var(--e-1); color: var(--tinta-2); text-wrap: pretty; }
+.k-dialogo__cuerpo { padding: var(--e-5) var(--e-6) 0; overflow-y: auto; overscroll-behavior: contain; }
+.k-dialogo__pie { display: flex; justify-content: flex-end; gap: var(--e-2); padding: var(--e-5) var(--e-6); }
+.k-dialogo__caja > :last-child:not(.k-dialogo__pie) { padding-bottom: var(--e-6); }
+
+/* En móvil los botones ocupan todo el ancho y el principal queda arriba, al alcance del pulgar */
+@media (max-width: 480px) {
+  .k-dialogo__pie { flex-direction: column-reverse; }
+  .k-dialogo__pie .k-boton { width: 100%; height: var(--toque); }
+}

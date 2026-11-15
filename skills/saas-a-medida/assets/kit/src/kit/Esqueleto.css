@@ -1,0 +1,23 @@
+.k-esqueleto {
+  display: block;
+  border-radius: var(--radio-chico);
+  background:
+    linear-gradient(100deg, transparent 30%, color-mix(in oklch, var(--superficie) 70%, transparent) 50%, transparent 70%) 200% 0 / 200% 100% no-repeat,
+    var(--superficie-2);
+  animation: k-esqueleto-brillo 1.4s linear infinite;
+}
+.k-esqueleto--redondo { border-radius: 50%; }
+@keyframes k-esqueleto-brillo { to { background-position: -100% 0, 0 0; } }
+@media (prefers-reduced-motion: reduce) { .k-esqueleto { animation: none; } }
+
+.k-esqueleto-texto { display: grid; gap: var(--e-2); }
+
+.k-esqueleto-tabla__fila {
+  display: grid; grid-template-columns: repeat(var(--columnas), 1fr); gap: var(--e-6);
+  padding: calc(var(--fila) + 5px) var(--e-4);
+  border-bottom: 1px solid var(--linea);
+}
+.k-esqueleto-tabla__fila:last-child { border-bottom: 0; }
+
+.k-esqueleto-persona { display: flex; align-items: center; gap: var(--e-3); }
+.k-esqueleto-persona > span:last-child { display: grid; gap: var(--e-2); }

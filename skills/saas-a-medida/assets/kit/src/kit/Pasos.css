@@ -1,0 +1,47 @@
+.k-pasos { display: grid; gap: var(--e-6); container-type: inline-size; }
+
+.k-pasos__guia { position: relative; display: flex; justify-content: space-between; margin: 0; padding: 0; list-style: none; }
+/* La línea que une los pasos, y encima su tramo recorrido, que crece al avanzar */
+.k-pasos__guia::before, .k-pasos__guia::after {
+  content: ''; position: absolute; top: 13px; left: 14px; right: 14px; height: 2px; border-radius: 1px; background: var(--linea);
+}
+.k-pasos__guia::after {
+  background: var(--acento); transform-origin: left; transform: scaleX(var(--avance));
+  transition: transform 420ms var(--curva);
+}
+.k-pasos__paso { position: relative; z-index: 1; }
+.k-pasos__paso button {
+  display: grid; justify-items: center; gap: var(--e-2); padding: 0; border: 0; background: none;
+  border-radius: var(--radio); color: var(--tinta-2); cursor: pointer;
+}
+.k-pasos__paso button:disabled { cursor: default; }
+.k-pasos__paso:first-child button { justify-items: start; }
+.k-pasos__paso:last-child button { justify-items: end; }
+
+.k-pasos__numero {
+  display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--superficie); border: 2px solid var(--linea); color: var(--tinta-2);
+  font-size: var(--t-13); font-weight: 600; font-variant-numeric: tabular-nums;
+  transition: background-color var(--medio), border-color var(--medio), color var(--medio), transform var(--lento);
+}
+.k-pasos__numero svg { width: 14px; height: 14px; animation: k-pasos-marca var(--dur-3) var(--curva); }
+@keyframes k-pasos-marca { from { opacity: 0; transform: scale(0.4); } }
+.k-pasos__titulo { font-size: var(--t-13); font-weight: 550; white-space: nowrap; transition: color var(--medio); }
+
+.k-pasos__paso[data-estado='actual'] .k-pasos__numero { border-color: var(--acento); color: var(--acento-fuerte); transform: scale(1.08); box-shadow: 0 0 0 4px var(--acento-suave); }
+.k-pasos__paso[data-estado='actual'] .k-pasos__titulo { color: var(--tinta); }
+.k-pasos__paso[data-estado='hecho'] .k-pasos__numero { background: var(--acento); border-color: var(--acento); color: var(--sobre-acento); }
+@media (hover: hover) { .k-pasos__paso[data-estado='hecho'] button:hover .k-pasos__titulo { color: var(--tinta); text-decoration: underline; text-underline-offset: 3px; } }
+
+.k-pasos__movil { display: none; color: var(--tinta-2); }
+.k-pasos__movil strong { color: var(--tinta); font-weight: 600; }
+.k-pasos__cuerpo { border-radius: var(--radio); overflow-x: clip; }
+.k-pasos__cuerpo:focus-visible { box-shadow: none; }
+.k-pasos__pie { display: flex; justify-content: flex-end; gap: var(--e-2); }
+
+/* Cuando no caben los títulos, quedan los círculos y una línea que dice el paso */
+@container (max-width: 520px) {
+  .k-pasos__titulo { display: none; }
+  .k-pasos__movil { display: block; margin-top: calc(var(--e-3) * -1); }
+  .k-pasos__pie .k-boton { flex: 1; height: var(--toque); }
+}
