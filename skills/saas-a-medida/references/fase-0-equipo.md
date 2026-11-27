@@ -45,8 +45,12 @@ Copia desde `${CLAUDE_SKILL_DIR}/assets/`:
 | `CLAUDE.md` | raíz del repo, rellenado |
 | `settings.json` | `.claude/settings.json` (si ya existe, mezcla las claves sin borrar nada) |
 | `pull_request_template.md` | `.github/pull_request_template.md` |
-| `github/ci.yml` | `.github/workflows/ci.yml`, con los comandos del stack cuando se conozca (fase 2) |
-| `docs/informacion-cliente.md`, `docs/dudas.md`, `docs/decisiones.md` | `docs/` |
+| `github/ci.yml` | `.github/workflows/ci.yml`, con los comandos del stack cuando se conozca (fase 2). Ya busca secretos en el historial y dependencias con fallos graves |
+| `github/dependabot.yml` | `.github/dependabot.yml`, con el ecosistema del stack: propone cada semana las actualizaciones de dependencias como PR a `develop` |
+| `docs/informacion-cliente.md`, `docs/dudas.md`, `docs/decisiones.md`, `docs/gasto.md` | `docs/` |
+| `docs/relevo.md` | `docs/relevo/<usuario de GitHub>.md`, uno por persona del equipo |
+
+Añade `graphify-out/` al `.gitignore` del repo (paso 5).
 
 El resto de plantillas de `assets/docs/` se copian en la fase que las usa.
 
@@ -67,14 +71,15 @@ Pon primero la recomendada según el modo de trabajo. Guarda la respuesta en `pr
 
 ## 5. Skills y herramientas
 
-1. Ejecuta `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh"`. Lista las skills recomendadas que faltan y las opcionales.
-2. Pregunta con el menú (`multiSelect: true`) qué grupos opcionales instalar, explicando qué aporta cada uno y cuánto pesa en tokens (los servidores MCP cargan sus herramientas en cada mensaje).
-3. Instala lo elegido con `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh" --instalar <grupos>`.
-4. Comprueba que hay Google Chrome o Chromium para generar los PDF y `gh` identificado para los avisos de PR. Si falta algo, dilo con el comando para instalarlo.
+1. Ejecuta `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh"`. Lista las skills recomendadas que faltan, las obligatorias y las opcionales.
+2. **Graphify es obligatorio**, no se pregunta: instálalo con `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh" --instalar obligatorias` y, desde la raíz del repo, `graphify claude install`, `graphify hook install` y `graphify update .` (sin `--strict`). Si falta `uv`, di el comando para instalarlo y sigue con lo demás; la fase no se cierra sin graphify. Qué hace y por qué: `ahorro-tokens.md`.
+3. Pregunta con el menú (`multiSelect: true`) qué grupos opcionales instalar, explicando qué aporta cada uno y cuánto pesa en tokens (los servidores MCP cargan sus herramientas en cada mensaje). En el grupo `tokens`, ofrece el LSP del lenguaje del proyecto.
+4. Instala lo elegido con `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh" --instalar <grupos>`.
+5. Comprueba que hay Google Chrome o Chromium para generar los PDF y `gh` identificado para los avisos de PR. Si falta algo, dilo con el comando para instalarlo.
 
 ## 6. Cerrar la fase
 
 - En `fases` de `.claude/saas-a-medida.json`: fase 0 hecha, fase 1 en curso.
 - Con el repo ya en GitHub, aplica la protección elegida en el paso 4: `bash "${CLAUDE_SKILL_DIR}/scripts/proteger-ramas.sh"` (lee el nivel del fichero de proyecto; `--simular` enseña lo que haría). En un repo privado sin plan de pago GitHub no lo permite: el script lo dice, y entonces díselo a la persona y deja `proteccion` en `ninguna`.
 - Apunta en `docs/decisiones.md` el modo de trabajo, quién lleva el contacto, dónde van los documentos y el nivel de protección de las ramas.
-- Si es en pareja o grupo, propón a la persona hacer el primer commit en `develop` y subirlo, para que los demás clonen el repo con todo esto. Haz el commit y el push solo si te lo confirma.
+- Si es en pareja o grupo, propón a la persona hacer el primer commit en `develop` y subirlo, para que los demás clonen el repo con todo esto. Haz el commit y el push solo si te lo confirma. Recuérdale que cada compañero, al clonar, instala graphify y pasa `graphify hook install` (está en los comandos del `CLAUDE.md`).

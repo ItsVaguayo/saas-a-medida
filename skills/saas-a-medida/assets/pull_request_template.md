@@ -6,6 +6,10 @@
 
 1. 
 
+## Ficheros de otras personas
+
+<!-- Qué fichero, qué cambia y a quién se le pide que lo revise. Si no hay, «ninguno». -->
+
 ## Capturas
 
 <!-- Móvil y ordenador, si hay pantallas. -->
@@ -15,6 +19,7 @@
 - [ ] Listas «Antes de darlo por hecho» de las guías de backend y de pantallas
 - [ ] `/simplify` y, después, `/code-review`
 - [ ] Tests de la especificación y CI en verde
+- [ ] Usado entero con la base vacía, sin semilla: alta, edición y baja de sus datos solo con la interfaz
 - [ ] Datos extremos con `break-ui` y prueba a 375 px (si hay pantallas)
 - [ ] Un test por cada «solo lo suyo» (si hay rutas nuevas)
 - [ ] `/security-review` (si toca sesión, permisos, ficheros, pagos o datos sensibles)

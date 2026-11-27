@@ -55,6 +55,7 @@ El caso con datos normales es uno entre muchos. Antes de dar la pantalla por hec
 
 - **Cada campo con su etiqueta visible.** El texto de ejemplo de dentro desaparece al escribir y no hace de etiqueta.
 - **El tipo de campo correcto**: `type="email"`, `type="tel"`, `inputmode="decimal"` para importes, `autocomplete` con su valor. En el móvil cambia el teclado.
+- **Contraseña y segundo factor**: `autocomplete="current-password"` o `"new-password"` para que funcione el gestor de contraseñas, y el código con `CodigoVerificacion` de los componentes complementarios (`autocomplete="one-time-code"`). La pantalla de «He olvidado la contraseña» dice lo mismo exista o no el correo.
 - **Se valida al salir del campo y al enviar.** No mientras se escribe la primera letra.
 - **El error va junto a su campo y dice cómo arreglarlo**: «El IBAN tiene 24 caracteres; faltan 2», no «Campo no válido». Al enviar con errores, el foco va al primero.
 - **Los errores que devuelve el servidor se enseñan en su campo**, usando la clave `campos` de la respuesta.
@@ -107,6 +108,7 @@ Obligatoria. Arranca la app en una instancia propia, con la semilla, y haz esto 
 4. Provoca cada estado de la tabla del punto 2: base vacía, filtro sin resultados, el servidor parado, red lenta.
 5. Doble clic en guardar. Recargar a mitad de un formulario. Botón atrás después de guardar.
 6. Entra con cada rol y comprueba que ve lo que dice la especificación y nada más.
+7. Reinicia sin semilla y usa el módulo desde cero: da de alta cada dato de la tabla «Datos que maneja» de la especificación, edítalo y dalo de baja. Cada desplegable tiene que poder llenarse desde la app. Si te quedas parado porque falta un dato que solo ponía la semilla, falta un formulario.
 
 Si no tienes navegador o no puedes ver imágenes, no declares la pantalla revisada: di exactamente qué has comprobado y qué no, y pídele a la persona que la abra. Los pasos de arriba se los das como lista.
 
@@ -125,4 +127,6 @@ Si no tienes navegador o no puedes ver imágenes, no declares la pantalla revisa
 - La pantalla tiene un texto que explica para qué sirve.
 - Has añadido cifras, gráficas o un saludo que nadie pidió.
 - Solo existe el estado con datos.
+- Hay una lista o una ficha y ningún botón para crear, editar o dar de baja lo que enseña.
+- Las opciones de un desplegable están escritas en el componente.
 - Has arreglado el móvil escondiendo cosas con `display: none` sin preguntarte si en el móvil hacen falta.

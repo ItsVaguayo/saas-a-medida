@@ -14,9 +14,11 @@ dependencias	feature-dev	plugin	feature-dev	claude plugin install feature-dev@cl
 dependencias	frontend-design	plugin	frontend-design	claude plugin install frontend-design@claude-plugins-official	dirección visual
 dependencias	pr-review-toolkit	plugin	pr-review-toolkit	claude plugin install pr-review-toolkit@claude-plugins-official	revisores de PR
 dependencias	claude-security	plugin	claude-security	claude plugin install claude-security@claude-plugins-official	auditoría de seguridad a fondo
+obligatorias	graphify	comando	graphify	uv tool install graphifyy && graphify install	mapa del proyecto que se consulta antes de leer ficheros (necesita uv y Python 3.11 o más); en cada repo, además, fase 0 paso 5
 tokens	typescript-lsp	plugin	typescript-lsp	npm install -g typescript-language-server typescript && claude plugin install typescript-lsp@claude-plugins-official	ir a la definición sin leer ficheros enteros
-tokens	graphify	comando	graphify	uv tool install graphifyy && graphify install	mapa del proyecto antes de leer (necesita uv)
 tokens	ccusage	comando	npx	echo "ccusage no se instala: se ejecuta con npx ccusage@latest"	medir cuánto gasta cada sesión
+tokens	pyright-lsp	plugin	pyright-lsp	npm install -g pyright && claude plugin install pyright-lsp@claude-plugins-official	lo mismo que typescript-lsp para Python (comprueba el nombre en /plugin)
+tokens	php-lsp	plugin	php-lsp	npm install -g intelephense && claude plugin install php-lsp@claude-plugins-official	lo mismo para PHP (comprueba el nombre en /plugin)
 pruebas	playwright-cli	comando	playwright-cli	npm install -g @playwright/cli@latest && playwright-cli install --skills	pruebas en navegador con menos tokens que el MCP
 mockups	figma	plugin	figma	claude plugin install figma@claude-plugins-official	capturar la demo a Figma para que el cliente comente (después /plugin, figma, Allow access)
 documentos	doc-coauthoring	skill	doc-coauthoring	DISABLE_TELEMETRY=1 npx --yes skills add anthropics/skills --skill doc-coauthoring -g -a claude-code -y	redactar documentos con la persona
@@ -26,3 +28,4 @@ rendimiento	chrome-devtools-mcp	plugin	chrome-devtools-mcp	claude plugin install
 seguridad-continua	security-guidance	plugin	security-guidance	claude plugin install security-guidance@claude-plugins-official	aviso al editar y revisión con IA en cada turno (gasta tokens; ENABLE_STOP_REVIEW=0 la quita)
 legal	claude-para-abogados	plugin	privacidad	claude plugin marketplace add betobetico/claude-para-abogados && claude plugin install privacidad@claude-para-abogados && claude plugin install proteccion-datos@claude-para-abogados && claude plugin install gobernanza-ia@claude-para-abogados	triajes, EIPD y encargos en detalle (piden su entrevista inicial; sin probar con casos reales)
 despliegue	hostinger	plugin	hostinger	claude plugin install hostinger@claude-plugins-official	solo si el servidor está en Hostinger
+seguridad-extra	security-audit	skill	security-audit	DISABLE_TELEMETRY=1 npx --yes skills add https://github.com/cloudflare/security-audit-skill --skill security-audit -g -a claude-code -y	auditoría de seguridad completa de Cloudflare (MIT), segunda opinión en la fase 9; lanza muchos subagentes y gasta mucho

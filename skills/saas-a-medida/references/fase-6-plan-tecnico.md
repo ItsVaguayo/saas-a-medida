@@ -13,6 +13,7 @@ Es lo que se sigue para construir cada módulo, así que tiene que bastar para h
    - de qué depende y quién lo hace;
    - qué hace, en dos o tres frases;
    - referencias reales que se han mirado (ver `referencias-reales.md`);
+   - los datos que maneja: para cada entidad y cada lista de opciones, quién la crea, quién la edita, quién la da de baja y desde qué pantalla. Una fila sin pantalla es un hueco, y se ve aquí antes de programar: o se añade la pantalla o se apunta como fijo en el código, con el motivo;
    - reglas;
    - casos límite;
    - contrato: ruta, entrada, salida y errores;
@@ -20,6 +21,8 @@ Es lo que se sigue para construir cada módulo, así que tiene que bastar para h
 5. **Fuera de alcance.** Lo que se habló y no se hace.
 
 Si los datos que el cliente ya tiene entran en la app (fase 1, pregunta 2), **la migración es un módulo más**, con sus reglas (qué se hace con cada defecto de los datos), sus casos límite y su forma de cuadrar el resultado con el cliente. Va de los últimos, porque depende de las tablas de los demás. Cómo se construye: `desarrollo-backend.md`, «Si el módulo es la migración de los datos reales».
+
+La tabla de datos existe porque es fácil construir un apartado que lista y enseña pero no deja dar de alta: con la semilla cargada parece terminado, y el día que el cliente quiere añadir un servicio nos lo tiene que pedir. Las listas de un desplegable siguen la misma regla. Las que el cliente querrá cambiar (categorías, tarifas, tipos de cita, plantillas de aviso) van en su tabla y se editan en Configuración. Las que arrastran lógica (un estado que dispara un aviso o cambia permisos) se quedan fijas y se apuntan como tales.
 
 Los casos límite y los tests son lo que más vale. Un módulo sin casos límite escritos se construye para el caso feliz y falla en la demo. Si algo no está claro, va al panel de dudas o a `docs/dudas.md` y no se construye hasta resolverlo.
 
@@ -42,10 +45,16 @@ Lo común no está hecho hasta que cumple esto, porque cambiarlo con diez módul
 | Contraseñas | guardadas con un hash lento (scrypt, bcrypt o argon2) |
 | Sesión | cookie `HttpOnly`, `Secure` y `SameSite`; caduca y se puede cerrar en todos los dispositivos |
 | Inicio de sesión | límite de intentos y bloqueo temporal |
+| Segundo factor | obligatorio para administradores y para quien gestiona usuarios, permisos o cobros; opcional para el resto. Código de una app de autenticación (TOTP); el SMS, solo si no hay otra opción. Al activarlo se dan códigos de recuperación de un solo uso, guardados como hash |
+| Recuperar la contraseña | enlace de un solo uso que caduca en una hora como mucho, con el token guardado como hash. La respuesta es la misma exista o no el correo. Al cambiarla se cierran las demás sesiones y se avisa por correo |
 | Permisos | una sola función que todas las rutas usan, con el filtro por dueño dentro de la consulta |
+| Aislamiento en la base | con Postgres (o Supabase) y datos de varias empresas, sedes o usuarios: además del filtro, seguridad por filas (RLS) en cada tabla con dueño, y la app conecta con un rol que no puede saltársela |
+| CSRF | con sesión en cookie, toda ruta que cambia algo exige un token CSRF o comprueba que `Origin` es el de la app. `SameSite` ayuda, pero no basta. Nada cambia datos por `GET` |
+| CORS | cerrado: solo los orígenes propios de la app, nunca `*` si hay cookies o credenciales |
+| Auditoría | registro de quién hizo qué, cuándo y desde dónde en lo sensible: entradas y fallos de entrada, cambios de roles y permisos, cobros y devoluciones, bajas, exportaciones y cambios de ajustes. Solo se añade, nadie lo edita, y lo consulta el administrador desde la app |
 | Cabeceras | `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy` y bloqueo de iframes |
 | Errores | formato único, sin trazas en la respuesta |
-| CI | `.github/workflows/ci.yml` pasa tests, lint y compilación en cada PR |
+| CI | `.github/workflows/ci.yml` pasa tests, lint, compilación, búsqueda de secretos y auditoría de dependencias en cada PR; Dependabot propone las actualizaciones |
 | Despliegue | `deploy/desplegar.sh` sube `develop` a la instancia de demo (con su `deploy/demo.env` y `PRODUCCION=0`) y se ha probado volver atrás |
 
 Desplegar desde el primer día a la instancia de demo hace que el script esté rodado cuando llegue producción, y que la demo de la fase 8 no sea la primera vez que la app corre fuera de un portátil.
@@ -58,7 +67,7 @@ Reglas para que los módulos sean independientes:
 
 1. **Cada módulo es dueño de lo suyo**: sus tablas, sus rutas, sus pantallas y su carpeta. Nadie toca la carpeta de otro módulo sin hablarlo.
 2. **Los contratos que cruzan módulos van primero.** Si el módulo B lee datos del A, el contrato del A (esquema y respuesta de ejemplo) se escribe e integra antes, en un PR pequeño, y B trabaja contra ese ejemplo hasta que A esté hecho.
-3. **Cada fichero compartido tiene un único dueño**, apuntado en el plan: el enrutador, el menú, el catálogo de permisos, los estilos globales, la semilla común. Mejor todavía, que cada módulo se registre solo desde su carpeta (sus rutas, su entrada de menú, sus permisos) y el fichero central los cargue sin que nadie lo edite. Lo mismo vale para los documentos: el avance va en un fichero por módulo, y los documentos comunes (`docs/decisiones.md`, `docs/dudas.md`, `docs/dudas-cliente.md`, el estado de las fases) no se tocan desde la rama de un módulo, sino en una rama `docs/<tema>` con un PR pequeño que se integra en el momento.
+3. **Cada fichero compartido tiene un único dueño**, apuntado en el plan: el enrutador, el menú, el catálogo de permisos, los estilos globales, la semilla común. Mejor todavía, que cada módulo se registre solo desde su carpeta (sus rutas, su entrada de menú, sus permisos) y el fichero central los cargue sin que nadie lo edite. Lo mismo vale para los documentos: el avance va en un fichero por módulo, y los documentos comunes (`docs/decisiones.md`, `docs/dudas.md`, `docs/dudas-cliente.md`, `docs/gasto.md`, el estado de las fases) no se tocan desde la rama de un módulo, sino en una rama `docs/<tema>` con un PR pequeño que se integra en el momento.
 4. **Migraciones sin choques**: numeradas por módulo o con fecha y hora en el nombre, nunca un contador global que dos personas incrementan a la vez.
 5. **Semilla por módulo**: cada uno añade sus datos de ejemplo en su carpeta.
 6. **Las esperas se escriben.** Si un módulo no puede empezar hasta que otro integre algo, el plan lo dice: «M5 espera al contrato de M2».
@@ -100,8 +109,9 @@ En modo individual también se trabaja con rama y PR: el PR es donde corre el CI
 1. Pasan los tests de su especificación y el CI está en verde.
 2. Ha pasado las revisiones de la fase 7 y lo que encontraron está resuelto.
 3. Alguien lo ha probado en el móvil y en el ordenador con la semilla.
-4. Su PR está aprobado e integrado en `develop`.
-5. Su fichero de `docs/avance/` está al día, dentro del mismo PR.
+4. Alguien lo ha usado entero con la base vacía, sin semilla: da de alta lo que el módulo necesita, lo edita y lo da de baja solo con la interfaz. Si para llegar a usarlo hay que tocar la base o el código, falta una pantalla.
+5. Su PR está aprobado e integrado en `develop`.
+6. Su fichero de `docs/avance/` está al día, dentro del mismo PR.
 
 ## 3. El avance: `docs/avance/`
 

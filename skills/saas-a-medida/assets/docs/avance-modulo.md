@@ -9,3 +9,7 @@ Estados que cuentan: `hecho` (en código y con su test), `a medias`, `falta`, `e
 | Punto | Estado | Nota |
 |---|---|---|
 | | falta | |
+
+## Relevo
+
+<!-- Solo si el módulo queda a medias: en qué se quedó (rama, fichero, paso), lo que falta en orden, lo probado y descartado, lo que espera respuesta. Se reescribe cada vez; se vacía al integrar. -->

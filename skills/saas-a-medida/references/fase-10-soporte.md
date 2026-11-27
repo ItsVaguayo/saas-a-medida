@@ -21,7 +21,9 @@ Si un error llegó a producción por algo que el proceso debería haber parado (
 Una vez al mes, o cuando la persona lo pida:
 
 - Dependencias: `npm outdated` y `npm audit --omit=dev`. Las actualizaciones grandes van en su propia rama con los tests en verde.
-- Copias de seguridad: comprueba que la de anoche existe en el servidor y en el destino externo, y restaura una en otra instancia para ver que sirve.
+- Copias de seguridad: comprueba que la de anoche existe en el servidor y, cifrada, en el destino externo, y restaura una externa en otra instancia (descifrándola con la clave privada) para ver que sirve y que la clave sigue a mano.
+- PR de Dependabot pendientes y avisos de seguridad del repo: se integran o se apunta por qué no.
+- Registro de auditoría: un vistazo a entradas fallidas, cambios de roles y exportaciones fuera de lo normal.
 - Registros de errores del servidor: lo que se repite se convierte en un error a arreglar.
 - Que el certificado HTTPS se renueva solo.
 

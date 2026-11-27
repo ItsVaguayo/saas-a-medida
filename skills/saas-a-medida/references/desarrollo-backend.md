@@ -47,13 +47,17 @@ En cada ruta, en este orden: ¿hay sesión?, ¿su rol puede hacer esta acción?,
 - **Lo que existe pero no es suyo responde 404**, igual que si no existiera. Un 403 le confirma a un curioso que ese id existe.
 - **Los ids que salen en enlaces para gente de fuera** (familias, clientes finales) no pueden adivinarse sumando uno.
 - **Un test por cada «solo lo suyo» de la especificación**, con dos usuarios: A crea el registro y B intenta verlo, cambiarlo, borrarlo y encontrarlo en su lista. Las cuatro cosas.
+- **Con Postgres y seguridad por filas (RLS)**, cada tabla nueva con dueño lleva su política en la misma migración que la crea, y un test que conecta con el rol de la app y comprueba que B no ve las filas de A aunque la consulta no filtre. RLS es una segunda red: el filtro en la consulta sigue siendo obligatorio.
 
 Comprobación: los tests de permisos fallan si quitas el filtro de la consulta. Pruébalo una vez.
 
 ## 4. Reglas y estados
 
 - **Las transiciones de estado viven en un solo sitio**: una función que recibe estado actual, estado nuevo y rol, y dice si se puede, calcada de la tabla de la especificación. Ninguna ruta cambia un estado por su cuenta.
+- **Cada dato tiene sus rutas de alta, edición y baja**, no solo la de lectura, con sus permisos y sus tests. La baja de algo que ya se usa en otros registros lo archiva: deja de ofrecerse y los registros antiguos lo siguen mostrando.
+- **Las listas que el cliente querrá cambiar van en una tabla, no en el código**: categorías, tarifas, tipos de cita, plantillas de aviso, horarios. Lo mismo los valores sueltos (IVA, antelación de un recordatorio, datos de la empresa), que van en la tabla de ajustes. Se quedan fijas, con `CHECK`, las que arrastran lógica, como los estados; la especificación dice cuáles.
 - **Lo que toca varias tablas va en una transacción.** O se guarda todo o nada.
+- **Lo sensible deja rastro en la auditoría**, con la función común de lo común (fase 6): quién, qué, sobre qué registro, cuándo y desde qué IP, en la misma transacción que el cambio. Cuenta como sensible: cambios de roles y permisos, cobros y devoluciones, bajas, exportaciones, cambios de ajustes y ver datos de categorías especiales. La tabla de auditoría solo admite altas; ninguna ruta la edita ni la borra.
 - **Repetir no duplica.** Un doble clic, un reintento de la red o un aviso repetido de la pasarela de pago no pueden crear dos cobros ni mandar dos correos. Se consigue con una restricción única o con una clave que identifica la operación.
 - **Dos personas a la vez.** Para editar el mismo registro: el `UPDATE` comprueba la versión o la fecha de última modificación y, si ha cambiado, responde 409. Para reservar el último hueco: restricción única o bloqueo en la base. «Leo si hay hueco y luego escribo» falla con dos peticiones simultáneas.
 - **La hora llega desde fuera.** Las reglas reciben la hora como parámetro o usan el reloj del proyecto, para que los tests la fijen.
@@ -72,6 +76,9 @@ Comprobación: los tests de permisos fallan si quitas el filtro de la consulta. 
 - Subidas de ficheros: tipo comprobado por el contenido, tamaño máximo, nombre generado por la app y servidas como descarga.
 - Claves y contraseñas por variables de entorno. Ninguna en el código, en los tests ni en la semilla.
 - Las rutas públicas (entrar, recuperar contraseña, formularios abiertos) tienen límite de intentos.
+- **CSRF**: toda ruta que cambia algo pasa por la comprobación común (token o `Origin`). Nada cambia datos con `GET`. Un test por módulo: la misma petición sin token responde 403.
+- **CORS**: no se abre por módulo. Si una ruta tiene que responder a otro dominio (un formulario en la web del cliente), se apunta en la especificación con el origen exacto y sin credenciales.
+- **Segundo factor y recuperación de contraseña** viven en lo común. Un módulo que añade una acción de administrador no la deja fuera del segundo factor, y nada que mande un enlace por correo (invitaciones, cambio de correo) usa tokens que no caduquen o que sirvan dos veces.
 
 ## 7. Tests, en este orden
 
@@ -83,7 +90,9 @@ Comprobación: los tests de permisos fallan si quitas el filtro de la consulta. 
 
 Van contra una base de datos de prueba de verdad, no contra una imitación de la base: los fallos de este tipo de app están en las consultas y en las restricciones. Ningún test depende de la hora real ni del orden en que se ejecuten.
 
-**Nunca cambies un test para que pase.** Si falla, o el código está mal o la especificación ha cambiado; en el segundo caso se corrige primero la especificación.
+**Nunca cambies un test para que pase.** Si falla, o el código está mal o la especificación ha cambiado; en el segundo caso se corrige primero la especificación. La única excepción es un test que daba por bueno el fallo que estás arreglando: se cambia junto con el arreglo y el PR lo dice.
+
+Ni los tests ni las comprobaciones escriben en la base o en las carpetas de trabajo de la persona: usa una base de prueba y carpetas temporales.
 
 ## 8. Antes de darlo por hecho
 

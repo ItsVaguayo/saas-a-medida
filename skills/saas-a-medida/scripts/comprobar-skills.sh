@@ -3,6 +3,7 @@
 # Uso:
 #   comprobar-skills.sh                      lista por grupos lo que hay y lo que falta
 #   comprobar-skills.sh --instalar g1,g2     instala lo que falte de esos grupos (los nombres salen en la lista)
+# El grupo «obligatorias» (graphify) se instala siempre que se pase --instalar, se nombre o no.
 # El catálogo está en skills-recomendadas.tsv, junto a este script.
 set -uo pipefail
 aqui=$(cd "$(dirname "$0")" && pwd)
@@ -38,6 +39,7 @@ tiene() {  # tipo id
 
 grupo_actual=""
 faltan=0
+faltan_obligatorias=0
 while IFS=$'\t' read -r grupo nombre tipo id comando nota; do
   case "$grupo" in ''|\#*) continue ;; esac
   if [ "$grupo" != "$grupo_actual" ]; then echo; echo "== $grupo"; grupo_actual=$grupo; fi
@@ -45,8 +47,9 @@ while IFS=$'\t' read -r grupo nombre tipo id comando nota; do
     printf '  ✔ %-28s %s\n' "$nombre" "$nota"
   else
     faltan=$((faltan + 1))
+    [ "$grupo" = obligatorias ] && faltan_obligatorias=$((faltan_obligatorias + 1))
     printf '  ✘ %-28s %s\n' "$nombre" "$nota"
-    if [ -n "$instalar" ] && [[ "$instalar" == *",$grupo,"* ]]; then
+    if [ -n "$instalar" ] && { [[ "$instalar" == *",$grupo,"* ]] || [ "$grupo" = obligatorias ]; }; then
       echo "    instalando: $comando"
       if bash -c "$comando" </dev/null; then echo "    hecho"; else echo "    no se ha podido; prueba a mano: $comando"; fi
     fi
@@ -54,6 +57,9 @@ while IFS=$'\t' read -r grupo nombre tipo id comando nota; do
 done < "$catalogo"
 
 echo
+if [ "$faltan_obligatorias" -gt 0 ] && [ -z "$instalar" ]; then
+  echo "Falta lo obligatorio (grupo obligatorias). Instálalo con: $0 --instalar obligatorias"
+fi
 if [ "$faltan" -gt 0 ] && [ -z "$instalar" ]; then
   echo "Faltan $faltan. Para instalar un grupo: $0 --instalar <grupo>[,<grupo>]"
   echo "Después reinicia Claude Code (o /reload-plugins) para que las cargue."

@@ -14,13 +14,18 @@ Contraseñas, sesión, límite de intentos y cabeceras se montaron con lo común
 
 | Comprobación | Cómo |
 |---|---|
-| Revisión de todo el repo | `/security-review`; si está instalado, el escaneo de `claude-security` |
-| Dependencias con fallos conocidos | `npm audit --omit=dev` (o el equivalente del stack) |
-| Secretos en el repo o en su historial | `gitleaks detect` si está instalado; si no, buscar claves, tokens y `.env` en el historial |
+| Revisión de todo el repo | `/security-review`; si está instalado, el escaneo de `claude-security`. Si la persona quiere una segunda opinión (datos sensibles, pagos, mucho usuario de fuera), la auditoría completa de `security-audit` de Cloudflare, grupo `seguridad-extra`: pídela explícitamente («auditoría completa del repo»), porque si no se queda en modo consulta. Lanza muchos subagentes y gasta mucho, así que pregúntalo antes con el menú. Deja su informe en `~/security-audit-skill/<repo>/`, fuera del repo: lo que confirme se pasa a `docs/qa/` y se arregla, lo que quede «por validar» se comprueba a mano |
+| Dependencias con fallos conocidos | el CI ya pasa `npm audit --omit=dev --audit-level=high` en cada PR; aquí se mira también lo de nivel medio y que no haya PR de Dependabot sin integrar |
+| Secretos en el repo o en su historial | el CI ya pasa `gitleaks` sobre todo el historial; aquí se confirma que el paso sigue activo y en verde en `main`. Un secreto que salió alguna vez se cambia en su servicio, aunque ya no esté en el código |
 | Contraseñas | guardadas con un hash lento (scrypt, bcrypt o argon2), nunca en claro |
 | Sesión | cookie `HttpOnly`, `Secure` y `SameSite`; caduca y se puede cerrar en todos los dispositivos |
 | Inicio de sesión | límite de intentos y bloqueo temporal |
+| Segundo factor | activo y obligatorio en todas las cuentas de administrador antes de dar de alta a los usuarios reales; los códigos de recuperación funcionan |
+| Recuperar la contraseña | el enlace sirve una sola vez y caduca; pedirlo con un correo que no existe responde igual; al cambiarla se cierran las demás sesiones |
 | Permisos | los tests de «solo lo suyo» pasan; ninguna ruta devuelve datos de otro cliente o de otro rol |
+| Aislamiento en la base | si hay RLS: cada tabla con dueño tiene su política y la app no conecta como propietario de las tablas ni con un rol que se salte RLS |
+| CSRF y CORS | una petición que cambia algo sin token, o desde otro origen, responde 403; CORS no devuelve `*` ni refleja cualquier origen |
+| Auditoría | entrar, cambiar un rol, cobrar y exportar dejan su fila en el registro de auditoría, y el administrador la ve |
 | Subidas de ficheros | tipo comprobado por contenido, tamaño máximo, nunca servidas como HTML |
 | Cabeceras | `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy` y bloqueo de iframes |
 | Errores | sin trazas ni datos internos en las respuestas |
@@ -65,8 +70,8 @@ Además:
 
 - Variables de entorno y secretos fuera del repo, en el servidor.
 - HTTPS con renovación automática del certificado.
-- Copias de seguridad cada noche con `copia-nocturna.sh` (en `${CLAUDE_SKILL_DIR}/assets/despliegue/`): se copia al servidor junto con su `copia.env` y se programa con cron. Guarda dos semanas y manda cada copia a otra máquina o a un almacenamiento externo; si no tiene destino externo configurado, falla a propósito. Las copias que hace `desplegar.sh` antes de cada despliegue viven en el mismo servidor y no cuentan como copia de seguridad.
-- Una restauración de prueba antes de dar la fase por cerrada: `copia-nocturna.sh copia.env --probar`, y además levantar la app en otra instancia con esa copia y entrar.
+- Copias de seguridad cada noche con `copia-nocturna.sh` (en `${CLAUDE_SKILL_DIR}/assets/despliegue/`): se copia al servidor junto con su `copia.env` y se programa con cron. Guarda dos semanas y manda cada copia a otra máquina o a un almacenamiento externo, **cifrada con `age`** (o `gpg`) con una clave pública; si no tiene destino externo o no puede cifrar, falla a propósito. La clave privada se crea en el ordenador de quien custodia las copias, se guarda en el gestor de contraseñas del equipo y nunca va al servidor: si se pierde, las copias externas no sirven. Mejor dos destinatarios (dos personas). Las copias que hace `desplegar.sh` antes de cada despliegue viven en el mismo servidor y no cuentan como copia de seguridad.
+- Una restauración de prueba antes de dar la fase por cerrada: `copia-nocturna.sh copia.env --probar`, y además bajar una copia del destino externo, descifrarla con la clave privada en una máquina del equipo (el comando está en la cabecera del script), levantar la app en otra instancia con esa copia y entrar.
 - Un aviso si la app deja de responder y registros de errores que se puedan consultar.
 
 Desplegar en el servidor del cliente o en el nuestro, con qué dominio y con qué proveedor son decisiones de la persona: pregúntalas con el menú.
