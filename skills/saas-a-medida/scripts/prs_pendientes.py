@@ -41,6 +41,27 @@ def dias_desde(iso):
     return "hoy" if d == 0 else ("hace 1 día" if d == 1 else f"hace {d} días")
 
 
+def avisos_graphify(raiz):
+    """Graphify es obligatorio: avisa si falta el programa, su hook de git o el mapa de este repo."""
+    import shutil
+    if not shutil.which("graphify"):
+        return ["Falta graphify, que es obligatorio en este proyecto (mapa del código para leer menos). "
+                "Propón instalarlo: uv tool install graphifyy && graphify install; después, en el repo, "
+                "graphify claude install && graphify hook install && graphify update . (ver ahorro-tokens.md)."]
+    avisos = []
+    try:
+        hooks = sh(["git", "rev-parse", "--git-path", "hooks"], raiz, timeout=3)
+        hooks = hooks if os.path.isabs(hooks) else os.path.join(raiz, hooks)
+        post = os.path.join(hooks, "post-commit")
+        if not (os.path.isfile(post) and "graphify" in open(post, encoding="utf-8", errors="replace").read()):
+            avisos.append("El mapa de graphify no se actualiza solo en esta máquina: propón graphify hook install.")
+    except Exception:
+        pass
+    if not os.path.isfile(os.path.join(raiz, "graphify-out", "graph.json")):
+        avisos.append("Este repo aún no tiene mapa de graphify: propón graphify update . antes de buscar en el código.")
+    return avisos
+
+
 def main():
     evento = sys.argv[1] if len(sys.argv) > 1 else "inicio"
     try:
@@ -79,6 +100,8 @@ def main():
         if en_curso:
             cabecera.append(f"Proyecto {config.get('proyecto') or os.path.basename(raiz)} (saas-a-medida). "
                             f"Fases en curso: {', '.join(en_curso)}. Lee solo la guía de la fase en la que se vaya a trabajar.")
+    if evento == "inicio":
+        cabecera += avisos_graphify(raiz)
     if modo == "individual":
         emitir(cabecera)
         return

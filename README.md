@@ -10,17 +10,18 @@ Claude sigue once fases: equipo y proyecto, información del cliente, maqueta, d
 - **Documento de alcance en PDF** para el cliente: qué se hace, qué se conecta, qué no y qué necesitamos de él, con un estilo sobrio de documento técnico.
 - **Plan técnico con reparto** por módulos enteros, para que en equipo nadie espere a nadie, con las ramas explicadas paso a paso.
 - **Guías de desarrollo para cualquier IA**: cómo se construye y se comprueba el backend y las pantallas de un módulo, paso a paso, para que otro modelo u otro agente llegue al mismo resultado.
-- **CI y ramas protegidas**: una plantilla de GitHub Actions y, al empezar, eliges con el menú cuánto se protegen `develop` y `main` (nada, PR obligatorio, PR con revisión o estricta).
+- **CI y ramas protegidas**: una plantilla de GitHub Actions que también busca secretos en el historial y dependencias con fallos graves, Dependabot y, al empezar, eliges con el menú cuánto se protegen `develop` y `main` (nada, PR obligatorio, PR con revisión o estricta).
 - **Se engancha a proyectos ya empezados**: detecta en qué fase está el proyecto por sus ficheros y su historial y sigue desde ahí.
 - **Aviso de PR**: al abrir Claude en el proyecto, te dice en qué fase está, qué PR de tus compañeros esperan tu revisión (también los que ya revisaste y han cambiado) y cuáles tuyos tienen cambios pedidos.
 - **Panel de dudas para el cliente**: una página con cada pregunta explicada fácil, una pestaña técnica para el equipo y las respuestas guardadas. Si el cliente lo abre con un enlace de solo lectura, no ve la parte técnica.
 - **Revisiones en dos niveles**: en cada PR, simplificación, código, datos extremos y seguridad si toca; antes de la demo, una pasada completa de diseño, móvil y accesibilidad sobre toda la app.
 - **Textos de la app sin tono de IA**, y un bloque marcado para el texto que explica cosas en las demos, con un comprobador que impide que llegue a producción.
-- **Producción con lista**: seguridad, documentos legales para España y la UE, un script de despliegue con copia previa, comprobación de salud y vuelta atrás automática, y otro de copia nocturna que saca la copia del servidor.
+- **Producción con lista**: seguridad, documentos legales para España y la UE, un script de despliegue con copia previa, comprobación de salud y vuelta atrás automática, y otro de copia nocturna que saca la copia del servidor cifrada con `age` o `gpg`.
 - **Kit de 40 módulos de interfaz** en React y CSS plano, con su catálogo y sus pruebas: tabla, diálogo, avisos, paleta de comandos, selector de fecha, tablero con arrastre, gráficos, estados vacíos y de error. Se copian al proyecto y toman su tema de las variables.
 - **Skills de diseño, móvil y accesibilidad incluidas**: `impeccable`, `web-design-guidelines`, `emil-design-eng`, `mobile-native`, `fixing-accessibility`, `break-ui` y `vercel-react-best-practices`, copiadas de sus autores con su licencia (ver `THIRD_PARTY_NOTICES.md`).
 - **Migración de datos como módulo**, con ensayo antes de producción, y **lecciones** al cerrar cada proyecto para mejorar la skill.
-- **Ahorro de tokens**: hábitos de trabajo y, si quieres, el LSP de TypeScript, graphify y ccusage.
+- **Seguridad en lo común**: segundo factor para administradores, recuperación de contraseña segura, CSRF, CORS, registro de auditoría y RLS, exigidos al montar la base y comprobados en producción.
+- **Ahorro de tokens y contextos largos**: graphify obligatorio con su hook, cuándo compactar, nota de relevo entre sesiones, registro del gasto por fase y, si quieres, el LSP del lenguaje y ccusage.
 
 ## Instalación
 
@@ -46,6 +47,8 @@ Abre Claude Code en la carpeta del proyecto (o en una vacía si aún no existe) 
 - Claude Code reciente.
 - `gh` identificado (`gh auth login`) para los avisos y las revisiones de PR.
 - `python3` para el aviso de PR.
+- `uv` y Python 3.11 o más para graphify, que es obligatorio.
+- `age` (o `gpg`) en el servidor para cifrar las copias.
 - Google Chrome, Chromium o Playwright para generar los PDF. `pdftoppm` (paquete `poppler-utils`) para revisar sus páginas.
 - El panel de dudas usa los artifacts de claude.ai. Sin ellos, las dudas van a `docs/dudas-cliente.md`.
 

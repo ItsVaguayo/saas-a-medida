@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Copia de cada noche de los datos de la app, con una segunda copia fuera del servidor.
+# Copia de cada noche de los datos de la app, con una segunda copia cifrada fuera del servidor.
 # Corre EN EL SERVIDOR (cron o temporizador de systemd), no en tu máquina.
+# La copia lleva datos personales del cliente: lo que sale del servidor va cifrado con una clave pública.
+# La clave privada, la que descifra, NO vive en el servidor (si se lo llevan, no debe llevarse también la llave).
 #
 # Uso:
 #   copia-nocturna.sh /srv/mi-app/copia.env             hace la copia de hoy
@@ -17,6 +19,20 @@
 #                                        (ejemplo: pg_dump -Fc mi_app > "$VOLCADO")
 #   EXTERNO=usuario@otro-servidor:/copias/mi-app    destino de rsync en OTRA máquina; o rclone:remoto:ruta
 #   AVISO_CMD=""                         comando que avisa si la copia falla; recibe el motivo en $MOTIVO
+#   CIFRADO=age                          age (recomendado), gpg o ninguno (solo si el destino externo ya cifra
+#                                        y lo ha decidido la persona; deja un aviso en el registro cada noche)
+#   CIFRAR_PARA=/srv/mi-app/destinatarios-age.txt
+#                                        con age: fichero con una o más claves públicas (age1…), una por línea;
+#                                        con gpg: el id o el correo de la clave pública, ya importada en el servidor
+#
+# Preparar las claves (una vez, en el ordenador de quien custodia las copias, nunca en el servidor):
+#   age-keygen -o copias-<proyecto>.key        la privada: guárdala en el gestor de contraseñas del equipo
+#   grep 'public key' copias-<proyecto>.key    la pública (age1…): va a CIFRAR_PARA en el servidor
+# Pon dos destinatarios (dos personas, o una persona y una copia en papel) para no depender de un solo portátil.
+#
+# Restaurar una copia externa (en una máquina del equipo):
+#   age -d -i copias-<proyecto>.key copia-AAAAMMDD-HHMMSS.tar.gz.age > copia.tar.gz && tar -xzf copia.tar.gz
+#   gpg -d copia-AAAAMMDD-HHMMSS.tar.gz.gpg > copia.tar.gz && tar -xzf copia.tar.gz
 set -Eeuo pipefail
 
 conf=${1:?Uso: copia-nocturna.sh <copia.env> [--probar]}
@@ -29,6 +45,8 @@ DIAS=${DIAS:-14}
 VOLCADO_CMD=${VOLCADO_CMD:-}
 EXTERNO=${EXTERNO:-}
 AVISO_CMD=${AVISO_CMD:-}
+CIFRADO=${CIFRADO:-age}
+CIFRAR_PARA=${CIFRAR_PARA:-}
 
 fallo() {
   echo "$(date '+%F %T') COPIA FALLIDA: $1" >&2
@@ -38,6 +56,22 @@ fallo() {
 trap 'fallo "error en la línea $LINENO"' ERR
 
 [ -d "$ORIGEN" ] || fallo "no existe $ORIGEN"
+# El cifrado se comprueba antes de copiar nada: mejor fallar en el primer segundo que a mitad de la noche.
+case "$CIFRADO" in
+  age)
+    command -v age >/dev/null 2>&1 || fallo "falta age para cifrar la copia (apt install age)"
+    [ -s "$CIFRAR_PARA" ] || fallo "falta CIFRAR_PARA: el fichero con las claves públicas de age"
+    if grep -q 'AGE-SECRET-KEY' "$CIFRAR_PARA"; then fallo "$CIFRAR_PARA tiene una clave PRIVADA: en el servidor solo va la pública"; fi
+    grep -q '^age1' "$CIFRAR_PARA" || fallo "$CIFRAR_PARA no tiene ninguna clave pública de age (age1…)"
+    ;;
+  gpg)
+    command -v gpg >/dev/null 2>&1 || fallo "falta gpg para cifrar la copia"
+    [ -n "$CIFRAR_PARA" ] || fallo "falta CIFRAR_PARA: el id o el correo de la clave pública de gpg"
+    gpg --batch --list-keys "$CIFRAR_PARA" >/dev/null 2>&1 || fallo "gpg no tiene importada la clave pública $CIFRAR_PARA"
+    ;;
+  ninguno) echo "$(date '+%F %T') AVISO: la copia sale del servidor SIN CIFRAR (CIFRADO=ninguno)" >&2 ;;
+  *) fallo "CIFRADO desconocido: $CIFRADO (age, gpg o ninguno)" ;;
+esac
 mkdir -p "$DESTINO"
 sello=$(date +%Y%m%d-%H%M%S)
 trabajo=$(mktemp -d)
@@ -79,13 +113,27 @@ if [ "$probar" = "--probar" ]; then
 fi
 
 # Fuera del servidor: si la máquina se pierde, la copia de al lado se pierde con ella.
-if [ -z "$EXTERNO" ]; then
-  fallo "la copia de hoy está hecha, pero solo en este servidor: falta EXTERNO en $conf"
-elif [ "${EXTERNO#rclone:}" != "$EXTERNO" ]; then
-  rclone copy "$fichero" "${EXTERNO#rclone:}" || fallo "no se ha podido subir la copia con rclone"
+# Lo que sale va cifrado; la copia de este servidor se queda como está para restaurar rápido.
+[ -n "$EXTERNO" ] || fallo "la copia de hoy está hecha, pero solo en este servidor: falta EXTERNO en $conf"
+case "$CIFRADO" in
+  age)
+    enviar="$trabajo/$(basename "$fichero").age"
+    destinatarios=(); while IFS= read -r clave; do destinatarios+=(-r "$clave"); done < <(grep '^age1' "$CIFRAR_PARA")
+    age "${destinatarios[@]}" -o "$enviar" "$fichero" || fallo "no se ha podido cifrar la copia con age"
+    [ "$(head -c 21 "$enviar")" = "age-encryption.org/v1" ] || fallo "la copia cifrada no tiene la cabecera de age"
+    ;;
+  gpg)
+    enviar="$trabajo/$(basename "$fichero").gpg"
+    gpg --batch --yes --trust-model always -e -r "$CIFRAR_PARA" -o "$enviar" "$fichero" || fallo "no se ha podido cifrar la copia con gpg"
+    ;;
+  ninguno) enviar="$fichero" ;;
+esac
+[ -s "$enviar" ] || fallo "la copia cifrada ha salido vacía"
+if [ "${EXTERNO#rclone:}" != "$EXTERNO" ]; then
+  rclone copy "$enviar" "${EXTERNO#rclone:}" || fallo "no se ha podido subir la copia con rclone"
 else
-  rsync -a "$fichero" "$EXTERNO/" || fallo "no se ha podido enviar la copia a $EXTERNO"
+  rsync -a "$enviar" "$EXTERNO/" || fallo "no se ha podido enviar la copia a $EXTERNO"
 fi
-echo "$(date '+%F %T') copia enviada fuera: $EXTERNO"
+echo "$(date '+%F %T') copia enviada fuera ($([ "$CIFRADO" = ninguno ] && echo 'sin cifrar' || echo "cifrada con $CIFRADO")): $EXTERNO/$(basename "$enviar")"
 
 find "$DESTINO" -maxdepth 1 -name 'copia-*.tar.gz' -mtime +"$DIAS" -delete

@@ -1,6 +1,8 @@
 # Comprobaciones automáticas de cada PR. Destino en el proyecto: .github/workflows/ci.yml
 # Ajusta los comandos al stack del proyecto: lo que importa es que el trabajo se llame «comprobar»,
 # porque la protección de ramas (scripts/proteger-ramas.sh) exige ese nombre en verde para integrar.
+# La seguridad va dentro del mismo trabajo para que también bloquee: secretos en el historial y
+# dependencias con fallos graves conocidos. Las actualizaciones las propone Dependabot (github/dependabot.yml).
 name: CI
 
 on:
@@ -19,11 +21,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # el historial entero, para buscar secretos también en commits viejos
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
+      # Secretos: claves, tokens o contraseñas en el código o en cualquier commit. Si salta, la clave se
+      # da por filtrada: se cambia en el servicio y después se quita del repo (borrarla del código no basta).
+      # Un falso positivo se apunta en .gitleaksignore con su huella, nunca se desactiva el paso.
+      - name: Sin secretos en el repo
+        env:
+          GITLEAKS_VERSION: 8.24.2   # cambia a la última de https://github.com/gitleaks/gitleaks/releases
+        run: |
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz -C "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" git --redact --no-banner --exit-code 1 .
       - run: npm ci
+      # Dependencias de producción con fallos altos o críticos conocidos. Si salta: actualizar la dependencia
+      # (npm audit fix o subir la versión); si no hay arreglo, apuntarlo en docs/decisiones.md como riesgo aceptado.
+      - name: Dependencias sin fallos graves conocidos
+        run: npm audit --omit=dev --audit-level=high
       - run: npm run lint --if-present
       - run: npm run typecheck --if-present
       - run: npm test

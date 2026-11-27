@@ -5,6 +5,7 @@ Hay cuatro tipos:
 - **Vienen con Claude Code**: `/code-review`, `/simplify`, `/security-review`.
 - **Vienen dentro de este plugin**, copiadas de sus autores con su licencia (ver `THIRD_PARTY_NOTICES.md` en la raíz del plugin): `impeccable`, `web-design-guidelines`, `emil-design-eng`, `mobile-native`, `fixing-accessibility`, `break-ui` y `vercel-react-best-practices`. Aparecen con el prefijo del plugin: `saas-a-medida:impeccable`.
 - **Se instalan solas con el plugin**, como dependencias del marketplace oficial de Anthropic: `feature-dev`, `frontend-design`, `pr-review-toolkit` y `claude-security`.
+- **Obligatoria, fuera del marketplace**: `graphify`, el mapa del código (grupo `obligatorias`; fase 0, paso 5, y `ahorro-tokens.md`).
 - **Opcionales, por grupos**: las comprueba e instala `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh"`, con el OK de la persona (fase 0). El catálogo está en `scripts/skills-recomendadas.tsv`.
 
 Usa el nombre que aparezca en la lista de skills de la sesión. Si una no está, sigue sin ella, dilo y ofrece instalar su grupo.
@@ -18,11 +19,11 @@ Usa el nombre que aparezca en la lista de skills de la sesión. Si una no está,
 | 5. Mockups | `frontend-design` para cada dirección; `impeccable` para pulir; plugin `figma` (grupo `mockups`) para que el cliente comente |
 | 6. Plan técnico | `compound-engineering:ce-plan` (grupo `plan`) si está; si no, la plantilla de la fase 6 |
 | 7. Cada módulo | `feature-dev` con `desarrollo-backend.md` y `desarrollo-frontend.md`; antes del PR, `/simplify` y después `/code-review`; con pantallas, `break-ui` |
-| 7 y 8. Todas las pantallas, una vez sobre `develop` antes de la demo | `impeccable` (auditoría), `web-design-guidelines`, `mobile-native`, `fixing-accessibility`; `emil-design-eng` para el pulido final |
+| 7 y 8. Todas las pantallas, una vez sobre `develop` antes de la demo | `impeccable audit` y después `impeccable polish` (no `new-work`, `critique` ni `live`, que pesan 40 a 65 KB), `web-design-guidelines`, `mobile-native`, `fixing-accessibility`; `emil-design-eng` para el pulido final |
 | 7. React | `vercel-react-best-practices` cuando haya problemas de rendimiento o al revisar componentes con muchos datos |
 | 7. Pruebas en navegador | `playwright-cli` (grupo `pruebas`); accesibilidad automática con `@axe-core/playwright` en los e2e del proyecto |
-| 7. Revisar un PR | `/code-review <número>` y los agentes de `pr-review-toolkit` |
-| 9. Producción | `/security-review` del repo entero y `claude-security` para la auditoría a fondo; `legal.md` |
+| 7. Revisar un PR de un compañero | sin repetir `/code-review`, que ya pasó el autor: se contrasta con la especificación y se prueba; los agentes de `pr-review-toolkit` solo si el PR es grande o delicado (fase 7) |
+| 9. Producción | `/security-review` del repo entero y `claude-security` para la auditoría a fondo; si se quiere una segunda opinión, `security-audit` de Cloudflare (grupo `seguridad-extra`), una sola vez; `legal.md` |
 | 9. Rendimiento | `chrome-devtools-mcp` (grupo `rendimiento`) si la app va lenta |
 | 9. Despliegue | el script de `assets/despliegue/`; plugin `hostinger` si el servidor está allí |
 
@@ -32,7 +33,8 @@ Al ofrecerlos con el menú (`multiSelect`), explica qué aporta cada grupo y su 
 
 | Grupo | Qué trae |
 |---|---|
-| `tokens` | LSP de TypeScript, graphify y ccusage (ver `ahorro-tokens.md`) |
+| `obligatorias` | graphify; se instala siempre que se pasa `--instalar` |
+| `tokens` | LSP del lenguaje (TypeScript, Python o PHP) y ccusage (ver `ahorro-tokens.md`) |
 | `pruebas` | Playwright CLI con sus skills |
 | `mockups` | plugin de Figma |
 | `documentos` | `doc-coauthoring` |
@@ -40,6 +42,7 @@ Al ofrecerlos con el menú (`multiSelect`), explica qué aporta cada grupo y su 
 | `documentacion` | `context7`: documentación al día de las librerías |
 | `rendimiento` | `chrome-devtools-mcp` |
 | `seguridad-continua` | `security-guidance` |
+| `seguridad-extra` | `security-audit` de Cloudflare (MIT): auditoría completa del código con agentes que buscan fallos y otros que intentan desmentirlos. Gasta mucho: solo una vez, en la fase 9 |
 | `legal` | plugins de `claude-para-abogados` |
 | `despliegue` | plugin de Hostinger |
 

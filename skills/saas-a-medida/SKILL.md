@@ -11,8 +11,10 @@ Esta skill lleva un SaaS a medida desde la primera información del cliente hast
 
 1. Busca `.claude/saas-a-medida.json` en la raíz del repo. Si no existe, o existe sin el campo `fases`, no des por hecho que el proyecto empieza de cero: ejecuta `python3 "${CLAUDE_SKILL_DIR}/scripts/detectar-fase.py"`. Si no encuentra rastro de nada, ve a la fase 0 por el principio. Si lo encuentra, ve a la fase 0 por «Si el proyecto ya está empezado»: se confirma con la persona en qué fase está y se sigue desde ahí, sin repetir lo que ya está hecho.
 2. Mira el campo `fases` de ese fichero (el aviso de inicio de sesión ya te dice cuáles están en curso). Puede haber varias fases abiertas a la vez (por ejemplo, desarrollo con dudas del cliente pendientes de la fase 1). Trabaja en la que pida la persona.
-3. Si un aviso de inicio de sesión dice que hay PR de compañeros esperando revisión o cambios pedidos en los suyos, díselo a la persona en tu primera respuesta y ofrécele revisarlos (fase 7, «Revisar el PR de un compañero»).
-4. Lee solo la referencia de la fase en la que estás. No cargues todas.
+3. **Antes de tocar nada, comprueba en qué rama estás** y si va por delante o por detrás de `origin` y `develop`. Si no coincide con lo que cree la persona, díselo.
+4. Si un aviso de inicio de sesión dice que hay PR de compañeros esperando revisión o cambios pedidos en los suyos, díselo a la persona en tu primera respuesta y ofrécele revisarlos (fase 7, «Revisar el PR de un compañero»).
+5. Si hay nota de relevo (`docs/relevo/<usuario de GitHub>.md`, o la sección «Relevo» del módulo en `docs/avance/`), léela antes que nada: dice en qué se quedó la última sesión.
+6. Lee solo la referencia de la fase en la que estás. No cargues todas.
 
 Las rutas de esta skill: los scripts están en `${CLAUDE_SKILL_DIR}/scripts/`, las plantillas en `${CLAUDE_SKILL_DIR}/assets/` y las guías en `${CLAUDE_SKILL_DIR}/references/`.
 
@@ -24,13 +26,17 @@ Las rutas de esta skill: los scripts están en `${CLAUDE_SKILL_DIR}/scripts/`, l
 - **Nada sale al cliente sin que lo revise la persona**: documentos, mensajes, demos, respuestas. Tú lo preparas y ella lo envía.
 - **Los planes no llevan fechas ni semanas.** El orden lo dan las dependencias. Si la persona da una fecha, se apunta como dato, no se reparte el trabajo por semanas.
 - **La especificación manda** sobre cualquier conversación y sobre el código. Si el código hace algo distinto de lo que dice, es un error y se arregla el código; si lo que hay que cambiar es la regla, se cambia primero en la especificación. La única excepción son los nombres (de un campo, una ruta o un estado): si no coinciden, se deja el del código y se corrige la especificación.
+- **Una vez desplegada, la app no depende de un programador para el día a día.** Todo dato que se ve en una pantalla se puede crear, editar y dar de baja desde la propia app por alguien con el rol adecuado, y las listas que el cliente querrá cambiar (categorías, tarifas, tipos de cita, plantillas de aviso) se editan en Configuración. Un apartado que solo enseña lo que trae la semilla no está hecho. Lo que se quede fijo en el código se apunta como excepción en la especificación, con su motivo. La prueba: arrancar con la base vacía y llegar a usar el módulo entero solo con la interfaz.
 - **Antes de escribir un componente de interfaz, mira el kit** de `assets/kit/`: 41 módulos hechos y probados (tabla, diálogo, avisos, selector de fecha, tablero, esqueletos, gráficos…). Si no está ahí, mira los 31 de `assets/componentes/` (estructura, cifras, gráficos, formularios, bloques de producto), con las mismas convenciones y prefijo `c-`. Qué hay y cómo se lleva uno al proyecto: `references/kit-componentes.md` y `references/componentes-complementarios.md`.
 - **Al construir se siguen `references/desarrollo-backend.md` y `references/desarrollo-frontend.md`.** Dicen paso a paso cómo se hace cada cosa y cómo se comprueba, y valen para cualquier modelo o agente que trabaje en el proyecto.
-- **Desde la rama de un módulo solo se toca lo de ese módulo.** Los documentos comunes (`docs/decisiones.md`, `docs/dudas.md`, `docs/dudas-cliente.md`, el estado de las fases) se cambian en una rama `docs/<tema>` con su PR pequeño, que se integra en el momento. Trabajando solo se pueden cambiar directamente en `develop`.
+- **Desde la rama de un módulo solo se toca lo de ese módulo.** Los documentos comunes (`docs/decisiones.md`, `docs/dudas.md`, `docs/dudas-cliente.md`, `docs/gasto.md`, el estado de las fases) se cambian en una rama `docs/<tema>` con su PR pequeño, que se integra en el momento. Trabajando solo se pueden cambiar directamente en `develop`. La nota de relevo de cada persona (`docs/relevo/<usuario>.md`) no es común: solo la toca su dueño y viaja en la rama en la que trabaja.
+- **Nada entra en `develop` sin PR revisado**, tampoco un arreglo pequeño. Si hay algo integrado sin revisión, se revisa después como un PR más.
+- **Un PR, un tema**, y que se pueda revisar de una sentada. Si es muy grande o junta varias funcionalidades, se parte antes de pedir revisión.
+- **El QA vive en el repo**, en `docs/qa/`, con un identificador y un estado por fallo (fase 7, «QA»).
 - **Las dudas no se quedan en el chat.** Las del cliente van al panel de dudas (`references/dudas-cliente.md`); las del equipo, a `docs/dudas.md`; las decisiones tomadas, a `docs/decisiones.md`.
 - **Pregunta antes de construir** algo que cambie permisos o envíe datos a terceros (familias, clientes finales, otras empresas).
 - **Ningún dato personal real del cliente** en la semilla, en los tests ni en el repo, aunque nos pase el Excel.
-- **Ahorra tokens**: lectura dirigida, subagentes para los barridos grandes, no releer lo que no ha cambiado. Ver `references/ahorro-tokens.md`.
+- **Ahorra tokens**: el mapa de graphify antes que abrir ficheros (es obligatorio), lectura dirigida, subagentes para los barridos grandes, no releer lo que no ha cambiado, `/compact` en los cortes naturales y nota de relevo al dejar algo a medias. Ver `references/ahorro-tokens.md`.
 
 ## Si quien te habla no lleva el contacto con el cliente
 
@@ -66,8 +72,8 @@ El detalle, con nombres exactos y alternativas, está en `references/skills.md`.
 | Plan técnico | `compound-engineering:ce-plan` si está instalada; si no, la plantilla de la fase 6 |
 | Cada módulo | `feature-dev`, con `references/desarrollo-backend.md` y `references/desarrollo-frontend.md` |
 | Antes de cada PR | `/simplify` y después `/code-review`; con pantallas, también `break-ui` |
-| Antes de la demo, una vez sobre `develop` | revisión completa de diseño, móvil y accesibilidad |
-| Revisar el PR de un compañero | `/code-review <número>` y `pr-review-toolkit` |
+| Antes de la demo, una vez sobre `develop` | revisión completa de diseño, móvil y accesibilidad (`impeccable audit` y `polish`, no sus guías enteras) |
+| Revisar el PR de un compañero | contrastarlo con la especificación y probarlo; `pr-review-toolkit` solo si es grande o delicado (el autor ya pasó `/code-review`) |
 | Producción | `/security-review`, `claude-security`, `references/legal.md`, script de `assets/despliegue/` |
 
 Si una skill no está instalada, sigue sin ella, dilo y ofrece instalarla con `bash "${CLAUDE_SKILL_DIR}/scripts/comprobar-skills.sh"`.

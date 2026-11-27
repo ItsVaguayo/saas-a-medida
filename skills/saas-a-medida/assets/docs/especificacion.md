@@ -37,6 +37,15 @@ Referencias: <!-- productos reales mirados, ver docs/referencias.md -->
 
 Qué hace:
 
+Datos que maneja:
+
+| Dato | Quién lo crea | Quién lo edita | Quién lo da de baja | Desde qué pantalla |
+|---|---|---|---|---|
+| | | | | |
+
+<!-- Entidades y también listas de opciones (categorías, tarifas, tipos…). Una fila sin pantalla es un hueco: o se añade la pantalla o se apunta aquí debajo como fijo en el código, con el motivo. -->
+Fijo en el código:
+
 Reglas:
 -
 

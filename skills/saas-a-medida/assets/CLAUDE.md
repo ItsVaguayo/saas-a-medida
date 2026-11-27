@@ -42,11 +42,22 @@ Modo: {{MODO}}. Contacto con el cliente: {{CONTACTO}}.
 - Antes de diseñar o construir un módulo se miran productos reales parecidos.
 - Los textos de la app se escriben como en las apps reales. Lo que explica cómo funciona algo en la demo va en un bloque de texto de demo y se quita antes de producción.
 - Una rama por módulo (`modulo/<nombre>`) desde `develop`, PR revisado por otra persona, CI en verde y «Squash and merge».
+- Nada entra en `develop` sin PR revisado. Un PR, un tema; si es muy grande, se parte.
+- Si se toca un fichero de otra persona, va en un commit aparte y se le pide que lo revise.
+- El QA va en `docs/qa/`, con un identificador y un estado por fallo.
 - Desde la rama de un módulo solo se toca lo de ese módulo. Los documentos comunes (decisiones, dudas, estado de las fases) van en una rama `docs/<tema>`.
 - La especificación manda. Si el código hace otra cosa, se arregla el código; si cambia la regla, se cambia primero la especificación. Solo en los nombres (campos, rutas, estados) se deja el del código y se corrige la especificación.
+- Todo dato que se ve en pantalla se puede crear, editar y dar de baja desde la app, y las listas que el cliente querrá cambiar se editan en Configuración. Un módulo no está hecho hasta que se puede usar entero con la base vacía.
 - Las migraciones de la base solo añaden. Renombrar o borrar una columna va en dos entregas.
 - Nada sale al cliente sin que lo revise quien lleva el contacto.
 
+## Contexto y tokens
+
+- Antes de abrir ficheros para saber dónde está algo: `graphify query "<pregunta>"` o `graphify path "A" "B"`.
+- Al empezar, si hay nota en `docs/relevo/<tu usuario>.md` o en la sección «Relevo» del módulo en `docs/avance/`, se lee primero. Al dejar algo a medias, se reescribe.
+- `/compact` al terminar un módulo o una revisión, nunca a mitad de un paso. Detalle: `references/ahorro-tokens.md` del plugin.
+
 ## Comandos
 
+- Después de clonar: `uv tool install graphifyy && graphify install`, y en el repo `graphify hook install && graphify update .`
 - {{COMANDOS}}

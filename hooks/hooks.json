@@ -1,5 +1,5 @@
 {
-  "description": "saas-a-medida: al abrir la sesión dice qué fases del proyecto están en curso y, en pareja o grupo, avisa de los PR que esperan revisión o tienen cambios pedidos (también como mucho cada 15 minutos mientras se trabaja). Solo actúa en proyectos con .claude/saas-a-medida.json.",
+  "description": "saas-a-medida: al abrir la sesión dice qué fases del proyecto están en curso, avisa si falta graphify o su hook y, en pareja o grupo, avisa de los PR que esperan revisión o tienen cambios pedidos (también como mucho cada 15 minutos mientras se trabaja). Solo actúa en proyectos con .claude/saas-a-medida.json.",
   "hooks": {
     "SessionStart": [
       {

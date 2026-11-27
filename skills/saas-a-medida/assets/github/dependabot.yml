@@ -1,0 +1,22 @@
+# Actualizaciones de dependencias propuestas como PR. Destino en el proyecto: .github/dependabot.yml
+# Los PR de Dependabot van a develop y pasan el CI como cualquier otro; se integran tras revisarlos.
+# Ajusta «package-ecosystem» al stack (npm, pip, composer, bundler, gomod…).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Las actualizaciones menores y de parche, juntas en un PR; las grandes, cada una en el suyo.
+      menores:
+        update-types: [minor, patch]
+    labels: [dependencias]
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: monthly
+    labels: [dependencias]
